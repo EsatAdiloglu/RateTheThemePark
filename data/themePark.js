@@ -48,4 +48,14 @@ const getThemeParkById = async (id) => {
     return themePark
 }
 
+const getThemeParksByName = async (name) => {
+    name = helper.checkString(name)
+    const themeParkCollections = await themeparks();
+    const allThemeParks = await themeParkCollections.find().toArray();
+    const res = []
+    allThemeParks.forEach((park) => {
+        if(park.themeParkName.toLowerCase().includes(name.toLowerCase())) res.push(park)
+    })
+    return res
+}
 export default {createThemePark, getThemeParkById}
