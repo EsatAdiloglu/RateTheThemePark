@@ -47,4 +47,4 @@ const getThemeParkById = async (id) => {
     return themePark
 }
 
-export {createThemePark, getThemeParkById}
+export default {createThemePark, getThemeParkById}
