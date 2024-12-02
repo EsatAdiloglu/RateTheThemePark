@@ -6,6 +6,12 @@ const checkString = (str) => {
     if (!str) throw "Error: str is an empty string or just spaces"
     return str
 }
+const checkRating = (num) => {
+    if (typeof num !== "number") throw "Error: num isn't of type number"
+    if (isNaN(num)) throw "Error: num is NaN"
+    if (num < 0 || num > 10) throw "Error: num is out of bounds"
+    if (num % 1 !== 0) throw "Error: num isn't an integer"
+}
 const checkState = (state) => {
     state = checkString(state)
     const states = {
@@ -68,4 +74,4 @@ const checkState = (state) => {
       }
 }
 
-export default {checkString, checkState}
+export default {checkString, checkState, checkRating}
