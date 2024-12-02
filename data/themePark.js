@@ -40,9 +40,10 @@ const createThemePark = async (
 const getThemeParkById = async (id) => {
     id = helper.checkString(id)
     if(!ObjectId.isValid(id)) throw "Error: id isn't an object id"
+    id = new ObjectId(id)
     const themeParkCollections = await themeparks();
     const themePark = await themeParkCollections.findOne({_id: id})
-    if (themePark == null) throw `Error: a theme park doesn't have an id ${id}`
+    if (themePark === null) throw `Error: a theme park doesn't have an id ${id}`
     themePark._id = themePark._id.toString()
     return themePark
 }
