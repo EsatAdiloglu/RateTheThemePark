@@ -15,9 +15,7 @@ const createThemePark = async (
     country = helper.checkString(country)
     state = helper.checkState(state)
 
-    const themeParkId = new ObjectId()
     const newThemePark = {
-        _id: themeParkId,
         themeParkName: name,
         streetAddress: streetaddress,
         city: city,

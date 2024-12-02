@@ -1,5 +1,6 @@
 import {dbConnection, closeConnection} from '../config/mongoConnections.js';
 import themeparksfunc from '../data/themePark.js'
+import ridefunc from "../data/ride.js"
 // import {games} from '../data/games.js';
 
 const db = await dbConnection();
@@ -8,6 +9,8 @@ await db.dropDatabase();
 let themepark1 = undefined;
 let themepark2 = undefined;
 let themepark3 = undefined;
+let ride1 = undefined;
+let ride2 = undefined;
 
 try{
     //1
@@ -29,7 +32,17 @@ try{
 catch(e){
     console.log(e);
 }
-
-
+try{
+    ride1 = await ridefunc.createRide(themepark1._id, "The Haunted Mansion")
+}
+catch(e){
+    console.log(e)
+}
+try{
+    ride2 = await ridefunc.createRide(themepark1._id, "Splash Mountain")
+}
+catch(e){
+    console.log(e)
+}
 console.log('Done seeding database');
 await closeConnection();
