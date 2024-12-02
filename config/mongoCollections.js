@@ -15,13 +15,13 @@ const getCollectionFn = (collection) => {
 
 // Note: You will need to change the code below to have the collection required by the assignment!
 export const users = getCollectionFn('users');
-export const themepark = getCollectionFn('themepark');
-export const ride = getCollectionFn('ride'); 
-export const foodstall = getCollectionFn('foodstall');
-export const themeparkrating = getCollectionFn('themeparkrating');
-export const riderating = getCollectionFn('riderating');
-export const foodstallrating = getCollectionFn('foodstallrating');
-export const comment = getCollectionFn('comment'); 
-export const report = getCollectionFn('report');
+export const themeparks = getCollectionFn('themepark');
+export const rides = getCollectionFn('ride'); 
+export const foodstalls = getCollectionFn('foodstall');
+export const themeparkratings = getCollectionFn('themeparkrating');
+export const rideratings = getCollectionFn('riderating');
+export const foodstallratings = getCollectionFn('foodstallrating');
+export const comments = getCollectionFn('comment'); 
+export const reports = getCollectionFn('report');
 
 //testing 1 2 
