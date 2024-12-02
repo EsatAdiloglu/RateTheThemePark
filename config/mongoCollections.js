@@ -23,3 +23,5 @@ export const riderating = getCollectionFn('riderating');
 export const foodstallrating = getCollectionFn('foodstallrating');
 export const comment = getCollectionFn('comment'); 
 export const report = getCollectionFn('report');
+
+//testing 1 2 
