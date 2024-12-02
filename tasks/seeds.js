@@ -2,6 +2,7 @@ import {dbConnection, closeConnection} from '../config/mongoConnections.js';
 import themeparksfunc from '../data/themePark.js'
 import ridefunc from "../data/ride.js"
 import userfunc from "../data/user.js"
+import themeparksratingfunc from "../data/themeParkRating.js"
 // import {games} from '../data/games.js';
 
 const db = await dbConnection();
@@ -14,6 +15,7 @@ let ride1 = undefined;
 let ride2 = undefined;
 let user1 = undefined; 
 let user2 = undefined;
+let rating1 = undefined
 
 try{
     //1
@@ -58,6 +60,12 @@ try {
     user2 = await userfunc.createUser("Jane Smith", "JaneSmith1", "anotherpassword123");
 } catch (e) {
     console.log(e) 
+}
+try{
+    rating1 = await themeparksratingfunc.createThemeParkRating(user1._id, themepark2._id, 5, 10, 2, 6, "hello world")
+}
+catch(e){
+    console.log(e)
 }
 
 console.log('Done seeding database');
