@@ -68,4 +68,4 @@ const checkState = (state) => {
       }
 }
 
-export default (checkString, checkState)
+export default {checkString, checkState}
