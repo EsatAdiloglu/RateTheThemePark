@@ -61,6 +61,7 @@ const getThemeParksByName = async (name) => {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 export default {createThemePark, getThemeParkById, getThemeParksByName}
 =======
@@ -75,3 +76,7 @@ export default {createThemePark, getThemeParkById, getThemeParksByName}
 export default {createThemePark, getThemeParkById}
 >>>>>>> 98c144e (added getThemeParksByName)
 >>>>>>> 17bad1b (added getThemeParksByName)
+=======
+
+export default {createThemePark, getThemeParkById, getThemeParksByName}
+>>>>>>> 52a1efd (Exported the functions)
