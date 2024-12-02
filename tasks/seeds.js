@@ -1,4 +1,4 @@
-import {dbConnection, closeConnection} from '../config/mongoConnection.js';
+import {dbConnection, closeConnection} from '../config/mongoConnections.js';
 import themeparksfunc from '../data/helper.js'
 // import {games} from '../data/games.js';
 

@@ -46,3 +46,5 @@ const getThemeParkById = async (id) => {
     themePark._id = themePark._id.toString()
     return themePark
 }
+
+export {newThemePark, getThemeParkById}
