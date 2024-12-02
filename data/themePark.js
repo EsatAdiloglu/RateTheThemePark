@@ -58,4 +58,8 @@ const getThemeParksByName = async (name) => {
     })
     return res
 }
+<<<<<<< HEAD
 export default {createThemePark, getThemeParkById, getThemeParksByName}
+=======
+export default {createThemePark, getThemeParkById}
+>>>>>>> 98c144e (added getThemeParksByName)
