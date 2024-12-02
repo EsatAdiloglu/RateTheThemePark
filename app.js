@@ -33,7 +33,10 @@ app.set('view engine', 'handlebars');
 
 // default route
 app.get('/', (req, res) => {
-    res.render('addCommentPage')
+    res.render('homePage', {title: "Rate My Theme Park"})
+})
+app.get('/addThemePark', (req, res) => {
+  res.render('addThemeParkPage')
 })
 
 app.listen(3000, () => {
