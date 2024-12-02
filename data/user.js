@@ -16,7 +16,7 @@ const createUser = async (
     const existingUser = await userCollections.findOne({userName: userName.toLowerCase()});   
     
     if (existingUser) {
-        throw "The user already exists"
+        throw "The user already exists."
     }
 
     const saltRounds = 10;
@@ -26,7 +26,12 @@ const createUser = async (
         _id: new ObjectId(),
         name: name,
         userName: userName,
-        password: hashedPassword
+        password: hashedPassword,
+        themeParkRatings: [],
+        rideRatings: [],
+        foodStallRatings: [],
+        comments: [],
+        reports: []
     }
     const userInfo = await userCollections.insertOne(newUser);
     if (!userInfo.acknowledged || !userInfo.insertedId) {
