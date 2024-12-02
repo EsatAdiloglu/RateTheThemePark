@@ -19,6 +19,7 @@ const constructorMethod = (app) => {
     app.use('/themepark', themeParkRoutes)
     app.use('/themeParkRoutes', themeParkRoutesRating)
     app.use('/user', userRoutes)
+    
 
     app.use("*",(req,res) => {
         return res.status(404).json({error: "Not Found"})
