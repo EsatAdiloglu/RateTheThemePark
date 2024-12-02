@@ -2,7 +2,7 @@ import {ObjectId} from "mongodb";
 import helper from "./helper.js"
 import { themeparks } from "../config/mongoCollections.js";
 
-const newThemePark = async (
+const createThemePark = async (
     name,
     streetaddress,
     city,
@@ -47,4 +47,4 @@ const getThemeParkById = async (id) => {
     return themePark
 }
 
-export {newThemePark, getThemeParkById}
+export {createThemePark, getThemeParkById}
