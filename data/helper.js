@@ -7,7 +7,7 @@ const checkString = (str) => {
     return str
 }
 const checkState = (state) => {
-    state = checkString(string)
+    state = checkString(state)
     const states = {
         "AL": "Alabama",
         "AK": "Alaska",
