@@ -59,8 +59,12 @@ const getThemeParksByName = async (name) => {
     return res
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 export default {createThemePark, getThemeParkById, getThemeParksByName}
 =======
 export default {createThemePark, getThemeParkById}
 >>>>>>> 49235e3 (added getThemeParksByName)
+=======
+export default {createThemePark, getThemeParkById, getThemeParksByName}
+>>>>>>> 961e9b3 (added getThemeParksByName)
