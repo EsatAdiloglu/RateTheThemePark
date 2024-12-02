@@ -19,4 +19,3 @@ const closeConnection = async () => {
 
 export { dbConnection, closeConnection };
 
-//HELLO HELLO TESTING TESTING
