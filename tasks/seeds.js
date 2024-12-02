@@ -1,5 +1,5 @@
 import {dbConnection, closeConnection} from '../config/mongoConnections.js';
-import themeparksfunc from '../data/helper.js'
+import themeparksfunc from '../data/themePark.js'
 // import {games} from '../data/games.js';
 
 const db = await dbConnection();
