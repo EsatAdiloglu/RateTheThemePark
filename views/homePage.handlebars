@@ -11,18 +11,19 @@
  <h1> Home Page </h1>
  <main>
     <p>Want to search for a theme park? Enter the name on the form below</p>
-    <form id = "themeParkInput">
+    <form method = "POST" action = "/listofthemeparks" id = "themeParkInput">
         <label for="themeParkInput">Theme Park</label>
-        <input type="themeParkInput" name="themeParkInput" id="themeParkInput">
+        <input type="text" name="themeParkInput" id="themeParkInput">
         <br>
         <button>Submit</button>
     </form>
-    <form>
-        <p>Unable to find a theme park? Click this button to add a theme park!</p>
-        <button>Add a Theme Park</button>
-    </form>
+    
+    <p>Unable to find a theme park? Click this button to add a theme park!</p>
+    <a href = "/addThemePark"><button>Add a Theme Park</button></a>
+    
     <form>
         <p>Want to compare two different theme parks? Clikc this button to do so?</p>
         <button>Compare Theme Parks</button>
     </form>
+
  </main>
