@@ -42,9 +42,19 @@ const getThemeParkById = async (id) => {
     if(!ObjectId.isValid(id)) throw "Error: id isn't an object id"
     const themeParkCollections = await themeparks();
     const themePark = await themeParkCollections.findOne({_id: id})
-    if (themePark == null) throw `Error: a theme park doesn't have an id ${id}`
+    if (themePark === null) throw `Error: a theme park doesn't have an id ${id}`
     themePark._id = themePark._id.toString()
     return themePark
 }
 
+const getThemeParksByName = async (name) => {
+    name = helper.checkString(name)
+    const themeParkCollections = await themeparks();
+    const allThemeParks = await themeParkCollections.find().toArray();
+    const res = []
+    allThemeParks.forEach((park) => {
+        if(park.themeParkName.toLowerCase().includes(name.toLowerCase())) res.push(park)
+    })
+    return res
+}
 export default {createThemePark, getThemeParkById}
