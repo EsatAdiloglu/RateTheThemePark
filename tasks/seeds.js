@@ -2,7 +2,8 @@ import {dbConnection, closeConnection} from '../config/mongoConnections.js';
 import themeparksfunc from '../data/themePark.js'
 import ridefunc from "../data/ride.js"
 import userfunc from "../data/user.js"
-import themeparksratingfunc from "../data/themeParkRating.js"
+// import themeparksratingfunc from "../data/themeParkRating.js"
+import foodstallfunc from "../data/foodStall.js";
 // import {games} from '../data/games.js';
 
 const db = await dbConnection();
@@ -16,6 +17,8 @@ let ride2 = undefined;
 let user1 = undefined; 
 let user2 = undefined;
 let rating1 = undefined
+let foodstall1 = undefined;
+let foodstall2 = undefined;
 
 try{
     //1
@@ -61,11 +64,28 @@ try {
 } catch (e) {
     console.log(e) 
 }
+// try{
+//     rating1 = await themeparksratingfunc.createThemeParkRating(user1._id, themepark2._id, 5, 10, 2, 6, "hello world")
+// }
+// catch(e){
+//     console.log(e)
+// }
 try{
-    rating1 = await themeparksratingfunc.createThemeParkRating(user1._id, themepark2._id, 5, 10, 2, 6, "hello world")
-}
-catch(e){
+    foodstall1 = await foodstallfunc.createFoodStall(
+        themepark1._id,
+        "Alien Pizza Planet"
+    );
+} catch (e) {
     console.log(e)
+}
+
+try{
+    foodstall2 = await foodstallfunc.createFoodStall(
+        themepark1._id,
+        "Turkey Leg Stand" 
+    );
+} catch (e) {
+    console.log(e);
 }
 
 console.log('Done seeding database');
