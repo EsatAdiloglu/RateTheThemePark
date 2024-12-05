@@ -14,3 +14,25 @@
 
     - Report Button (Another page)
  --}}
+
+ <h1>{{themepark.themeParkName}}</h1>
+
+ <h3>{{themepark.streetAddress}}, {{themepark.city}}, {{themepark.state}}, {{themepark.country}}</h3>
+
+
+<div>
+    {{!-- Ratings --}}
+    <div><a href="/themepark/{{_id}}/ratings">Ratings</a></div>
+
+    {{!-- Comments --}}
+    <div><a href="/themepark/{{_id}}/comments">Comments</a></div>
+
+    {{!-- Rides --}}
+    <div><a href="/themepark/{{_id}}/rides">Rides</a></div>
+
+    {{!-- Food Stalls --}}
+    <div><a href="/themepark/{{_id}}/foodstalls">Food Stalls</a></div>
+
+    {{!-- We need to make the report page --}}
+
+</div>

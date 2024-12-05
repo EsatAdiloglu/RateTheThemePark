@@ -1,10 +1,30 @@
 {{!-- 
 Theme Park Rating Page (INDIVIDUAL THEME PARK)
 
-/homepage/{idOfThemePark}/ratings
+/themepark/{idOfThemePark}/ratings
 
 
 - list of all ratings 
 
 - add button (Another page)
  --}}
+
+{{!-- /themepark/{{_id}}/ratings --}}
+
+ {{!-- Gives back the ratings of the specific theme park --}}
+{{!-- Should return username        "staffRating": 9
+        "cleanlinessRating": 10
+        "crowdsRating": 3
+        "diveristyRating": 6
+        "review --}}
+
+<h1>{{themeparkname}}</h1>
+<ul>
+  {{#each ratings}}
+    <li>
+      User: {{username}}, Staff: {{staffRating}}, Cleanliness: {{cleanlinessRating}}, Crowds: {{crowdsRating}}, Diversity: {{diveristyRating}}, Review: {{review}}
+    </li>
+  {{/each}}
+</ul>
+
+<a href = '/themepark/{{_id}}/ratings/addThemeParkRating'></a>
