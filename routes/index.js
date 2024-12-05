@@ -10,17 +10,18 @@ import userRoutes from "./user.js"
 
 
 const constructorMethod = (app) => {
-    app.use('/comment', commentRoutes)
-    app.use('/foodStall', foodStallRoutes)
-    app.use('/foodStallRating', foodStallRatingRoutes)
-    app.use('/report', reportRoutes)
-    app.use('/ride', rideRoutes)
-    app.use('/rideRating', rideRatingRoutes)
+    app.use('/', userRoutes)
     app.use('/themepark', themeParkRoutes)
-    app.use('/themeParkRoutes', themeParkRoutesRating)
-    app.use('/user', userRoutes)
+    // app.use('/comment', commentRoutes)
+    // app.use('/foodStall', foodStallRoutes)
+    // app.use('/foodStallRating', foodStallRatingRoutes)
+    // app.use('/report', reportRoutes)
+    // app.use('/ride', rideRoutes)
+    // app.use('/rideRating', rideRatingRoutes)
+    // app.use('/themepark', themeParkRoutes)
+    // app.use('/themeParkRoutes', themeParkRoutesRating)
+    // app.use('/user', userRoutes)
     
-
     app.use("*",(req,res) => {
         return res.status(404).json({error: "Not Found"})
     });

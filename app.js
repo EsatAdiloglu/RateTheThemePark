@@ -3,6 +3,8 @@ import path from 'path'
 import exphbs from 'express-handlebars'
 import { dirname } from 'path';
 import {fileURLToPath} from 'url';
+import configRoutes from './routes/index.js'
+import session from 'express-session';
 
 let app = express();
 
@@ -31,13 +33,51 @@ app.use(express.urlencoded({extended: true}));
 app.engine('handlebars', handlebarsInstance.engine);
 app.set('view engine', 'handlebars');
 
-// default route
+// creates a session
+app.use(session({
+  name: 'AuthenticationState',
+  secret: 'some secret string!',
+  resave: false,
+  saveUninitialized: false})
+)
+
+// using some middleware if we hit the /, we will check if theres a req.session.user if there isn't redirect them to signin
 app.get('/', (req, res) => {
-    res.render('homePage', {title: "Rate My Theme Park"})
-})
-app.get('/addThemePark', (req, res) => {
-  res.render('addThemeParkPage')
-})
+  if (req.session.user) {
+    return res.redirect('/themepark');
+  } 
+  else {
+    return res.redirect('/signinuser');
+  }
+});
+
+app.use('/signinuser', (req, res, next) => {
+  if (req.session.user) {
+    return res.redirect('/themepark');
+  }
+  next();
+});
+
+app.use('/signupuser', (req, res, next) => {
+  if (req.session.user) {
+    return res.redirect('/themepark');
+  }
+  next();
+});
+
+// -------------------------------
+// additional routes possible here
+// -------------------------------
+
+// dummy routes
+// app.get('/', (req, res) => {
+//     res.render('homePage', {title: "Rate My Theme Park"})
+// })
+// app.get('/addThemePark', (req, res) => {
+//   res.render('addThemeParkPage')
+// })
+
+configRoutes(app);
 
 app.listen(3000, () => {
     console.log("We've now got a server!");
