@@ -1,6 +1,7 @@
 import {Router} from "express"
 const router = Router();
 import { namefunc, usernamefunc, passwordfunc, confirmpasswordfunc } from "../userhelper.js";
+import { signInUser, signUpUser } from "../data/user.js";
 
 //.get 
 router.route('/').get(async (req, res)  => {
@@ -104,26 +105,26 @@ router
             return res.status(400).render('signIn', {missing:true, missings: missing})
         }
 
-        username = username.trim().toLowerCase();
-        password = password.trim();
+        check_username = check_username.trim().toLowerCase();
+        check_password = check_password.trim();
 
         const errors = [];
 
         try {
-            usernamefunc(username)
+            usernamefunc(check_username)
         } 
         catch (e) {
             if (!errors.includes(e)) {errors.push(e);}
         }
         try {
-            passwordfunc(password)
+            passwordfunc(check_password)
         } catch (e) {
             if (!errors.includes(e)) {errors.push(e);}       
         }
 
         //IMPLEMENT SIGNINUSER FUNCTION
         try {
-        const user = await signInUser(username, password);
+        const user = await signInUser(check_username, check_password);
         } 
         catch (e) {
             if (!errors.includes(e)) {errors.push(e);}
@@ -134,7 +135,7 @@ router
 
 
         try {
-        const user = await signInUser(username, password);
+        const user = await signInUser(check_username, check_password);
         req.session.user = user; //SET THE SESSION HERE
         return res.redirect('/themepark')
         }
