@@ -1,5 +1,5 @@
 import {ObjectId} from "mongodb";
-import helper from "./helper.js"
+import helper from "../helper.js"
 import { namefunc, usernamefunc, passwordfunc } from "../userhelper.js";
 import { themeparks, rides, users } from "../config/mongoCollections.js";
 import bcrypt from 'bcrypt';

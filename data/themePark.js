@@ -1,5 +1,5 @@
 import {ObjectId} from "mongodb";
-import helper from "./helper.js"
+import helper from "../helper.js"
 import { themeparks } from "../config/mongoCollections.js";
 
 const createThemePark = async (

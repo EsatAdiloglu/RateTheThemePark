@@ -1,4 +1,5 @@
 import {ObjectId} from "mongodb";
+import { themeparks, users } from "./config/mongoCollections";
 
 const checkString = (str) => {
     if (typeof str !== "string") throw "Error: str isn't of type string"
@@ -7,11 +8,18 @@ const checkString = (str) => {
     return str
 }
 const checkRating = (num) => {
-    if (typeof num !== "number") throw "Error: num isn't of type number"
     if (isNaN(num)) throw "Error: num is NaN"
+    num = Number(num)
+    if (isNaN(num)) throw "Error: num is not a number"
     if (num < 0 || num > 10) throw "Error: num is out of bounds"
     if (num % 1 !== 0) throw "Error: num isn't an integer"
 }
+const checkId = (id, idName) => {
+  id = checkString(id)
+  if(!ObjectId.isValid(id)) throw `Error: ${idName} is a valid Object id`
+  return id
+}
+
 const checkState = (state) => {
     state = checkString(state)
     const states = {
@@ -73,5 +81,22 @@ const checkState = (state) => {
         throw "Error: state doesn't exist"
       }
 }
+const checkNumber = (num) => {
 
-export default {checkString, checkState, checkRating}
+}
+// const checkUser = async (userId) => {
+//   userId = checkString(userId)
+//   const userCollections = await users();
+//   const user = await userCollections.findOne({_id: new ObjectId(userId)})
+//   if (user === null) `Error: this is no user with id ${userId}`
+//   return user
+// }
+
+// const checkThemePark = async (themeparkId) => {
+//   themeparkId = checkString(themeparkId)
+//   const themeParkCollections = await themeparks();
+//   const themePark = await themeParkCollections.findOne({_id: new ObjectId(themeparkId)})
+//   if (themePark === null) `Error: this is no theme park with id ${themeparkId}`
+//   return themeParkId
+// }
+export default {checkString, checkState, checkRating, checkId}
