@@ -4,16 +4,15 @@ import { namefunc, usernamefunc, passwordfunc, confirmpasswordfunc } from "../us
 import { signInUser, signUpUser } from "../data/user.js";
 
 //.get 
-router.route('/').get(async (req, res)  => {
+router.route('/')
+.get(async (req, res)  => {
     return res.status(400).json({error: "Invalid route get / for users"})
 });
 
-router
-    .route('/signupuser')
+router.route('/signupuser')
     .get(async(req, res) => {
-    return res.render('signUp')})
+        return res.render('signUp')})
     .post(async(req, res) => {
-
         const missing = []
         let {name, username, password, confirmPassword} = req.body
 
@@ -73,21 +72,18 @@ router
             if (user.registrationCompleted){
               return res.redirect('/signinuser')
             } 
-          } 
-          catch (e) {
+        } 
+        catch (e) {
             if (!errors.includes(e)) {errors.push(e);}
-          }
-          if (errors.length > 0){
+        }
+        if (errors.length > 0){
             return res.status(400).render('signUp', {error: true, errors: errors})
-          }
-          else{
+        }
+        else{
             return res.status(500).json({error: "Internal server error"})
-          }
-
-
+        }
     })
-router
-    .route('/signinuser')
+router.route('/signinuser')
     .get(async(req, res) => {
     return res.render('signIn')})
     .post(async(req, res) => {
@@ -109,7 +105,6 @@ router
         check_password = check_password.trim();
 
         const errors = [];
-
         try {
             usernamefunc(check_username)
         } 
@@ -133,17 +128,14 @@ router
         return res.status(400).render('signIn', {error: true, errors: errors})
         }
 
-
         try {
-        const user = await signInUser(check_username, check_password);
-        req.session.user = user; //SET THE SESSION HERE
-        return res.redirect('/themepark')
+            const user = await signInUser(check_username, check_password);
+            req.session.user = user; //SET THE SESSION HERE
+            return res.redirect('/themepark')
         }
         catch (e) {
-        return res.status(400).render('signIn', {invalid: true, invalidmsg: "Invalid userId and/or password"})
+            return res.status(400).render('signIn', {invalid: true, invalidmsg: "Invalid userId and/or password"})
         }
-
-
     })
 
 export default router;

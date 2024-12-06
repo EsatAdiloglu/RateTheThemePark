@@ -14,9 +14,9 @@ export function namefunc(fname){
     if (fname.length === 0){
         throw "name empty";
     }
-    if (fname.length < 2 || fname.length > 25)
-        {throw 'length out of bounds'}
-    if (numberinstring(fname)){throw "firstname contains numbers"}
+    if (fname.length < 2)
+        {throw 'name too short'}
+    if (numberinstring(fname)){throw "name contains numbers"}
 }
 export function usernamefunc(userId){
     if (typeof(userId) !== "string"){throw 'userId not string'}
