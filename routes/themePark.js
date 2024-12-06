@@ -198,7 +198,23 @@ router.route('/:id/rides/:rideid')
 
 router.route('/:id/rides/:rideid/ratings')
 .get(async(req, res) => {
-    res.render('rideRatingPage')
+    try {
+        const themeParkId = helper.checkId(req.params.id, "theme park ID");
+        const rideId = helper.checkId(req.params.rideid, "ride ID");
+        
+        const themePark = await themeParkData.getThemeParkById(themeParkId);
+        const ride = themePark.rides.find((ride) => ride._id.toString() === rideId);
+        
+        if (!ride) {
+            return res.status(404).json({error: "Ride not found in the theme park"});
+        }
+        return res.render('rideRatingPage', {ride});
+    } catch (e) {
+        return res.status(400).json({error:e});
+    }
+})
+.post(async(req,res) => {
+    // NNED TO COMPLETE  
 })
 
 router.route('/:id/rides/:rideid/addRating')
