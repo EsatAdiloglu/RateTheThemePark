@@ -44,4 +44,7 @@ const getRideById = async (id) => {
     return ride
 }
 
+const getRidesByThemePark = async (id) => {
+    pass
+}
 export default {createRide, getRideById}

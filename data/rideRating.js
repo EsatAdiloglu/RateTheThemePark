@@ -68,4 +68,7 @@ const getRideRatingById = async (id) => {
     return rideRating
 }
 
+const getRideRatingsByRide = async (id) => {
+    pass
+}
 export default {createRideRating, getRideRatingById}

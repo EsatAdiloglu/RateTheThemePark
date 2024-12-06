@@ -72,5 +72,8 @@ const getThemeParkRatingById = async (id) => {
     return themeParkRating
 }
 
+const getThemeParkRatings = async (ids) => {
+    pass
+}
 
 export default {createThemeParkRating, getThemeParkRatingById}

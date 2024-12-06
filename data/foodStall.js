@@ -44,4 +44,7 @@ const getFoodStallById = async (id) => {
     return foodstall
 }
 
+const getFoodStallsByThemePark = async (id) => {
+    pass
+}
 export default {createFoodStall, getFoodStallById}
