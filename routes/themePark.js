@@ -13,7 +13,6 @@ router.route('/addthemepark')
 })
 .post(async (req, res) => {
     //add theme park
-
     // need to validate fields before sending, need to validate in clientside as well
 })
 
@@ -21,7 +20,6 @@ router.route('/listofthemeparks')
 .post(async (req, res) => {
     try {
         const themeParkInput = req.body.themeParkInput;
-        
         // need to validate fields before sending, need to validate in clientside as well
         const newThemePark = await themeParkData.getThemeParksByName(themeParkInput);
         res.render("listOfThemeParks", { parks: newThemePark })
@@ -39,6 +37,8 @@ router.route('/:id')
     // send the whole object data as part of the render
     res.render('themeParkPage')
 })
+
+// -------------------------------------RATINGS---------------------------------------------
 
 router.route('/:id/ratings')
 .get(async (req, res) => {
@@ -58,6 +58,10 @@ router.route('/:id/ratings/addThemeParkRating')
     // check all the fields, need to the check the valids clientside as well
 })
 
+// -------------------------------------END OF RATINGS---------------------------------------------
+
+
+// -------------------------------------COMMENTS---------------------------------------------
 router.route('/:id/comments')
 .get(async (req, res) => {
     // get the themepark by id function and then render the comments
@@ -73,7 +77,9 @@ router.route('/:id/comments/addThemeParkComment')
     // add the comment to the the theme park comments
     // check the validity of the arguments, need to check clientside as well
 })
+// -------------------------------------E OF COMMENTS---------------------------------------------
 
+// -------------------------------------RIDES---------------------------------------------
 router.route('/:id/rides')
 .get(async (req, res) => {
     // get the themepark by id function and render the ride page, send back an array with all the rides, especially with their id's
@@ -130,15 +136,18 @@ router.route('/:id/rides/:rideid/addComment')
     // check for validation
     // check for valid ids
 })
+// -------------------------------------E OF RIDES---------------------------------------------
 
+// -------------------------------------FOOD STALLS---------------------------------------------
 router.route('/:id/foodstalls')
 .get(async (req, res) => {
     // get the themepark by id function and render the foodstall page
-    res.render('themeParkFoodStallsPage')
+    res.render('themeParkFoodStallsPage') //need to do
 })
 router.route('/:id/foodstalls/addfoodstall')
 .get(async(req, res) => {
     // get the themepark addfood stall page
+    res.render('addFoodStallPage') //need to edit
 })
 .post((req, res) => {
     // add the foodstall to the specific themepark
@@ -148,15 +157,18 @@ router.route('/:id/foodstalls/addfoodstall')
 router.route('/:id/foodstalls/:foodstallid')
 .get(async(req, res) => {
     // get the specific foodstall
+    res.render('foodStallPage') //need to do
 })
 router.route('/:id/foodstalls/:foodstallid/ratings')
 .get(async(req, res) => {
     // get the specific ratings for the food stall
     // return the array
+    res.render('foodStallRatingPage') //need to do
 })
 router.route('/:id/foodstalls/:foodstallid/addRating')
 .get(async(req, res) => {
     // get the addRating page
+    res.render('addFoodStallRatingPage') //need to edit
 })
 .post(async(req, res) => {
     // create the rating
@@ -165,13 +177,17 @@ router.route('/:id/foodstalls/:foodstallid/addRating')
 router.route('/:id/foodstalls/:foodstallid/comments')
 .get(async(req, res) => {
     // get the comments page, return an array on comments
+    res.render('foodStallCommentPage') // need to do
 })
 router.route('/:id/foodstalls/:foodstallid/addComment')
 .get(async(req, res) => {
     // get the addComment page
+    res.render('addFoodStallCommentPage') //need to do
 })
 .post(async(req, res) => {
     // add the comment to the specific food stall
 })
+
+// -------------------------------------E OF FOOD STALL---------------------------------------------
 
 export default router;
