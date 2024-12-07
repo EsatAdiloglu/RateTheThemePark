@@ -5,3 +5,14 @@ Theme Park Comment Page (INDIVIDUAL THEME PARK)
 - list of all comments
 - add button (Another page)
  --}}
+
+<h1>{{themeparkname}}</h1>
+<ul>
+  {{#each comments}}
+    <li>
+      User: {{username}}, Staff: {{staffRating}}, Cleanliness: {{cleanlinessRating}}, Crowds: {{crowdsRating}}, Diversity: {{diveristyRating}}, Review: {{review}}
+    </li>
+  {{/each}}
+</ul>
+
+<a href = '/themepark/{{_id}}/comments/addThemeParkComment'></a>

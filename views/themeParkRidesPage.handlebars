@@ -1,0 +1,28 @@
+{{!-- 
+
+    /homepage/{idOfThemePark}/rides
+    Ride page of every individial theme park
+
+    - list of rides
+    - add ride button (another page)
+    - report btton for every ride
+ --}}
+
+ {{!-- List of rides returned 
+    basically links to each ride
+ --}}
+
+ <h1>Theme Park Rides</h1>
+
+<main>
+    <ol>
+        {{#each rides}}
+        <li>
+            <a href="/themepark/{{_id}}/rides/{{ride._id}}"> {{themeParkName}} </a>
+        </li>
+        {{/each}}
+    </ol>
+</main>
+
+
+ <a href = '/themepark/{{_id}}/rides/addRide'>Add ride</a>

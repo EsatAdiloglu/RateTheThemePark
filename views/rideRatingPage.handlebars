@@ -3,3 +3,17 @@
     /homepage/{idOfThemePark}/rides/{idOfRide}/ratings
     - add button to add a ride rating
  --}}
+
+ <h1>Ratings on Rides</h1>
+
+ <main>
+    <ol>
+        {{#each ratings}}
+        <li>
+            {{rating info}}
+        </li>
+        {{/each}}
+    </ol>
+</main>
+
+<a href = '/themepark/{{_id}}/rides/{{_rideid}}/addRating'>Add rating on ride</a>

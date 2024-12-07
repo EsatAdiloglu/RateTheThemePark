@@ -6,10 +6,10 @@
    --}}
  
  
- <h1> Add A Theme Park </h1>
+ <h1> Add A Rating </h1>
  <main>
     <p>Please enter the following information to add a rating to a theme park</p>
-    <form id = "theme_park_rating">
+    <form id = "theme_park_rating" method = 'POST' action = "/themepark/{{_id}}/ratings/addThemeParkRating">
         <label for="theme_park_staff">Staff Rating</label>
         <input type="number" name="theme_park_staff" id="theme_park_staff">
         <br>

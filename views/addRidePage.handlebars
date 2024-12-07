@@ -3,10 +3,10 @@
     Add a ride -> comes from add button in ridePage
   --}}
  
- <h1> Add A Report </h1>
+ <h1> Add A Ride </h1>
  <main>
     <p>Please enter the following information to add a ride</p>
-    <form id = "ride">
+    <form id = "ride" method = 'POST' action = '/themepark/{{_id}}/rides/addRide'>
         <label for="ride_name">Ride Name</label>
         <input type="string" name="ride_name" id="ride_name">
         <br>
