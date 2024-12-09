@@ -14,6 +14,9 @@ const createRide = async (
     const themePark = await themeParkCollections.findOne({_id: themeParkId})
     if (themePark === null) throw `Error: there is no theme park with id ${id}`
 
+    const rideCollections = await rides();
+    const exist = await rideCollections.find({parkRideIsLocatedIn: themeParkId}).toArray()
+    if(exist.some((ride) => ride.rideName.toLowerCase() === rideName.toLowerCase())) throw "Error: a ride with that name already exists"    
     const newRide = {
         rideName: rideName, 
         parkRideIsLocatedIn: themeParkId,
@@ -23,7 +26,7 @@ const createRide = async (
         ratings: [],
         reports: []
     }
-    const rideCollections = await rides();
+
     const rideInfo = await rideCollections.insertOne(newRide);
     if(!rideInfo.acknowledged || !rideInfo.insertedId) throw "Error: could not add a new ride"
     const rideId = rideInfo.insertedId.toString()
