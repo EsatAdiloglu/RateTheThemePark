@@ -146,8 +146,8 @@ router.route('/:id/ratings/addThemeParkRating')
     
     try{
         const user = await userData.getUserByUsername(req.session.user.userName)
-        const {theme_park_staff, theme_park_cleanliness, theme_park_crowds, theme_park_diversity} = newthemeParkRatingInfo
-        await themeParkRatingData.createThemeParkRating(user._id.toString(), req.params.id, theme_park_staff, theme_park_cleanliness, theme_park_crowds, theme_park_diversity)
+        const {theme_park_staff, theme_park_cleanliness, theme_park_crowds, theme_park_diversity, theme_park_review} = newthemeParkRatingInfo
+        await themeParkRatingData.createThemeParkRating(user.userName, req.params.id, theme_park_staff, theme_park_cleanliness, theme_park_crowds, theme_park_diversity, theme_park_review)
 
         //replace this with where you want to render to
         return res.status(200).render("addThemeParkRatingPage")
@@ -296,7 +296,7 @@ router.route('/:id/rides/:rideid/addRating')
     try {
         const user = await userData.getUserByUsername(req.session.user.userName)
         const {ride_waittime, ride_comfortability, ride_enjoyment, ride_review} = newRideRatingInfo
-        await rideRatingData.createRideRating(user._id, req.params.rideid, ride_waittime, ride_comfortability, ride_enjoyment, ride_review)
+        await rideRatingData.createRideRating(user.userName, req.params.rideid, ride_waittime, ride_comfortability, ride_enjoyment, ride_review)
 
         //replace this with where you want to render to
         return res.status(200).render("addRideRatingPage")
@@ -397,7 +397,7 @@ router.route('/:id/foodstalls/:foodstallid/addRating')
     try{
         const user = await userData.getUserByUsername(req.session.user.userName)
         const {food_quality, food_wait_time, food_stall_review} = newFoodStallRatingInfo
-        await foodStallRatingData.createFoodStallRating(user._id, req.params.foodstallid, food_quality, food_wait_time, food_stall_review)
+        await foodStallRatingData.createFoodStallRating(user.userName, req.params.foodstallid, food_quality, food_wait_time, food_stall_review)
 
         //replace this with where you want to render to
         return res.status(200).render("addFoodStallRatingPage")
