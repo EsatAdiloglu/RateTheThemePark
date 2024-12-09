@@ -48,30 +48,7 @@ const getRideById = async (id) => {
 }
 
 const getRidesByThemePark = async (id) => {
-    // id = helper.checkString(id); 
-    // if (!ObjectId.isValid(id)) throw "Error: id isn't an object id";
-    // id = new ObjectId(id);
-
-    // const rideRatingCollections = await rideratings();
-    // const rideRatings = await rideRatingCollections.find({ rideId: id }).toArray(); 
-    // if (!rideRatings || rideRatings.length === 0)
-    //     throw `Error: no ride ratings found for ride with id ${id}`;
-
-    // return rideRatings.map((rating) => ({
-    //     ...rating,
-    //     _id: rating._id.toString(),
-    //     userId: rating.userId.toString(),
-    //     rideId: rating.rideId.toString(),
-    // }));
-
-
-    // if (!ObjectId.isValid(id)) throw "Invalid theme park ID";
-    // const rideCollection = await rides();
-    // const themeParkRides = await rideCollection.find({themeParkId: new ObjectId(themeParkId)}).toArray();
-    // if (!themeParkRides.length) throw "No rides found for the specified theme park";
-    // return themeParkRides;
-
-    
+        
     if (!ObjectId.isValid(id)) throw "Invalid Theme Park ID";
 
     const rideCollection = await rides();
