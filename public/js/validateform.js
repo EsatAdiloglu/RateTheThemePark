@@ -1,5 +1,134 @@
 let addthemeparkform = document.getElementById('tp'); //a
+let nameInput = document.getElementById('theme_park_name');
+let streetInput = document.getElementById('theme_park_street');
+let cityInput = document.getElementById('theme_park_city');
+let stateInput = document.getElementById('theme_park_state');
+
+function validString(string, min) {
+    if (typeof(string) === 'undefined') {
+        throw   `You must enter input`;
+    } else if (typeof(string) !== 'string') {
+        throw `Input must be a text value`;
+    } else if (string.length() < min ) {
+        throw `Input must be at least ${min} characters` 
+    }
+}
+
+if (addthemeparkform) {
+    addthemeparkform.addEventListener('submit', (event) => {
+    const errors = [];
+    try {
+        validString(nameInput.value, 2);
+    } catch (e) {
+        if (!errors.includes(e)) {
+            errors.push(e);
+        }
+    }
+    try {
+        validString(streetInput.value, 5);
+    } catch (e) {
+        if (!errors.includes(e)) {
+            errors.push(e);
+        }
+    }
+    try {
+        validString(cityInput.value, 2);
+    } catch (e) {
+        if (!errors.includes(e)) {
+            errors.push(e);
+        }
+    }
+    try {
+        validString(stateInput.value, 2);
+    } catch (e) {
+        if (!errors.includes(e)) {
+            errors.push(e);
+        }
+    }
+    if (errors.length > 0) {
+        const existingul = document.getElementById('myul');
+        if (existingul) {
+            existingul.remove();
+        }
+        let myUL = document.getElementById('myul');
+        myUL.id = 'myul';
+        event.preventDefault();
+              for (let i = 0; i < errors.length; i++) {
+                let myLi = document.createElement('li');
+                myLi.classList.add('error');
+                myLi.innerHTML = errors[i];
+                myUL.appendChild(myLi);
+              }
+              addthemeparkform.appendChild(myUL);
+    }
+  });
+}
+
 let addthemeparkratingform = document.getElementById('tprating') //a
+let staffInput = document.getElementById('theme_park_staff');
+let cleanlinessInput = document.getElementById('theme_park_cleanliness');
+let crowdsInput = document.getElementById('theme_park_crowds');
+let diversityInput = document.getElementById('theme_park_diversity');
+
+function validRating(rating) {
+    if (typeof(rating) === 'undefined') {
+        throw   `You must enter rating`;
+    } else if (typeof(rating) !== 'integer') {
+        throw `Rating must be a numerical value`;
+    } else if (rating < 1 || rating > 10) {
+        throw `Rating must be between 1-10`; 
+    }
+}
+
+if (addthemeparkratingform) {
+    addthemeparkratingform.addEventListener('submit', (event) => {
+    const errors = [];
+    try {
+        validRating(staffInput.value, 2);
+    } catch (e) {
+        if (!errors.includes(e)) {
+            errors.push(e);
+        }
+    }
+    try {
+        validRating(cleanlinessInput.value, 5);
+    } catch (e) {
+        if (!errors.includes(e)) {
+            errors.push(e);
+        }
+    }
+    try {
+        validRating(crowdsInput.value, 2);
+    } catch (e) {
+        if (!errors.includes(e)) {
+            errors.push(e);
+        }
+    }
+    try {
+        validRating(diversityInput.value, 2);
+    } catch (e) {
+        if (!errors.includes(e)) {
+            errors.push(e);
+        }
+    }
+    if (errors.length > 0) {
+        const existingul = document.getElementById('myul');
+        if (existingul) {
+            existingul.remove();
+        }
+        let myUL = document.getElementById('myul');
+        myUL.id = 'myul';
+        event.preventDefault();
+              for (let i = 0; i < errors.length; i++) {
+                let myLi = document.createElement('li');
+                myLi.classList.add('error');
+                myLi.innerHTML = errors[i];
+                myUL.appendChild(myLi);
+              }
+              addthemeparkratingform.appendChild(myUL);
+    }
+  });
+}
 
 function commenthelper(cmt){
     if (!cmt) throw "Comment not there";
@@ -9,7 +138,7 @@ function commenthelper(cmt){
     if (cmt.length < 5) throw "Comment too short";
 }
 let addthemeparkcommentform = document.getElementById('tpcomment') 
-let themeparkcomment = document.getElementById('theme_park_comment')
+let themeparkcomment = document.getElementById('theme_park_comment') 
 if (addthemeparkcommentform){
     addthemeparkcommentform.addEventListener('submit', (event) => {
         const errors = [];
@@ -42,7 +171,84 @@ if (addthemeparkcommentform){
 }
 
 let addrideform = document.getElementById('addride') //a
+let rideNameInput = document.getElementById('ride_name');
+if (addrideform) {
+    addrideform.addEventListener('submit', (event) => {
+    const errors = [];
+    try {
+        validString(rideNameInput.value, 2);
+    } catch (e) {
+        if (!errors.includes(e)) {
+            errors.push(e);
+        }
+    }
+    if (errors.length > 0) {
+        const existingul = document.getElementById('myul');
+        if (existingul) {
+            existingul.remove();
+        }
+        let myUL = document.getElementById('myul');
+        myUL.id = 'myul';
+        event.preventDefault();
+              for (let i = 0; i < errors.length; i++) {
+                let myLi = document.createElement('li');
+                myLi.classList.add('error');
+                myLi.innerHTML = errors[i];
+                myUL.appendChild(myLi);
+              }
+              addrideform.appendChild(myUL);
+    }
+  });
+}
+
+
 let addrideratingform = document.getElementById('riderating') //a
+let rideWaitTimeInput = document.getElementById('ride_waittime');
+let comfortabilityInput = document.getElementById('ride_comfortability');
+let enjoymentInput = document.getElementById('ride_enjoyment');
+
+if (addrideratingform) {
+    addrideratingform.addEventListener('submit', (event) => {
+    const errors = [];
+    try {
+        validRating(rideWaitTimeInput.value, 2);
+    } catch (e) {
+        if (!errors.includes(e)) {
+            errors.push(e);
+        }
+    }
+    try {
+        validRating(comfortabilityInput.value, 5);
+    } catch (e) {
+        if (!errors.includes(e)) {
+            errors.push(e);
+        }
+    }
+    try {
+        validRating(enjoymentInput.value, 2);
+    } catch (e) {
+        if (!errors.includes(e)) {
+            errors.push(e);
+        }
+    }
+    if (errors.length > 0) {
+        const existingul = document.getElementById('myul');
+        if (existingul) {
+            existingul.remove();
+        }
+        let myUL = document.getElementById('myul');
+        myUL.id = 'myul';
+        event.preventDefault();
+              for (let i = 0; i < errors.length; i++) {
+                let myLi = document.createElement('li');
+                myLi.classList.add('error');
+                myLi.innerHTML = errors[i];
+                myUL.appendChild(myLi);
+              }
+              addrideratingform.appendChild(myUL);
+    }
+  });
+}
 
 
 let addridecommentform = document.getElementById('ridecomment')
@@ -80,7 +286,83 @@ if (addridecommentform){
 
 
 let addfoodstallform = document.getElementById('addfoodstall') //a
+let foodStallNameInput = document.getElementById('food_stall_name');
+let foodServedInput = document.getElementById('foods_served');
+if (addfoodstallform) {
+    addfoodstallform.addEventListener('submit', (event) => {
+    const errors = [];
+    try {
+        validString(foodStallNameInput.value, 2);
+    } catch (e) {
+        if (!errors.includes(e)) {
+            errors.push(e);
+        }
+    }
+    try {
+        validString(foodServedInput.value, 2);
+    } catch (e) {
+        if (!errors.includes(e)) {
+            errors.push(e);
+        }
+    }
+    if (errors.length > 0) {
+        const existingul = document.getElementById('myul');
+        if (existingul) {
+            existingul.remove();
+        }
+        let myUL = document.getElementById('myul');
+        myUL.id = 'myul';
+        event.preventDefault();
+              for (let i = 0; i < errors.length; i++) {
+                let myLi = document.createElement('li');
+                myLi.classList.add('error');
+                myLi.innerHTML = errors[i];
+                myUL.appendChild(myLi);
+              }
+              addfoodstallform.appendChild(myUL);
+    }
+  });
+}
+
 let addfoodstallrating = document.getElementById('foodstallrating'); //a
+let foodQualityInput = document.getElementById('food_quality');
+let foodWaitTimeInput = document.getElementById('food_wait_time');
+
+if (addfoodstallrating) {
+    addfoodstallrating.addEventListener('submit', (event) => {
+    const errors = [];
+    try {
+        validRating(foodQualityInput.value, 2);
+    } catch (e) {
+        if (!errors.includes(e)) {
+            errors.push(e);
+        }
+    }
+    try {
+        validRating(foodWaitTimeInput.value, 5);
+    } catch (e) {
+        if (!errors.includes(e)) {
+            errors.push(e);
+        }
+    }
+    if (errors.length > 0) {
+        const existingul = document.getElementById('myul');
+        if (existingul) {
+            existingul.remove();
+        }
+        let myUL = document.getElementById('myul');
+        myUL.id = 'myul';
+        event.preventDefault();
+              for (let i = 0; i < errors.length; i++) {
+                let myLi = document.createElement('li');
+                myLi.classList.add('error');
+                myLi.innerHTML = errors[i];
+                myUL.appendChild(myLi);
+              }
+              addfoodstallrating.appendChild(myUL);
+    }
+  });
+}
 
 
 let addfoodstallcommentform = document.getElementById('foodstallcomment')
