@@ -208,9 +208,24 @@ router.route('/:id/rides/addRide')
 // NESTED stuff, render the ridePage for the get, get the themepark by id, get the indivdiual ride of themepark (ride id req.params.id and return specific ride object ) for the ride page 
 // validate that rideid is in theme park
 // access ride collections to get the speific ride  `
+// COMPLETED FOR NOW
 router.route('/:id/rides/:rideid')
 .get(async(req, res) => {
-    res.render('ridePage')
+    // res.render('ridePage')
+    try {
+        const themeParkId = helper.checkId(req.params.id, "Theme Park ID");
+        const rideId = helper.checkId(req.params.rideid, "Ride ID");
+
+        const ride = await rideData.getRideById(rideId);
+
+        if (ride.themeParkId.toString() !== themeParkId) {
+            throw `Ride with ID ${rideId} does not belong to Theme Park with ID ${themeParkId}`;
+        }
+        
+        res.render('ridePage', {ride});
+    } catch (e) {
+        res.status(400).json({error: e});
+    }
 })
 
 // get the themepark id, get the rides id indivudial ride idea, return the array of ratings for the specific rides 

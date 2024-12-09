@@ -69,6 +69,32 @@ const getRideRatingById = async (id) => {
 }
 
 const getRideRatingsByRide = async (id) => {
-    pass
+    if (!ObjectId.isValid(id)) throw "Invalid Ride ID";
+
+    const rideRatingCollection = await rideratings();
+    const ratings = await rideRatingCollection.find({rideID: new ObjectId(id)}).toArray();
+
+    if (ratings.length === 0) {
+        return {
+            rideID: id,
+            ratings: []
+        };
+    }
+
+    const formattedRideRatings = ratings.map(rating => ({
+        _id: rating._id.toString(),
+        userID: rating.userID.toString(),
+        waitTimeRating: rating.waitTimeRating,
+        comfortabilityRating: rating.comfortabilityRating,
+        enjoymentAndExperienceRating: rating.enjoymentAndExperienceRating,
+        review: rating.review,
+        comments: rating.comments, //rating.comments.map(commentId => commentId.toString()),
+        reports: rating.reports //rating.reports.map(reportId => reportId.toString())
+    }));
+
+    return {
+        rideID: id,
+        ratings: formattedRideRatings
+    };
 }
 export default {createRideRating, getRideRatingById}

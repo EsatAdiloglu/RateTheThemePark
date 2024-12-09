@@ -65,4 +65,33 @@ const getFoodStallRatingById = async (id) => {
     return foodStallRating
 }
 
+const getFoodStallRatings = async (id) => {
+    if (!ObjectId.isValid(id)) throw "Invalid Food Stall ID";
+
+    const foodStallRatingCollection = await foodstallratings();
+    const ratings = await foodStallRatingCollection.find({foodStallID: new ObjectId(id)}).toArray();
+
+    if (ratings.length === 0) {
+        return {
+            foodStallID: id,
+            ratings: []
+        };
+    }
+
+    const formattedFoodStallRatings = ratings.map(rating => ({
+        _id: rating._id.toString(),
+        userID: rating.userID.toString(),
+        foodQualityRating: rating.foodQualityRating,
+        waitTimeRating: rating.waitTimeRating,
+        review: rating.review,
+        comments: rating.comments, //rating.comments.map(commentId => commentId.toString()),
+        reports: rating.reports //rating.reports.map(reportId => reportId.toString())
+    }));
+
+    return {
+        foodStallID: id,
+        ratings: formattedFoodStallRatings
+    }; 
+}
+
 export default {createFoodStallRating, getFoodStallRatingById}

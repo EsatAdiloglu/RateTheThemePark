@@ -72,8 +72,35 @@ const getThemeParkRatingById = async (id) => {
     return themeParkRating
 }
 
-const getThemeParkRatings = async (ids) => {
-    pass
+const getThemeParkRatings = async (id) => {
+    if (!ObjectId.isValid(id)) throw "Invalid Theme Park ID";
+
+    const themeParkRatingCollection = await themeparkratings();
+    const ratings = await themeParkRatingCollection.find({themeParkID: new ObjectId(id)}).toArray();
+
+    if (ratings.length === 0) {
+        return {
+            themeParkID: id,
+            ratings: []
+        };
+    }
+
+    const formattedThemeRatings = ratings.map(rating => ({
+        _id: rating._id.toString(),
+        userID: rating.userID.toString(),
+        staffRating: rating.staffRating,
+        cleanlinessRating: rating.cleanlinessRating,
+        crowdsRating: rating.crowdsRating,
+        diversityRating: rating.diveristyRating,
+        review: rating.review,
+        comments: rating.comments, //rating.comments.map(commentId => commentId.toString()),
+        reports: rating.reports //rating.reports.map(reportId => reportId.toString())
+    }));
+
+    return {
+        themeParkID: id,
+        ratings: formattedThemeRatings
+    };
 }
 
 export default {createThemeParkRating, getThemeParkRatingById}
