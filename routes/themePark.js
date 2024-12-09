@@ -161,22 +161,28 @@ router.route('/:id/ratings/addThemeParkRating')
 router.route('/:id/comments')
 .get(async (req, res) => {
     // get the themepark by id function and then render the comments
-    const themeParkId = req.params.id;
+    const themePark3 = req.params.id;
 
     try {
-        const validatedId = helper.checkId(themeParkId, 'id');
-        const themePark = await themeParkData.getThemeParkById(validatedId);
-        const themeParkComments = await commentsData.getComments(validatedId);
+        const themeParkComment = helper.checkId(themePark3, 'id');
+        req.params.id = validatedId;
+    } catch (e) {
+        return res.status(400).json({error: e});
+    }
 
-        return res.status(200).render('themeParkCommentsPage', {
+    try {
+        const themePark = await themeParkData.getThemeParkById(req.params.id);
+        console.log('Theme Park', themePark);
+        const themeParkComments = await commentsData.getComments(req.params.id);
+        return res.status(200).render('themeParkCommentPage', {
             themepark: themePark,
-            comments: themeParkComments,
+            comments: themeParkComments.comments,
         });
     } catch (e) {
         return res.status(400).json({error: e});
     }
 })
-// get: render the themepark page using the id post: check the validty of the argymetns, create a coment document, and push that comment into the theme park array 
+// get: render the themepark page using the id post: check the validty of the argumetns, create a coment document, and push that comment into the theme park array 
 router.route('/:id/comments/addThemeParkComment')
 .get(async (req, res) => {
     res.render('addThemeParkCommentPage', {themeParkId: req.params.id})
