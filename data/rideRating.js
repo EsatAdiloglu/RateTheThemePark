@@ -12,15 +12,15 @@ const createRideRating = async (
     review
 ) => {
     userName = helper.checkString(userName)
-
     const userCollections = await users();
     const user = await userCollections.findOne({userName: userName})
     if (user === null) throw `Error: there is no user with username ${userName}`
 
     rideId = helper.checkString(rideId)
     if(!ObjectId.isValid(rideId)) throw `Error: id isn't an object id`
+    const rideObjectId = new ObjectId(rideId)
     const rideCollections = await rides();
-    const ride = await rideCollections.findOne({_id: rideId})
+    const ride = await rideCollections.findOne({_id: rideObjectId})
     if (ride === null) throw `Error: there is no ride with id ${rideId}`
 
     helper.checkRating(waitTimeRating)
@@ -46,7 +46,7 @@ const createRideRating = async (
     const ratingId = rideRatingInfo.insertedId.toString()
 
     const updateRideRating = {ratings: [...ride.ratings, ratingId]}
-    const updateRideResult = await rideRatingCollections.findOneAndUpdate({_id: rideId}, {$set: updateRideRating})
+    const updateRideResult = await rideRatingCollections.findOneAndUpdate({_id: rideObjectId}, {$set: updateRideRating})
     if(!updateRideResult) throw "Error: could not add rating to ride"
 
     const updateUserRating = {rideRatings: [...user.rideRatings, ratingId]}
@@ -71,18 +71,18 @@ const getRideRatingsByRide = async (id) => {
     if (!ObjectId.isValid(id)) throw "Invalid Ride ID";
 
     const rideRatingCollection = await rideratings();
-    const ratings = await rideRatingCollection.find({rideID: new ObjectId(id)}).toArray();
+    const ratings = await rideRatingCollection.find({rideId: id}).toArray();
 
     if (ratings.length === 0) {
         return {
-            rideID: id,
+            rideId: id,
             ratings: []
         };
     }
 
     const formattedRideRatings = ratings.map(rating => ({
         _id: rating._id.toString(),
-        userID: rating.userID.toString(),
+        userName: rating.userName,
         waitTimeRating: rating.waitTimeRating,
         comfortabilityRating: rating.comfortabilityRating,
         enjoymentAndExperienceRating: rating.enjoymentAndExperienceRating,
@@ -92,8 +92,8 @@ const getRideRatingsByRide = async (id) => {
     }));
 
     return {
-        rideID: id,
+        rideId: id,
         ratings: formattedRideRatings
     };
 }
-export default {createRideRating, getRideRatingById}
+export default {createRideRating, getRideRatingById, getRideRatingsByRide}

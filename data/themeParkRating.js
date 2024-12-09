@@ -18,10 +18,10 @@ const createThemeParkRating = async (
 
     themeParkId = helper.checkString(themeParkId)
     if(!ObjectId.isValid(themeParkId)) throw "Error: id isn't an object id"
-    themeParkId = new ObjectId(themeParkId)
+    const themeParkObjectId = new ObjectId(themeParkId)
     const themeParkCollections = await themeparks();
-    const themePark = await themeParkCollections.findOne({_id: themeParkId})
-    if (themePark === null) throw `Error: there is no theme park with id ${id}`
+    const themePark = await themeParkCollections.findOne({_id: themeParkObjectId})
+    if (themePark === null) throw `Error: there is no theme park with id ${themeParkId}`
 
     helper.checkRating(staffRating)
     helper.checkRating(cleanlinessRating)
@@ -48,7 +48,7 @@ const createThemeParkRating = async (
     const ratingID = themeParkRatingInfo.insertedId.toString()
 
     const updateThemeRating = {ratings: [...themePark.ratings, ratingID]}
-    const updateThemeResult = await themeParkCollections.findOneAndUpdate({_id: themeParkId},{$set: updateThemeRating})
+    const updateThemeResult = await themeParkCollections.findOneAndUpdate({_id: themeParkObjectId},{$set: updateThemeRating})
     if(!updateThemeResult) throw "Error: could not add rating to themepark"
 
     const updateUserRating = {themeParkRatings: [...user.themeParkRatings, ratingID]}
@@ -74,7 +74,7 @@ const getThemeParkRatings = async (id) => {
     if (!ObjectId.isValid(id)) throw "Invalid Theme Park ID";
 
     const themeParkRatingCollection = await themeparkratings();
-    const ratings = await themeParkRatingCollection.find({themeParkID: new ObjectId(id)}).toArray();
+    const ratings = await themeParkRatingCollection.find({themeParkId: id}).toArray();
 
     if (ratings.length === 0) {
         return {
@@ -85,7 +85,7 @@ const getThemeParkRatings = async (id) => {
 
     const formattedThemeRatings = ratings.map(rating => ({
         _id: rating._id.toString(),
-        userID: rating.userID.toString(),
+        userName: rating.userName,
         staffRating: rating.staffRating,
         cleanlinessRating: rating.cleanlinessRating,
         crowdsRating: rating.crowdsRating,

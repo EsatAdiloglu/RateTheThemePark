@@ -55,12 +55,12 @@ const createComment = async (
 const getComments = async (id) => {
     id = helper.checkId(id)
 
-    let collection = undefined
+
 
     const commentCollections = await comments();
-    const comments = await commentCollections.find({placeId: new ObjectId(id)}).toArray();
+    const commentArray = await commentCollections.find({placeId: new ObjectId(id)}).toArray();
 
-    const formattedComments = comments.map((comment) => ({
+    const formattedComments = commentArray.map((comment) => ({
         _id: comment._id.toString(),
         userName: comment.userName,
         thingId: comment.thingId,
