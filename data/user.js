@@ -99,7 +99,7 @@ export const signInUser = async(username, password) => {
 const getUserByUsername = async (userName) => {
     userName = helper.checkString(userName);
     const userCollection = await users(); 
-    const user = await userCollection.findOne({ username: userName.toLowerCase() }); 
+    const user = await userCollection.findOne({ userName: userName.toLowerCase() }); 
     if (!user) throw `Error: User with username '${userName}' not found.`;
     user._id = user._id.toString(); 
     return user;

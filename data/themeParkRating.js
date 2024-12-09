@@ -13,10 +13,9 @@ const createThemeParkRating = async (
 ) => {
     userId = helper.checkString(userId)
     if(!ObjectId.isValid(userId)) throw "Error: id isn't an object id"
-    userId = new ObjectId(userId)
     const userCollections = await users();
-    const user = await userCollections.findOne({_id: userId})
-    if (user === null) throw `Error: there is no user with id ${id}`
+    const user = await userCollections.findOne({_id: new ObjectId(userId)})
+    if (user === null) throw `Error: there is no user with id ${userId}`
 
     themeParkId = helper.checkString(themeParkId)
     if(!ObjectId.isValid(themeParkId)) throw "Error: id isn't an object id"
@@ -29,7 +28,6 @@ const createThemeParkRating = async (
     helper.checkRating(cleanlinessRating)
     helper.checkRating(crowdsRating)
     helper.checkRating(diversityRating)
-    review = helper.checkString(review)
 
     const newThemeParkRating = {
         userId: userId,
@@ -38,7 +36,6 @@ const createThemeParkRating = async (
         cleanlinessRating: cleanlinessRating,
         crowdsRating: crowdsRating,
         diversityRating: diversityRating,
-        review: review,
         comments: [],
         reports: []
     }
@@ -50,14 +47,14 @@ const createThemeParkRating = async (
     const ratingID = themeParkRatingInfo.insertedId.toString()
 
     const updateThemeRating = {ratings: [...themePark.ratings, ratingID]}
-    const updateThemeResult = await themeParkCollections.findOneAndUpdate({_id: themeParkId},{$set: updateThemeRating})
+    const updateThemeResult = await themeParkCollections.findOneAndUpdate({_id: new ObjectId(themeParkId)},{$set: updateThemeRating})
     if(!updateThemeResult) throw "Error: could not add rating to themepark"
 
     const updateUserRating = {themeParkRatings: [...user.themeParkRatings, ratingID]}
-    const updateUserResult = await userCollections.findOneAndUpdate({_id: userId},{$set: updateUserRating})
+    const updateUserResult = await userCollections.findOneAndUpdate({_id: new ObjectId(userId)},{$set: updateUserRating})
     if(!updateUserResult) throw "Error: could not add rating to user"
     
-    return await getThemeParkRatingById(ratingId);
+    return await getThemeParkRatingById(ratingID);
 
 
 }
@@ -92,7 +89,6 @@ const getThemeParkRatings = async (id) => {
         cleanlinessRating: rating.cleanlinessRating,
         crowdsRating: rating.crowdsRating,
         diversityRating: rating.diversityRating,
-        review: rating.review,
         comments: rating.comments, //rating.comments.map(commentId => commentId.toString()),
         reports: rating.reports //rating.reports.map(reportId => reportId.toString())
     }));

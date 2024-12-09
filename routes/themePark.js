@@ -146,13 +146,14 @@ router.route('/:id/ratings/addThemeParkRating')
     
     try{
         const user = await userData.getUserByUsername(req.session.user.userName)
-        const {theme_park_staff, theme_park_cleanliness, theme_park_crowds, theme_park_diversity, theme_park_review} = newthemeParkRatingInfo
-        await themeParkRatingData.createThemeParkRating(user._id, req.params.id, theme_park_staff, theme_park_cleanliness, theme_park_crowds, theme_park_diversity, theme_park_review)
+        const {theme_park_staff, theme_park_cleanliness, theme_park_crowds, theme_park_diversity} = newthemeParkRatingInfo
+        await themeParkRatingData.createThemeParkRating(user._id.toString(), req.params.id, theme_park_staff, theme_park_cleanliness, theme_park_crowds, theme_park_diversity)
 
         //replace this with where you want to render to
         return res.status(200).render("addThemeParkRatingPage")
     }
     catch(e){
+        console.log(e)
         return res.status(404).json({error: e})
     }
 })
