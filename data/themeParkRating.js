@@ -3,7 +3,7 @@ import helper from "../helper.js"
 import { themeparks, users, themeparkratings } from "../config/mongoCollections.js";
 
 const createThemeParkRating = async (
-    userId,
+    userName,
     themeParkId,
     staffRating,
     cleanlinessRating,
@@ -11,12 +11,10 @@ const createThemeParkRating = async (
     diversityRating,
     review
 ) => {
-    userId = helper.checkString(userId)
-    if(!ObjectId.isValid(userId)) throw "Error: id isn't an object id"
-    userId = new ObjectId(userId)
+    userName = helper.checkString(userName)
     const userCollections = await users();
-    const user = await userCollections.findOne({_id: userId})
-    if (user === null) throw `Error: there is no user with id ${id}`
+    const user = await userCollections.findOne({userName: userName})
+    if (user === null) throw `Error: there is no user with userName ${userName}`
 
     themeParkId = helper.checkString(themeParkId)
     if(!ObjectId.isValid(themeParkId)) throw "Error: id isn't an object id"
@@ -32,7 +30,7 @@ const createThemeParkRating = async (
     review = helper.checkString(review)
 
     const newThemeParkRating = {
-        userId: userId,
+        userName: userName,
         themeParkId: themeParkId,
         staffRating: staffRating,
         cleanlinessRating: cleanlinessRating,
@@ -54,10 +52,10 @@ const createThemeParkRating = async (
     if(!updateThemeResult) throw "Error: could not add rating to themepark"
 
     const updateUserRating = {themeParkRatings: [...user.themeParkRatings, ratingID]}
-    const updateUserResult = await userCollections.findOneAndUpdate({_id: userId},{$set: updateUserRating})
+    const updateUserResult = await userCollections.findOneAndUpdate({userName: userName},{$set: updateUserRating})
     if(!updateUserResult) throw "Error: could not add rating to user"
     
-    return await getThemeParkRatingById(ratingId);
+    return await getThemeParkRatingById(ratingID);
 
 
 }

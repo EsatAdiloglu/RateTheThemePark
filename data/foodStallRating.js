@@ -4,18 +4,17 @@ import { foodstallratings, foodstalls, users } from "../config/mongoCollections.
 
 
 const createFoodStallRating = async (
-    userId,
+    userName,
     foodStallId,
     foodQualityRating,
     waitTimeRating,
     review
 ) => {
-    userId = helper.checkString(userId)
-    if(!ObjectId.isValid(userId)) throw "Error: id isn't an object id"
-    userId = new ObjectId(userId)
+    userName = helper.checkString(userName)
+
     const userCollections = await users();
-    const user = await userCollections.findOne({_id: userId})
-    if (user === null) throw `Error: there is no user with id ${id}`
+    const user = await userCollections.findOne({userName: userName})
+    if (user === null) throw `Error: there is no user with username ${userName}`
 
     foodStallId = helper.checkString(foodStallId)
     if(!ObjectId.isValid(foodStallId)) throw `Error: id isn't an object id`
@@ -48,7 +47,7 @@ const createFoodStallRating = async (
     if(!updateFoodStallResult) throw "Error: could not add rating to food stall"
 
     const updateUserRating = {foodStallRatings: [...user.foodStallRatings, ratingId]}
-    const updateUserResult = await userCollections.findOneAndUpdate({_id: userId}, {$set: updateUserRating})
+    const updateUserResult = await userCollections.findOneAndUpdate({userName: userName}, {$set: updateUserRating})
     if(!updateUserResult) throw "Error: could not add rating to user"
 
     return await getFoodStallRatingById(ratingId)
