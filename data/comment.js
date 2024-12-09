@@ -1,7 +1,7 @@
 //testing other way of commit
 import {ObjectId} from "mongodb";
 import helper from "../helper.js"
-import { themeparks, comments, themeparkratings, rideratings, foodstallratings } from "../config/mongoCollections.js";
+import { themeparks, comments, rides, foodstalls } from "../config/mongoCollections.js";
 
 const createComment = async (
     userName,
@@ -18,13 +18,13 @@ const createComment = async (
     let collection = undefined
     switch(option){
         case 0:
-            collection = await themeparkratings();
+            collection = await themeparks();
             break;
         case 1:
-            collection = await rideratings();
+            collection = await rides();
             break;
         case 2:
-            collection = await foodstallratings();
+            collection = await foodstalls();
             break;
         case 3:
             //being added to comment
