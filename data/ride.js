@@ -52,7 +52,7 @@ const getRidesByThemePark = async (id) => {
     if (!ObjectId.isValid(id)) throw "Invalid Theme Park ID";
 
     const rideCollection = await rides();
-    const ridesarray = await rideCollection.find({themeParkId: new ObjectId(id)}).toArray();
+    const ridesarray = await rideCollection.find({parkRideIsLocatedIn: new ObjectId(id)}).toArray();
 
     if (ridesarray.length === 0) {
         return {
@@ -60,7 +60,6 @@ const getRidesByThemePark = async (id) => {
             rides: []
         };
     }
-
     const formattedRides = ridesarray.map(ride => ({
         _id: ride._id.toString(),
         rideName: ride.rideName,

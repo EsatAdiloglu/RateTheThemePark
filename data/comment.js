@@ -13,7 +13,7 @@ const createComment = async (
     thingId = helper.checkId(thingId)
     commentBody = helper.checkString(commentBody)
 
-    if(typeof option != number) throw "Error: option isn't of type number"
+    if(typeof option !== 'number') throw "Error: option isn't of type number"
     const commentCollections =  await comments();
     let collection = undefined
     switch(option){
