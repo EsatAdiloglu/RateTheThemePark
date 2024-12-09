@@ -16,6 +16,11 @@ router.route('/addthemepark')
     // need to validate fields before sending, need to validate in clientside as well
 })
 
+router.route('/comparethemepark')
+.get(async (req, res) => {
+    res.render('compareThemeParksPage', {parks: await themeParkData.getAllThemeParks()})
+})
+
 router.route('/listofthemeparks')
 .post(async (req, res) => {
     try {

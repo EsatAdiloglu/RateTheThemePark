@@ -67,4 +67,11 @@ const getThemeParksByLocation = async (name) => {
     })
     return res
 }
-export default {createThemePark, getThemeParkById, getThemeParksByName, getThemeParksByLocation}
+
+const getAllThemeParks = async () => {
+    const themeParkCollections = await themeparks();
+    const allThemeParks = await themeParkCollections.find().toArray();
+    return allThemeParks;
+}
+
+export default {createThemePark, getThemeParkById, getThemeParksByName, getThemeParksByLocation, getAllThemeParks}
