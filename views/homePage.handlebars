@@ -17,6 +17,14 @@
         <br>
         <button id = 'themeparksearchbutton'>Submit</button>
     </form>
+
+    <p>Want to search for a theme park by state name? Enter the state on the form below</p>
+    <form method = "POST" action = "/themepark/listofthemeparkslocation" id = "themeParkLocationForm">
+        <label for="themeParkLocationInput">State</label>
+        <input type="text" name="themeParkLocationInput" id="themeParkLocationInput">
+        <br>
+        <button id = 'themeparklocationbutton'>Submit</button>
+    </form>
     
     <p>Unable to find a theme park? Click this button to add a theme park!</p>
     <a href = "/themepark/addthemepark"><button>Add a Theme Park</button></a>

@@ -29,6 +29,19 @@ router.route('/listofthemeparks')
     }
 });
 
+router.route('/listofthemeparkslocation')
+.post(async (req, res) => {
+    try {
+        const themeParkLocationInput = req.body.themeParkLocationInput;
+        // need to validate fields before sending, need to validate in clientside as well
+        const newThemePark = await themeParkData.getThemeParksByLocation(themeParkLocationInput);
+        res.render("listOfThemeParks", { parks: newThemePark })
+
+    } catch (e) {
+        res.status(400).json({error: e});
+    }
+});
+
 router.route('/:id')
 .get(async (req, res) => {
     // Renders the invididual themePark page 

@@ -1,0 +1,12 @@
+<h1>Theme parks found</h1>
+<main>
+    <ol>
+        {{#each parks}}
+        <li>
+            <a href="/themepark/{{_id}}"> {{themeParkName}} </a>
+            <br>
+            {{stateOrRegion}} 
+        </li>
+        {{/each}}
+    </ol>
+</main>
