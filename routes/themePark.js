@@ -47,7 +47,6 @@ router.route('/addthemepark')
         );
         return res.status(200).json(result); // returned as a json so far
     } catch (e) {
-        console.error(e);
         return res.status(404).json({error: e});
     }
 });
@@ -82,7 +81,7 @@ router.route('/:id')
         return res.status(400).json({error: e})
     }
     
-    try{
+    try{ 
         const themePark = await themeParkData.getThemeParkById(req.params.id)
         return res.status(200).render('themeParkPage', {themepark: themePark})
     }
@@ -129,7 +128,7 @@ router.route('/:id/ratings/addThemeParkRating')
     // TODO:
     // add the rating to the theme park ratings
     const newthemeParkRatingInfo = req.body
-    if(!newthemeParkRatingInfo || Object.keys(newthemeParkRatingInfo).length < 1) 
+    if(!newthemeParkRatingInfo || Object.keys(newthemeParkRatingInfo).length < 1) return res.status(400).json({error: "The request body is empty"})
     try{
         req.params.id = helper.checkId(req.params.id,"id")
 
@@ -150,7 +149,7 @@ router.route('/:id/ratings/addThemeParkRating')
         await themeParkRatingData.createThemeParkRating(user._id, req.params.id, theme_park_staff, theme_park_cleanliness, theme_park_crowds, theme_park_diversity, theme_park_review)
 
         //replace this with where you want to render to
-        return res.status(200).json({message: "Success"})
+        return res.status(200).render("addThemeParkRatingPage")
     }
     catch(e){
         return res.status(404).json({error: e})
@@ -213,7 +212,7 @@ router.route('/:id/rides/addRide')
         await rideData.createRide(req.params.id, newRideInfo.ride_name)
 
         //replace this with where you want to render to
-        return res.status(200).json({message: "Success"})
+        return res.status(200).render("addRidePage")
     }
     catch(e){
         return res.status(404).json({error:e})
@@ -263,9 +262,6 @@ router.route('/:id/rides/:rideid/ratings')
         return res.status(400).json({error:e});
     }
 })
-.post(async(req,res) => {
-    // NNED TO COMPLETE  
-})
 
 // render the addriderating page
 router.route('/:id/rides/:rideid/addRating')
@@ -298,7 +294,7 @@ router.route('/:id/rides/:rideid/addRating')
         await rideRatingData.createRideRating(user._id, req.params.rideid, ride_waittime, ride_comfortability, ride_enjoyment, ride_review)
 
         //replace this with where you want to render to
-        return res.status(200).json({message: "Success"})
+        return res.status(200).render("addRideRatingPage")
     }
     catch(e){
         return res.status(404).json({error: e})
@@ -355,7 +351,7 @@ router.route('/:id/foodstalls/addfoodstall')
         await foodStallData.createFoodStall(req.params.id, newFoodStallInfo.food_stall_name)
 
         //replace this with where you want to render to
-        return res.status(200).json({message: "Success"})
+        return res.status(200).render("addFoodStallPage")
     }
     catch(e){
         return res.status(404).json({error:e})
@@ -399,7 +395,7 @@ router.route('/:id/foodstalls/:foodstallid/addRating')
         await foodStallRatingData.createFoodStallRating(user._id, req.params.foodstallid, food_quality, food_wait_time, food_stall_review)
 
         //replace this with where you want to render to
-        return res.status(200).json({message: "Success"})
+        return res.status(200).render("addFoodStallRatingPage")
     }
     catch(e){
         return res.status(404).json({error:e})
