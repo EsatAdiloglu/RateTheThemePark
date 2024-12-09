@@ -23,6 +23,10 @@ Theme Park Rating Page (INDIVIDUAL THEME PARK)
   {{#each ratings}}
     <li>
       User: {{username}}, Staff: {{staffRating}}, Cleanliness: {{cleanlinessRating}}, Crowds: {{crowdsRating}}, Diversity: {{diversityRating}}, Review: {{review}}
+      <button id = "likeRideRating"> Like</button>
+      {{likes.length()}}
+      <button id = "dislikeRideRating"> Dislike</button>
+      {{dislikes.length()}}
     </li>
   {{/each}}
 </ul>

@@ -63,7 +63,7 @@ const getThemeParksByLocation = async (name) => {
     const allThemeParks = await themeParkCollections.find().toArray();
     const res = []
     allThemeParks.forEach((park) => {
-        if(park.stateOrRegion.toLowerCase().includes(name.toLowerCase())) res.push(park)
+        if(park.state.toLowerCase().includes(name.toLowerCase())) res.push(park)
     })
     return res
 }
