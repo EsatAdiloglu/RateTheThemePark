@@ -1,6 +1,7 @@
 import {Router} from "express"
 const router = Router();
 import themeParkData from "../data/themePark.js"; 
+import commentsData from '../data/comment.js';
 import themeParkRatingData from "../data/themeParkRating.js"
 import userData from "../data/user.js"
 import rideData from "../data/ride.js"
@@ -156,17 +157,43 @@ router.route('/:id/ratings/addThemeParkRating')
 router.route('/:id/comments')
 .get(async (req, res) => {
     // get the themepark by id function and then render the comments
+    const themeParkId = req.params.id;
+
+    try {
+        const validatedId = helper.checkId(themeParkId, 'id');
+        const themePark = await themeParkData.getThemeParkById(validatedId);
+        const themeParkComments = await commentsData.getComments(validatedId);
+
+        return res.status(200).render('themeParkCommentsPage', {
+            themepark: themePark,
+            comments: themeParkComments,
+        });
+    } catch (e) {
+        return res.status(400).json({error: e});
+    }
 })
 // get: render the themepark page using the id post: check the validty of the argymetns, create a coment document, and push that comment into the theme park array 
 router.route('/:id/comments/addThemeParkComment')
 .get(async (req, res) => {
-    res.render('addThemeParkCommentPage')
+    res.render('addThemeParkCommentPage', {themeParkId: req.params.id})
 })
 .post(async(req, res) => {
     // add the comment to the the theme park comments
-    // check the validity of the arguments, need to check clientside as well
+    const themeParkId = req.params.id;
+    const { userName, commentBody } = req.body;
+
+    try {
+        const validatedId = helper.checkId(themeParkId, 'id');
+        const validatedUserName = helper.checkString(userName, 'User Name');
+        const validatedCommentBody = helper.checkString(commentBody, 'Comment Body');
+
+        const newComment = await commentsData.createComment(validatedUserName, validatedId, validatedCommentBody, 0);
+
+        return res.status(200).redirect(`/themeparks/${themeParkId}/comments`);
+    } catch (e) {
+        return res.status(400).render('addThemeParkCommentPage', {error: e});
+    }
 })
-// -------------------------------------E OF COMMENTS---------------------------------------------
 
 // get the themepark by id, render the page, and send back the array of rides and include the id as well or returning the object is fine
 // {themeParkId: req.params.id, rides [ride1,ride2,...]}
