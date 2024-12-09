@@ -4,6 +4,7 @@ import ridefunc from "../data/ride.js"
 import userfunc from "../data/user.js"
 // import themeparksratingfunc from "../data/themeParkRating.js"
 import foodstallfunc from "../data/foodStall.js";
+import commentfunc from "../data/comment.js";
 // import {games} from '../data/games.js';
 
 const db = await dbConnection();

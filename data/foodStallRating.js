@@ -27,7 +27,7 @@ const createFoodStallRating = async (
     review = helper.checkString(review)
 
     const newFoodStallRating = {
-        userId: userId,
+        userName: userName,
         foodStallId: foodStallId,
         foodQualityRating: foodQualityRating,
         waitTimeRating: waitTimeRating,
