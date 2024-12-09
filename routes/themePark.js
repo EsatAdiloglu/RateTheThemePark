@@ -1,5 +1,6 @@
 import {Router} from "express"
 const router = Router();
+import commentData from "../data/comment.js";
 import themeParkData from "../data/themePark.js"; 
 import themeParkRatingData from "../data/themeParkRating.js"
 import userData from "../data/user.js"
@@ -160,6 +161,38 @@ router.route('/:id/ratings/addThemeParkRating')
 router.route('/:id/comments')
 .get(async (req, res) => {
     // get the themepark by id function and then render the comments
+    // try {
+    //     const id = req.params.id;
+    //     if (!ObjectId.isValid(id)) throw "Invalid theme park ID";
+
+    //     const commentsCollection = await comments();
+    //     const themeParkComments = await commentsCollection.find({ thingBeingCommentedOnID: new ObjectId(id) }).toArray();
+    //     return res.json(themeParkComments);
+    // } catch (e) {
+    //     return res.status(400).json({ error:e});
+    // }
+    const themeParkId = req.params.id;
+    
+    try {
+        const validatedId = helper.checkId(themeParkId, "id");
+        req.params.id = validatedId;
+    } catch (e) {
+        return res.status(400).json({ error: e });
+    }
+
+    try {
+        const themePark = await themeParkData.getThemeParkById(req.params.id);
+
+        const commentsCollection = await comments();
+        const themeParkComments = await commentsCollection.find({thingBeingCommentedOnID: new ObjectId(req.params.id)}).toArray();
+
+        return res.status(200).render('themeParkCommentsPage', {
+            themepark: themePark,
+            comments: themeParkComments
+        });
+    } catch (e) {
+        return res.status(404).json({ error: e });
+    }
 })
 // get: render the themepark page using the id post: check the validty of the argymetns, create a coment document, and push that comment into the theme park array 
 router.route('/:id/comments/addThemeParkComment')
