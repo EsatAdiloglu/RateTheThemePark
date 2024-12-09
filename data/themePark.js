@@ -16,7 +16,7 @@ const createThemePark = async (
     state = helper.checkState(state)
 
     const themeParkCollections = await themeparks();
-    const exist = await themeParkCollections.findOne().toArray()
+    const exist = await themeParkCollections.find().toArray()
     if(exist.some((themePark) => themePark.themeParkName.toLowerCase() === name.toLowerCase())) throw "Error: a theme park already exists with that name"
     const newThemePark = {
         themeParkName: name,
