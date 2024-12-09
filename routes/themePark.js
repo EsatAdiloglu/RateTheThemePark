@@ -158,13 +158,15 @@ router.route('/:id/comments')
 .get(async (req, res) => {
     // get the themepark by id function and then render the comments
     const themeParkId = req.params.id;
+    console.log('Here');
 
     try {
         const validatedId = helper.checkId(themeParkId, 'id');
         const themePark = await themeParkData.getThemeParkById(validatedId);
-        const themeParkComments = await commentsData.getComments(validatedId);
+        const themeParkComments = await commentsData.getComments(validatedId).comments;
 
-        return res.status(200).render('themeParkCommentsPage', {
+        return res.status(200).render('themeParkCommentPage', {
+            _id: req.params.id,
             themepark: themePark,
             comments: themeParkComments,
         });
@@ -175,7 +177,7 @@ router.route('/:id/comments')
 // get: render the themepark page using the id post: check the validty of the argymetns, create a coment document, and push that comment into the theme park array 
 router.route('/:id/comments/addThemeParkComment')
 .get(async (req, res) => {
-    res.render('addThemeParkCommentPage', {themeParkId: req.params.id})
+    res.render('addThemeParkCommentPage', {_id: req.params.id})
 })
 .post(async(req, res) => {
     // add the comment to the the theme park comments

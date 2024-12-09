@@ -58,9 +58,9 @@ const getComments = async (id) => {
     let collection = undefined
 
     const commentCollections = await comments();
-    const comments = await commentCollections.find({placeId: new ObjectId(id)}).toArray();
+    const commentsarray = await commentCollections.find({placeId: new ObjectId(id)}).toArray();
 
-    const formattedComments = comments.map((comment) => ({
+    const formattedComments = commentsarray.map((comment) => ({
         _id: comment._id.toString(),
         userName: comment.userName,
         thingId: comment.thingId,
