@@ -1,6 +1,6 @@
 import {ObjectId} from "mongodb";
 import helper from "../helper.js"
-import { themeparks } from "../config/mongoCollections.js";
+import { comments, themeparks } from "../config/mongoCollections.js";
 
 const createThemePark = async (
     name,
@@ -31,6 +31,7 @@ const createThemePark = async (
         rides: [],
         foodStalls: [],
         ratings: [],
+        comments: [],
         reports: []
     }
 

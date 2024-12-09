@@ -21,6 +21,7 @@ const createFoodStall = async (
         foodQualityRating: 0,
         waitTimeRating: 0,
         ratings: [],
+        comments: [],
         reports: []
     }
     const foodStallCollections = await foodstalls();

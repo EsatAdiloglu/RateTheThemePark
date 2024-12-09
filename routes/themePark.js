@@ -168,13 +168,14 @@ router.route('/:id/comments')
         return res.status(200).render('themeParkCommentPage', {
             _id: req.params.id,
             themepark: themePark,
-            comments: themeParkComments,
+            comments: themeParkComments.comments,
         });
     } catch (e) {
         return res.status(400).json({error: e});
     }
 })
-// get: render the themepark page using the id post: check the validty of the argymetns, create a coment document, and push that comment into the theme park array 
+// get: render the themepark page using the id post: check the validty of the argumetns, create a coment document, and push that comment into the theme park array 
+// get: render the themepark page using the id post: check the validty of the argumetns, create a coment document, and push that comment into the theme park array 
 router.route('/:id/comments/addThemeParkComment')
 .get(async (req, res) => {
     res.render('addThemeParkCommentPage', {_id: req.params.id})

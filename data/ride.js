@@ -24,6 +24,7 @@ const createRide = async (
         comfortabilityRating: 0,
         enjoymentAndExperienceRating: 0,
         ratings: [],
+        comments: [],
         reports: []
     }
 
