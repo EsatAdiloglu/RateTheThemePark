@@ -21,7 +21,7 @@ const checkId = (id, idName) => {
 }
 
 const checkState = (state) => {
-    state = checkString(state).toUpperCase();
+    state = checkString(state)
     const states = {
         "AL": "Alabama",
         "AK": "Alaska",
