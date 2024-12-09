@@ -1,5 +1,5 @@
 import {ObjectId} from "mongodb";
-import { themeparks, users } from "./config/mongoCollections";
+// import { themeparks, users } from "./config/mongoCollections";
 
 const checkString = (str) => {
     if (typeof str !== "string") throw "Error: str isn't of type string"
@@ -21,7 +21,7 @@ const checkId = (id, idName) => {
 }
 
 const checkState = (state) => {
-    state = checkString(state)
+    state = checkString(state).toUpperCase();
     const states = {
         "AL": "Alabama",
         "AK": "Alaska",
@@ -74,12 +74,17 @@ const checkState = (state) => {
         "WI": "Wisconsin",
         "WY": "Wyoming"
       }
-      if(states.hasOwnProperty(state)){
-        return states[state]
-      }
-      else{
-        throw "Error: state doesn't exist"
-      }
+
+      const abbreviateStates = Object.keys(states);
+      const fullNameStates = Object.values(states);
+      
+      if (abbreviateStates.includes(state.toUpperCase())) {
+        return states[state.toUpperCase()];
+    } else if (fullNameStates.includes(state)) {
+      return state; 
+    } else {
+        throw "Error: state doesn't exist";
+    }
 }
 const checkNumber = (num) => {
 

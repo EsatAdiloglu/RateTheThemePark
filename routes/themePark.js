@@ -20,62 +20,70 @@ router.route('/')
 });
 
 // adding a themepark, rendering the theme park, post: check all the fields, push the themepark into the themepark collection 
+// WORKS
 router.route('/addthemepark')
 .get(async (req, res) => {
     res.render('addThemeParkPage')
 })
 .post(async (req, res) => {
-    //add theme park
-    const newThemeParkInfo = req.body
-    if(!newThemeParkInfo || Object.keys(newThemeParkInfo).length < 1) return res.status(400).json({error: "The request body is empty"})
-    try{
-        newThemeParkInfo.theme_park_name = helper.checkString(newThemeParkInfo.theme_park_name)
-        newThemeParkInfo.theme_park_street = helper.checkString(newThemeParkInfo.theme_park_street)
-        newThemeParkInfo.theme_park_city = helper.checkString(newThemeParkInfo.theme_park_city)
-        newThemeParkInfo.theme_park_state = helper.checkState(newThemeParkInfo.theme_park_state)
+    const newThemeParkInfo = req.body;
+
+    if (!newThemeParkInfo || Object.keys(newThemeParkInfo).length === 0) {
+        return res.status(400).json({error:"The request body is empty"});
     }
-    catch(e){
-        return res.status(400).json({error:e})
+
+    try {
+        newThemeParkInfo.theme_park_name = helper.checkString(newThemeParkInfo.theme_park_name);
+        newThemeParkInfo.theme_park_street = helper.checkString(newThemeParkInfo.theme_park_street);
+        newThemeParkInfo.theme_park_city = helper.checkString(newThemeParkInfo.theme_park_city);
+        newThemeParkInfo.theme_park_state = helper.checkState(newThemeParkInfo.theme_park_state);
+
+        const result = await themeParkData.createThemePark(
+            newThemeParkInfo.theme_park_name,
+            newThemeParkInfo.theme_park_street,
+            newThemeParkInfo.theme_park_city,
+            'United States of America',
+            newThemeParkInfo.theme_park_state
+        );
+        return res.status(200).json(result); // returned as a json so far
+    } catch (e) {
+        console.error(e);
+        return res.status(404).json({error: e});
     }
-    try{
-        const {theme_park_name, theme_park_street, theme_park_city, theme_park_state} = newThemeParkInfo
-        await themeParkData.createThemePark(theme_park_name,theme_park_street,theme_park_city,"United States of America",theme_park_state)
-    }
-    catch(e){
-        return res.status(404).json({error:e})
-    }
-})
+});
 
 //post request
 //.post
-// get the input the user typed and send back an array of all the parks
+// get the input the user typed and send back an array of all the parks WORKS
 router.route('/listofthemeparks')
 .post(async (req, res) => {
     try {
          const themeParkInput = req.body.themeParkInput;
-         console.log(themeParkInput);
+        //  console.log(themeParkInput);
 
         const newThemePark = await themeParkData.getThemeParksByName(themeParkInput);
-        res.render("listOfThemeParks", { parks: newThemePark })
+        return res.status(200).render("listOfThemeParks", {parks: newThemePark})
 
     } catch (e) {
-        res.status(400).json({error: e});
+        return res.status(400).json({error: e});
     }
 });
 
-// renders the specific individal theme parks page, validity of the id, get the themeparkbyid function and send the object data back
+// renders the specific individal theme parks page, validity of the id, get the themeparkbyid function and send the object data back WORKS
 router.route('/:id')
 .get(async (req, res) => {
     // get the themepark by id function
-    try{
-        req.params.id = helper.checkId(req.params.id,"id")
+    const themePark = req.params.id;
 
-    }
-    catch(e){
+    try{
+        const themeParkIDCheck = helper.checkId(themePark,"id");
+        req.params.id = themeParkIDCheck; 
+    } catch(e){
         return res.status(400).json({error: e})
     }
+    
     try{
-        const themePark = themeParkData.getThemeParkById(req.params.id)
+        const themePark = await themeParkData.getThemeParkById(req.params.id)
         return res.status(200).render('themeParkPage', {themepark: themePark})
     }
     catch(e){
@@ -84,23 +92,30 @@ router.route('/:id')
     
 })
 
-// get the themeparkbyid validity check if its there, send back an array of ratings and the themepark id {themeparkid: id, rating: []}
+// get the themeparkbyid validity check if its there, send back an array of ratings and the themepark id {themeparkid: id, rating: []} NEED TO WORK ON THIS
 router.route('/:id/ratings')
 .get(async (req, res) => {
-    // get the themepark by id function, and then render the ratings page
-    try{
-        req.params.id = helper.checkId(req.params.id,"id")
-    }
-    catch(e){
-        return res.status(400).json({error: e})
-    }
-    try{
-        const themePark = themeParkData.getThemeParkById(req.params.id)
-        return res.status(200).render('themeParkRatingPage', {themepark: themePark})
-    }
-    catch(e){
-        return res.status(404).json({error:e})
-    }
+    const themePark2 = req.params.id;
+        try {
+            const themeParkRating = helper.checkId(themePark2,"id");
+            req.params.id = themeParkRating;
+        } catch (e) {
+            return res.status(400).json({error: e});
+        }
+    
+        // Fetch theme park and render ratings page
+        try {
+            const themePark = await themeParkData.getThemeParkById(req.params.id);
+            console.log('Theme Park:', themePark);
+            const ratingsData = await themeParkRatingData.getThemeParkRatings(req.params.id);
+    
+            return res.status(200).render('themeParkRatingPage', {
+                themepark: themePark,
+                ratings: ratingsData.ratings
+            });
+        } catch (e) {
+            return res.status(404).json({error: e});
+        }
 })
 
 // render that specific page of the themepark with the themepark, send back the themepark id as well 

@@ -105,4 +105,4 @@ const getUserByUsername = async (userName) => {
     return user;
 };
 
-//export default {createUser, getUserByUsername};
+export default {getUserByUsername};

@@ -91,7 +91,7 @@ const getThemeParkRatings = async (id) => {
         staffRating: rating.staffRating,
         cleanlinessRating: rating.cleanlinessRating,
         crowdsRating: rating.crowdsRating,
-        diversityRating: rating.diveristyRating,
+        diversityRating: rating.diversityRating,
         review: rating.review,
         comments: rating.comments, //rating.comments.map(commentId => commentId.toString()),
         reports: rating.reports //rating.reports.map(reportId => reportId.toString())
@@ -103,4 +103,4 @@ const getThemeParkRatings = async (id) => {
     };
 }
 
-export default {createThemeParkRating, getThemeParkRatingById}
+export default {createThemeParkRating, getThemeParkRatingById, getThemeParkRatings}
