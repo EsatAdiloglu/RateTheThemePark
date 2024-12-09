@@ -161,22 +161,18 @@ router.route('/:id/ratings/addThemeParkRating')
 router.route('/:id/comments')
 .get(async (req, res) => {
     // get the themepark by id function and then render the comments
-    const themePark3 = req.params.id;
+    const themeParkId = req.params.id;
+    console.log('Here');
 
     try {
-        const themeParkComment = helper.checkId(themePark3, 'id');
-        req.params.id = validatedId;
-    } catch (e) {
-        return res.status(400).json({error: e});
-    }
+        const validatedId = helper.checkId(themeParkId, 'id');
+        const themePark = await themeParkData.getThemeParkById(validatedId);
+        const themeParkComments = await commentsData.getComments(validatedId).comments;
 
-    try {
-        const themePark = await themeParkData.getThemeParkById(req.params.id);
-        console.log('Theme Park', themePark);
-        const themeParkComments = await commentsData.getComments(req.params.id);
         return res.status(200).render('themeParkCommentPage', {
+            _id: req.params.id,
             themepark: themePark,
-            comments: themeParkComments.comments,
+            comments: themeParkComments,
         });
     } catch (e) {
         return res.status(400).json({error: e});
@@ -189,20 +185,44 @@ router.route('/:id/comments/addThemeParkComment')
 })
 .post(async(req, res) => {
     // add the comment to the the theme park comments
-    const themeParkId = req.params.id;
-    const { userName, commentBody } = req.body;
+       const newThemeParkCommentInfo = req.body;
+       if (!newThemeParkCommentInfo || Object.keys(newThemeParkCommentInfo).length < 1) {
+           return res.status(400).json({error: "The request body is empty"});
+       }
+   
+       const {commentBody} = newThemeParkCommentInfo;
+       const userName = req.session.user.userName;
+   
+       try {
+           // Validate the theme park ID and input fields
+           req.params.id = helper.checkId(req.params.id, "id");
+           helper.checkString(userName)
+           helper.checkString(commentBody);
+       } catch (e) {
+           return res.status(400).json({error: e});
+       }
+   
+       try {
+           const user = await userData.getUserByUsername(req.session.user.userName);
+           const newComment = await commentsData.createComment(userName, req.params.id, commentBody, 0);
+           return res.status(200).redirect(`/themeparks/${req.params.id}/comments`);
+       } catch (e) {
+           return res.status(404).json({error: e});
+       }
+    // const themeParkId = req.params.id;
+    // const { userName, commentBody } = req.session.user;
 
-    try {
-        const validatedId = helper.checkId(themeParkId, 'id');
-        const validatedUserName = helper.checkString(userName, 'User Name');
-        const validatedCommentBody = helper.checkString(commentBody, 'Comment Body');
+    // try {
+    //     const validatedId = helper.checkId(themeParkId, 'id');
+    //     const validatedUserName = helper.checkString(userName, 'User Name');
+    //     const validatedCommentBody = helper.checkString(commentBody, 'Comment Body');
 
-        const newComment = await commentsData.createComment(validatedUserName, validatedId, validatedCommentBody, 0);
+    //     const newComment = await commentsData.createComment(validatedUserName, validatedId, validatedCommentBody, 0);
 
-        return res.status(200).redirect(`/themeparks/${themeParkId}/comments`);
-    } catch (e) {
-        return res.status(400).render('addThemeParkCommentPage', {error: e});
-    }
+    //     return res.status(200).redirect(`/themeparks/${themeParkId}/comments`);
+    // } catch (e) {
+    //     return res.status(400).render('addThemeParkCommentPage', {error: e});
+    // }
 })
 
 // get the themepark by id, render the page, and send back the array of rides and include the id as well or returning the object is fine
