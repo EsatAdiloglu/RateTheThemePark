@@ -45,7 +45,7 @@ router.route('/addthemepark')
             'United States of America',
             newThemeParkInfo.theme_park_state
         );
-        return res.status(200).json(result); // returned as a json so far
+        return res.status(200).render('addThemeParkPage') // returned as a json so far
     } catch (e) {
         return res.status(404).json({error: e});
     }
@@ -109,7 +109,8 @@ router.route('/:id/ratings')
             const ratingsData = await themeParkRatingData.getThemeParkRatings(req.params.id);
     
             return res.status(200).render('themeParkRatingPage', {
-                themepark: themePark,
+                themeparkname: themePark.themeParkName,
+                themepark: themePark2,
                 ratings: ratingsData.ratings
             });
         } catch (e) {
@@ -121,7 +122,7 @@ router.route('/:id/ratings')
 router.route('/:id/ratings/addThemeParkRating')
 .get(async (req, res) => {
     // renders the THEME PARK ADD RATING PAGE 
-    res.render('addThemeParkRatingPage')
+    res.render('addThemeParkRatingPage', {_id: req.params.id})
 })
 // creating a rating document and push into the rating documeent into the rating array of the specific themepark 
 .post(async(req, res) => {
@@ -137,7 +138,7 @@ router.route('/:id/ratings/addThemeParkRating')
         helper.checkRating(newthemeParkRatingInfo.theme_park_crowds)
         helper.checkRating(newthemeParkRatingInfo.theme_park_diversity)
 
-        newthemeParkRatingInfo.theme_park_review = helper.checkString(newthemeParkRatingInfo.theme_park_review)
+        // newthemeParkRatingInfo.theme_park_review = helper.checkString(newthemeParkRatingInfo.theme_park_review)
     }
     catch(e){
         return res.status(400).json({error:e})

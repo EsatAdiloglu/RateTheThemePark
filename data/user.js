@@ -42,7 +42,7 @@ export const signUpUser = async (name, username, password) => {
     const newUser = {
         _id: new ObjectId(),
         name: name,
-        userName: username,
+        userName: username.toLowerCase(),
         password: hashedPassword,
         themeParkRatings: [],
         rideRatings: [],
