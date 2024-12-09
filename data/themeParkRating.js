@@ -72,8 +72,7 @@ const getThemeParkRatings = async (id) => {
     if (!ObjectId.isValid(id)) throw "Invalid Theme Park ID";
 
     const themeParkRatingCollection = await themeparkratings();
-    const ratings = await themeParkRatingCollection.find({themeParkID: new ObjectId(id)}).toArray();
-
+    const ratings = await themeParkRatingCollection.find({themeParkId: new ObjectId(id)}).toArray();
     if (ratings.length === 0) {
         return {
             themeParkID: id,
@@ -83,7 +82,7 @@ const getThemeParkRatings = async (id) => {
 
     const formattedThemeRatings = ratings.map(rating => ({
         _id: rating._id.toString(),
-        userID: rating.userID.toString(),
+        userName: rating.userName,
         staffRating: rating.staffRating,
         cleanlinessRating: rating.cleanlinessRating,
         crowdsRating: rating.crowdsRating,

@@ -13,16 +13,17 @@
  --}}
 
  <h1>Theme Park Rides</h1>
+  <a href = '/themepark/{{tpid}}'>Go back</a>
 
 <main>
     <ol>
         {{#each rides}}
         <li>
-            <a href="/themepark/{{_id}}/rides/{{ride._id}}"> {{themeParkName}} </a>
+            <a href="/themepark/{{tpid}}/rides/{{_id}}"> {{rideName}} </a>
         </li>
         {{/each}}
     </ol>
 </main>
 
 
- <a href = '/themepark/{{_id}}/rides/addRide'>Add ride</a>
+ <a href = '/themepark/{{tpid}}/rides/addRide'>Add ride</a>

@@ -10,17 +10,13 @@ import foodStallRatingData from "../data/foodStallRating.js"
 import helper from "../helper.js";
 import { ObjectId } from "mongodb";
 
-//WHENEVER SOMEONE IS ADDING A RATING TO ANYTHING THEMEPARKS RIDES OR FOODSTALLS COMMENTS, 
-
-//.get 
-// homepage view, so far it WORKS
+// ------------------------- WORKS
 router.route('/')
 .get(async (req, res)  => {
     return res.render('homePage', {title: "Rate My Theme Park"})
 });
 
-// adding a themepark, rendering the theme park, post: check all the fields, push the themepark into the themepark collection 
-// WORKS
+// ------------------------- WORKS
 router.route('/addthemepark')
 .get(async (req, res) => {
     res.render('addThemeParkPage')
@@ -51,9 +47,7 @@ router.route('/addthemepark')
     }
 });
 
-//post request
-//.post
-// get the input the user typed and send back an array of all the parks WORKS
+// ------------------------- WORKS
 router.route('/listofthemeparks')
 .post(async (req, res) => {
     try {
@@ -68,7 +62,7 @@ router.route('/listofthemeparks')
     }
 });
 
-// renders the specific individal theme parks page, validity of the id, get the themeparkbyid function and send the object data back WORKS
+// ------------------------- WORKS
 router.route('/:id')
 .get(async (req, res) => {
     // get the themepark by id function
@@ -91,7 +85,7 @@ router.route('/:id')
     
 })
 
-// get the themeparkbyid validity check if its there, send back an array of ratings and the themepark id {themeparkid: id, rating: []} NEED TO WORK ON THIS
+// ------------------------- WORKS
 router.route('/:id/ratings')
 .get(async (req, res) => {
     const themePark2 = req.params.id;
@@ -107,24 +101,24 @@ router.route('/:id/ratings')
             const themePark = await themeParkData.getThemeParkById(req.params.id);
             console.log('Theme Park:', themePark);
             const ratingsData = await themeParkRatingData.getThemeParkRatings(req.params.id);
-    
+
             return res.status(200).render('themeParkRatingPage', {
                 themeparkname: themePark.themeParkName,
                 themepark: themePark2,
                 ratings: ratingsData.ratings
             });
         } catch (e) {
+            console.log(e)
             return res.status(404).json({error: e});
         }
 })
 
-// render that specific page of the themepark with the themepark, send back the themepark id as well 
+// ------------------------- WORKS
 router.route('/:id/ratings/addThemeParkRating')
 .get(async (req, res) => {
     // renders the THEME PARK ADD RATING PAGE 
     res.render('addThemeParkRatingPage', {_id: req.params.id})
 })
-// creating a rating document and push into the rating documeent into the rating array of the specific themepark 
 .post(async(req, res) => {
     // TODO:
     // add the rating to the theme park ratings
@@ -150,7 +144,7 @@ router.route('/:id/ratings/addThemeParkRating')
         await themeParkRatingData.createThemeParkRating(user.userName, req.params.id, theme_park_staff, theme_park_cleanliness, theme_park_crowds, theme_park_diversity, theme_park_review)
 
         //replace this with where you want to render to
-        return res.status(200).render("addThemeParkRatingPage")
+        return res.status(200).redirect(`/themepark/${req.params.id}/ratings`)
     }
     catch(e){
         console.log(e)
@@ -186,10 +180,13 @@ router.route('/:id/rides')
         return res.status(400).json({error: e})
     }
     try{
-        const themePark = themeParkData.getThemeParkById(req.params.id)
-        return res.status(200).render('themeParkRidesPage', {themepark: themePark})
+        //const themePark = themeParkData.getThemeParkById(req.params.id)
+        const ridesarray = (await rideData.getRidesByThemePark(req.params.id)).rides;
+        console.log(ridesarray);
+        return res.status(200).render('themeParkRidesPage', {tpid: req.params.id, rides: ridesarray})
     }
     catch(e){
+        console.log(e);
         return res.status(404).json({error:e})
     }
 })
@@ -198,7 +195,7 @@ router.route('/:id/rides')
 router.route('/:id/rides/addRide')
 .get(async(req, res) => {
     // get the themeparkid for the route
-    res.render('addRidePage')
+    res.render('addRidePage', {_id: req.params.id})
 })
 
 // get the themepark id, craete a a ride as a docuement and add array RidesArray which is a collection of arrays and we are trying to push it in there
@@ -217,9 +214,10 @@ router.route('/:id/rides/addRide')
         await rideData.createRide(req.params.id, newRideInfo.ride_name)
 
         //replace this with where you want to render to
-        return res.status(200).render("addRidePage")
+        return res.status(200).render("addRidePage", {_id: req.params.id})
     }
     catch(e){
+        console.log(e);
         return res.status(404).json({error:e})
     }
 })
@@ -273,7 +271,6 @@ router.route('/:id/rides/:rideid/addRating')
 .get(async(req, res) => {
     res.render('addRideRatingPage')
 })
-
 // create a new riderating document, add it to that specific ride (kinda like nesting it )
 .post(async(req, res) => {
     //adds a ride rating
