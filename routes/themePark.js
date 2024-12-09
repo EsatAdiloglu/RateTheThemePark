@@ -210,20 +210,6 @@ router.route('/:id/comments/addThemeParkComment')
        } catch (e) {
            return res.status(404).json({error: e});
        }
-    // const themeParkId = req.params.id;
-    // const { userName, commentBody } = req.session.user;
-
-    // try {
-    //     const validatedId = helper.checkId(themeParkId, 'id');
-    //     const validatedUserName = helper.checkString(userName, 'User Name');
-    //     const validatedCommentBody = helper.checkString(commentBody, 'Comment Body');
-
-    //     const newComment = await commentsData.createComment(validatedUserName, validatedId, validatedCommentBody, 0);
-
-    //     return res.status(200).redirect(`/themeparks/${themeParkId}/comments`);
-    // } catch (e) {
-    //     return res.status(400).render('addThemeParkCommentPage', {error: e});
-    // }
 })
 
 // get the themepark by id, render the page, and send back the array of rides and include the id as well or returning the object is fine
