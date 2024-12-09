@@ -22,9 +22,9 @@ Theme Park Rating Page (INDIVIDUAL THEME PARK)
 <ul>
   {{#each ratings}}
     <li>
-      User: {{username}}, Staff: {{staffRating}}, Cleanliness: {{cleanlinessRating}}, Crowds: {{crowdsRating}}, Diversity: {{diveristyRating}}, Review: {{review}}
+      User: {{username}}, Staff: {{staffRating}}, Cleanliness: {{cleanlinessRating}}, Crowds: {{crowdsRating}}, Diversity: {{diversityRating}}, Review: {{review}}
     </li>
   {{/each}}
 </ul>
 
-<a href = '/themepark/{{_id}}/ratings/addThemeParkRating'></a>
+<a href="/themepark/{{themepark._id}}/ratings/addThemeParkRating"></a>
