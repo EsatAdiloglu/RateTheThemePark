@@ -14,6 +14,9 @@ const createRide = async (
     const themePark = await themeParkCollections.findOne({_id: themeParkId})
     if (themePark === null) throw `Error: there is no theme park with id ${id}`
 
+    const rideCollections = await rides();
+    const exist = await rideCollections.find({parkRideIsLocatedIn: themeParkId}).toArray()
+    if(exist.some((ride) => ride.rideName.toLowerCase() === rideName.toLowerCase())) throw "Error: a ride with that name already exists"    
     const newRide = {
         rideName: rideName, 
         parkRideIsLocatedIn: themeParkId,
@@ -21,9 +24,10 @@ const createRide = async (
         comfortabilityRating: 0,
         enjoymentAndExperienceRating: 0,
         ratings: [],
+        comments: [],
         reports: []
     }
-    const rideCollections = await rides();
+
     const rideInfo = await rideCollections.insertOne(newRide);
     if(!rideInfo.acknowledged || !rideInfo.insertedId) throw "Error: could not add a new ride"
     const rideId = rideInfo.insertedId.toString()
@@ -45,43 +49,19 @@ const getRideById = async (id) => {
 }
 
 const getRidesByThemePark = async (id) => {
-    // id = helper.checkString(id); 
-    // if (!ObjectId.isValid(id)) throw "Error: id isn't an object id";
-    // id = new ObjectId(id);
-
-    // const rideRatingCollections = await rideratings();
-    // const rideRatings = await rideRatingCollections.find({ rideId: id }).toArray(); 
-    // if (!rideRatings || rideRatings.length === 0)
-    //     throw `Error: no ride ratings found for ride with id ${id}`;
-
-    // return rideRatings.map((rating) => ({
-    //     ...rating,
-    //     _id: rating._id.toString(),
-    //     userId: rating.userId.toString(),
-    //     rideId: rating.rideId.toString(),
-    // }));
-
-
-    // if (!ObjectId.isValid(id)) throw "Invalid theme park ID";
-    // const rideCollection = await rides();
-    // const themeParkRides = await rideCollection.find({themeParkId: new ObjectId(themeParkId)}).toArray();
-    // if (!themeParkRides.length) throw "No rides found for the specified theme park";
-    // return themeParkRides;
-
-    
+        
     if (!ObjectId.isValid(id)) throw "Invalid Theme Park ID";
 
     const rideCollection = await rides();
-    const rides = await rideCollection.find({themeParkId: new ObjectId(id)}).toArray();
+    const ridesarray = await rideCollection.find({parkRideIsLocatedIn: new ObjectId(id)}).toArray();
 
-    if (rides.length === 0) {
+    if (ridesarray.length === 0) {
         return {
             themeParkId: id,
             rides: []
         };
     }
-
-    const formattedRides = rides.map(ride => ({
+    const formattedRides = ridesarray.map(ride => ({
         _id: ride._id.toString(),
         rideName: ride.rideName,
         parkRideIsLocatedIn: ride.parkRideIsLocatedIn, // might need a toString() 
@@ -97,4 +77,4 @@ const getRidesByThemePark = async (id) => {
         rides: formattedRides
     };
 }
-export default {createRide, getRideById}
+export default {createRide, getRideById, getRidesByThemePark}

@@ -1,6 +1,6 @@
 import {ObjectId} from "mongodb";
 import helper from "../helper.js"
-import { themeparks } from "../config/mongoCollections.js";
+import { comments, themeparks } from "../config/mongoCollections.js";
 
 const createThemePark = async (
     name,
@@ -15,6 +15,9 @@ const createThemePark = async (
     country = helper.checkString(country)
     state = helper.checkState(state)
 
+    const themeParkCollections = await themeparks();
+    const exist = await themeParkCollections.find().toArray()
+    if(exist.some((themePark) => themePark.themeParkName.toLowerCase() === name.toLowerCase())) throw "Error: a theme park already exists with that name"
     const newThemePark = {
         themeParkName: name,
         streetAddress: streetaddress,
@@ -28,9 +31,10 @@ const createThemePark = async (
         rides: [],
         foodStalls: [],
         ratings: [],
+        comments: [],
         reports: []
     }
-    const themeParkCollections = await themeparks();
+
     const themeParkInfo = await themeParkCollections.insertOne(newThemePark);
     if(!themeParkInfo.acknowledged || !themeParkInfo.insertedId) throw "Error: could not add a new theme park"
     return await getThemeParkById(themeParkInfo.insertedId.toString());

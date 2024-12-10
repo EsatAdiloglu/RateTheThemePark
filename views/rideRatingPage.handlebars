@@ -10,14 +10,11 @@
     <ol>
         {{#each ratings}}
         <li>
-            {{rating info}}
-            <button id = "likeRideRating"> Like</button>
-            {{likes.length()}}
-            <button id = "dislikeRideRating"> Dislike</button>
-            {{dislikes.length()}}
+            Username: {{userName}}
+           waitTimeRating {{waitTimeRating}}, comfortabilityRating {{comfortabilityRating}}, enjoymentAndExperienceRating {{ enjoymentRating}}
         </li>
         {{/each}}
     </ol>
 </main>
 
-<a href = '/themepark/{{_id}}/rides/{{_rideid}}/addRating'>Add rating on ride</a>
+<a href = '/themepark/{{tpid}}/rides/{{rpid}}/addRating'>Add rating on ride</a>

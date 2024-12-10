@@ -4,23 +4,23 @@ import { foodstallratings, foodstalls, users } from "../config/mongoCollections.
 
 
 const createFoodStallRating = async (
-    userId,
+    userName,
     foodStallId,
     foodQualityRating,
     waitTimeRating,
     review
 ) => {
-    userId = helper.checkString(userId)
-    if(!ObjectId.isValid(userId)) throw "Error: id isn't an object id"
-    userId = new ObjectId(userId)
+    userName = helper.checkString(userName)
+
     const userCollections = await users();
-    const user = await userCollections.findOne({_id: userId})
-    if (user === null) throw `Error: there is no user with id ${id}`
+    const user = await userCollections.findOne({userName: userName})
+    if (user === null) throw `Error: there is no user with username ${userName}`
 
     foodStallId = helper.checkString(foodStallId)
     if(!ObjectId.isValid(foodStallId)) throw `Error: id isn't an object id`
+    const fodoStallObjectId = new ObjectId(foodStallId)
     const foodStallCollections = await foodstalls();
-    const foodStall = await foodStallCollections.findOne({_id: foodStallId})
+    const foodStall = await foodStallCollections.findOne({_id: fodoStallObjectId})
     if (foodStall === null) throw `Error: there is no food stall with id ${foodStallId}`
 
     helper.checkRating(foodQualityRating)
@@ -28,7 +28,7 @@ const createFoodStallRating = async (
     review = helper.checkString(review)
 
     const newFoodStallRating = {
-        userId: userId,
+        userName: userName,
         foodStallId: foodStallId,
         foodQualityRating: foodQualityRating,
         waitTimeRating: waitTimeRating,
@@ -46,11 +46,11 @@ const createFoodStallRating = async (
     const ratingId = foodStallRatingRatingInfo.insertedId.toString()
 
     const updateFoodStallRating = {ratings: [...foodStall.ratings, ratingId]}
-    const updateFoodStallResult = await rideRatingCollections.findOneAndUpdate({_id: rideId}, {$set: updateFoodStallRating})
+    const updateFoodStallResult = await foodStallCollections.findOneAndUpdate({_id: fodoStallObjectId}, {$set: updateFoodStallRating})
     if(!updateFoodStallResult) throw "Error: could not add rating to food stall"
 
     const updateUserRating = {foodStallRatings: [...user.foodStallRatings, ratingId]}
-    const updateUserResult = await userCollections.findOneAndUpdate({_id: userId}, {$set: updateUserRating})
+    const updateUserResult = await userCollections.findOneAndUpdate({userName: userName}, {$set: updateUserRating})
     if(!updateUserResult) throw "Error: could not add rating to user"
 
     return await getFoodStallRatingById(ratingId)
@@ -61,7 +61,7 @@ const getFoodStallRatingById = async (id) => {
     if(!ObjectId.isValid(id)) throw "Error: id isn't an object id"
     id = new ObjectId(id)
     const foodStallRatingCollections = await rideratings();
-    const foodStallRating = await foodStallRatingCollections.findOne({_id: id})
+    const foodStallRating = await foodStallRatingCollections.findOne({_id: new ObjectId(id)})
     if (foodStallRating === null) throw `Error: a food stall rating doesn't have an id of ${id}`
     foodStallRating._id = foodStallRating._id.toString()
     return foodStallRating
@@ -71,11 +71,11 @@ const getFoodStallRatings = async (id) => {
     if (!ObjectId.isValid(id)) throw "Invalid Food Stall ID";
 
     const foodStallRatingCollection = await foodstallratings();
-    const ratings = await foodStallRatingCollection.find({foodStallID: new ObjectId(id)}).toArray();
+    const ratings = await foodStallRatingCollection.find({foodStallId: id}).toArray();
 
     if (ratings.length === 0) {
         return {
-            foodStallID: id,
+            foodStallId: id,
             ratings: []
         };
     }
@@ -91,9 +91,9 @@ const getFoodStallRatings = async (id) => {
     }));
 
     return {
-        foodStallID: id,
+        foodStallId: id,
         ratings: formattedFoodStallRatings
     }; 
 }
 
-export default {createFoodStallRating, getFoodStallRatingById}
+export default {createFoodStallRating, getFoodStallRatingById, getFoodStallRatings}

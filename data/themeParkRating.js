@@ -3,7 +3,7 @@ import helper from "../helper.js"
 import { themeparks, users, themeparkratings } from "../config/mongoCollections.js";
 
 const createThemeParkRating = async (
-    userId,
+    userName,
     themeParkId,
     staffRating,
     cleanlinessRating,
@@ -11,36 +11,31 @@ const createThemeParkRating = async (
     diversityRating,
     review
 ) => {
-    userId = helper.checkString(userId)
-    if(!ObjectId.isValid(userId)) throw "Error: id isn't an object id"
-    userId = new ObjectId(userId)
+    userName = helper.checkString(userName)
     const userCollections = await users();
-    const user = await userCollections.findOne({_id: userId})
-    if (user === null) throw `Error: there is no user with id ${id}`
+    const user = await userCollections.findOne({userName: userName})
+    if (user === null) throw `Error: there is no user with userName ${userName}`
 
     themeParkId = helper.checkString(themeParkId)
     if(!ObjectId.isValid(themeParkId)) throw "Error: id isn't an object id"
-    themeParkId = new ObjectId(themeParkId)
+    const themeParkObjectId = new ObjectId(themeParkId)
     const themeParkCollections = await themeparks();
-    const themePark = await themeParkCollections.findOne({_id: themeParkId})
-    if (themePark === null) throw `Error: there is no theme park with id ${id}`
+    const themePark = await themeParkCollections.findOne({_id: themeParkObjectId})
+    if (themePark === null) throw `Error: there is no theme park with id ${themeParkId}`
 
     helper.checkRating(staffRating)
     helper.checkRating(cleanlinessRating)
     helper.checkRating(crowdsRating)
     helper.checkRating(diversityRating)
-    review = helper.checkString(review)
 
     const newThemeParkRating = {
-        userId: userId,
+        userName: userName,
         themeParkId: themeParkId,
         staffRating: staffRating,
         cleanlinessRating: cleanlinessRating,
         crowdsRating: crowdsRating,
         diversityRating: diversityRating,
         review: review,
-        likes: [],
-        dislikes: [],
         comments: [],
         reports: []
     }
@@ -52,14 +47,14 @@ const createThemeParkRating = async (
     const ratingID = themeParkRatingInfo.insertedId.toString()
 
     const updateThemeRating = {ratings: [...themePark.ratings, ratingID]}
-    const updateThemeResult = await themeParkCollections.findOneAndUpdate({_id: themeParkId},{$set: updateThemeRating})
+    const updateThemeResult = await themeParkCollections.findOneAndUpdate({_id: themeParkObjectId},{$set: updateThemeRating})
     if(!updateThemeResult) throw "Error: could not add rating to themepark"
 
     const updateUserRating = {themeParkRatings: [...user.themeParkRatings, ratingID]}
-    const updateUserResult = await userCollections.findOneAndUpdate({_id: userId},{$set: updateUserRating})
+    const updateUserResult = await userCollections.findOneAndUpdate({userName: userName},{$set: updateUserRating})
     if(!updateUserResult) throw "Error: could not add rating to user"
     
-    return await getThemeParkRatingById(ratingId);
+    return await getThemeParkRatingById(ratingID);
 
 
 }
@@ -78,7 +73,7 @@ const getThemeParkRatings = async (id) => {
     if (!ObjectId.isValid(id)) throw "Invalid Theme Park ID";
 
     const themeParkRatingCollection = await themeparkratings();
-    const ratings = await themeParkRatingCollection.find({themeParkID: new ObjectId(id)}).toArray();
+    const ratings = await themeParkRatingCollection.find({themeParkId: id}).toArray();
 
     if (ratings.length === 0) {
         return {
@@ -89,12 +84,11 @@ const getThemeParkRatings = async (id) => {
 
     const formattedThemeRatings = ratings.map(rating => ({
         _id: rating._id.toString(),
-        userID: rating.userID.toString(),
+        userName: rating.userName,
         staffRating: rating.staffRating,
         cleanlinessRating: rating.cleanlinessRating,
         crowdsRating: rating.crowdsRating,
         diversityRating: rating.diversityRating,
-        review: rating.review,
         comments: rating.comments, //rating.comments.map(commentId => commentId.toString()),
         reports: rating.reports //rating.reports.map(reportId => reportId.toString())
     }));

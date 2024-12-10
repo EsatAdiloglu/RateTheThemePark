@@ -18,17 +18,19 @@ Theme Park Rating Page (INDIVIDUAL THEME PARK)
         "diveristyRating": 6
         "review --}}
 
-<h1>{{themeparkname}}</h1>
+<h1>Ratings for {{themeparkname}}</h1>
+
 <ul>
   {{#each ratings}}
     <li>
-      User: {{username}}, Staff: {{staffRating}}, Cleanliness: {{cleanlinessRating}}, Crowds: {{crowdsRating}}, Diversity: {{diversityRating}}, Review: {{review}}
-      <button id = "likeRideRating"> Like</button>
-      {{likes.length()}}
-      <button id = "dislikeRideRating"> Dislike</button>
-      {{dislikes.length()}}
+      <p>{{userName}}</p>
+      <p><strong>Staff Rating:</strong> {{staffRating}}</p>
+      <p><strong>Cleanliness Rating:</strong> {{cleanlinessRating}}</p>
+      <p><strong>Crowds Rating:</strong> {{crowdsRating}}</p>
+      <p><strong>Diversity Rating:</strong> {{diversityRating}}</p>
+      <p><strong>Comments:</strong> 
     </li>
   {{/each}}
 </ul>
 
-<a href="/themepark/{{themepark._id}}/ratings/addThemeParkRating"></a>
+<a href="/themepark/{{themepark}}/ratings/addThemeParkRating">Add a rating to the theme park</a>
