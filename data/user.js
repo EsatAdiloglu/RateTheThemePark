@@ -47,6 +47,8 @@ export const signUpUser = async (name, username, password) => {
         themeParkRatings: [],
         rideRatings: [],
         foodStallRatings: [],
+        likedRatings: [],
+        dislikedRatings: [],
         comments: [],
         reports: []
     }

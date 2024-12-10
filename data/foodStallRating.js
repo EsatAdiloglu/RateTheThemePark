@@ -33,6 +33,8 @@ const createFoodStallRating = async (
         foodQualityRating: foodQualityRating,
         waitTimeRating: waitTimeRating,
         review: review,
+        likes: [],
+        dislikes: [],
         comments: [],
         reports: []
     }

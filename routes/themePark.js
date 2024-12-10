@@ -180,6 +180,7 @@ router.route('/:id/comments/addThemeParkComment')
     res.render('addThemeParkCommentPage', {_id: req.params.id})
 })
 .post(async(req, res) => {
+
     const newThemeParkCommentInfo = req.body;
     if (!newThemeParkCommentInfo || Object.keys(newThemeParkCommentInfo).length < 1) {
         return res.status(400).json({error: "The request body is empty"});
@@ -208,7 +209,12 @@ router.route('/:id/comments/addThemeParkComment')
         console.log(e);
         return res.status(404).json({error: e});
     }
+
+    // add the comment to the the theme park comments
+    // check the validity of the arguments, need to check clientside as well
+
 })
+// -------------------------------------E OF COMMENTS---------------------------------------------
 
 // ------------------------- Works
 router.route('/:id/rides')

@@ -2,3 +2,28 @@
     /homepage/comparethemeparks
 
 --}}
+
+<a href = '/themepark'><button>Rate my Theme Park</button></a>
+
+ <main>
+    <p>Select the theme parks you want to compare from both dropdowns</p>
+    <form method="POST" action="/comparethemepark" id="compareparkform">
+        <label for="firstpark">First Theme Park</label>
+        <select name = "firstparkform" id = "firstparkform">
+            {{#each parks}}
+            <option value = {{themeParkName}}> {{themeParkName}}</option>
+            {{/each}}
+        </select>
+        <br>
+        <label for="secondpark">Second Theme Park</label>
+        <select name = "secondparkform" id = "secondparkform">
+            {{#each parks}}
+            <option value = {{themeParkName}}> {{themeParkName}}</option>
+            {{/each}}
+        </select>
+        <button name="submit_button" id="submit_button">Submit</button>
+    </form>
+    <ol id = "compareresults">
+
+    </ol>
+ </main>

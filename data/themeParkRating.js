@@ -35,6 +35,7 @@ const createThemeParkRating = async (
         cleanlinessRating: cleanlinessRating,
         crowdsRating: crowdsRating,
         diversityRating: diversityRating,
+        review: review,
         comments: [],
         reports: []
     }

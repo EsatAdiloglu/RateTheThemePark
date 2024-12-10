@@ -60,4 +60,22 @@ const getThemeParksByName = async (name) => {
     })
     return res
 }
-export default {createThemePark, getThemeParkById, getThemeParksByName}
+
+const getThemeParksByLocation = async (name) => {
+    name = helper.checkString(name)
+    const themeParkCollections = await themeparks();
+    const allThemeParks = await themeParkCollections.find().toArray();
+    const res = []
+    allThemeParks.forEach((park) => {
+        if(park.state.toLowerCase().includes(name.toLowerCase())) res.push(park)
+    })
+    return res
+}
+
+const getAllThemeParks = async () => {
+    const themeParkCollections = await themeparks();
+    const allThemeParks = await themeParkCollections.find().toArray();
+    return allThemeParks;
+}
+
+export default {createThemePark, getThemeParkById, getThemeParksByName, getThemeParksByLocation, getAllThemeParks}
