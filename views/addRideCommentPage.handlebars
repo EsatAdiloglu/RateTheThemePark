@@ -5,7 +5,7 @@
   <h1> Add A Ride comment </h1>
  <main>
     <p>Please enter the following information to add a comment to the ride</p>
-    <form id = "ridecomment">
+    <form id = "ridecomment"  method = 'POST' action = "/themepark/{{themeId}}/ride/{{rideId}}/addComment">
         <label for="ride_comment">Ride Comment</label>
         <input type="text" name="ride_comment" id="ride_comment">
         <br>
