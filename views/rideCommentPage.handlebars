@@ -7,3 +7,17 @@
     - list of comments
     - add button
  --}}
+
+  <h1>Comments on Rides</h1>
+
+ <main>
+    <ol>
+        {{#each comments}}
+        <li>
+            {{comment info}}
+        </li>
+        {{/each}}
+    </ol>
+</main>
+
+<a href = '/themepark/{{_id}}/rides/{{_rideid}}/addComment'>Add comment on ride</a>

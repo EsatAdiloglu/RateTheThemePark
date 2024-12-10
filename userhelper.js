@@ -8,37 +8,50 @@ function special(str){
     return /[^a-zA-Z0-9]/.test(str)
 }
 
-export function namefunc(fname){
-    if (typeof(fname) !== "string"){throw 'name not string'}
-    fname = fname.trim();
-    if (fname.length === 0){
-        throw "name empty";
-    }
-    if (fname.length < 2 || fname.length > 25)
-        {throw 'length out of bounds'}
-    if (numberinstring(fname)){throw "firstname contains numbers"}
+export function namefunc(name){
+    if (!name) throw "Name undefined or null"
+    if (typeof(name) !== 'string') throw "name is not a string"
+    name = name.trim();
+    if (name.length === 0) throw "Name is empty"
+    if (name.length < 3) throw "Name too short"
 }
-export function usernamefunc(userId){
-    if (typeof(userId) !== "string"){throw 'userId not string'}
-    userId = userId.trim().toLowerCase();
-    if (userId.length === 0){throw "userId empty"}
-    if (userId.length < 5 || userId.length > 10){throw 'userId length out of bounds'}
-    if (numberinstring(userId)){throw "userid contains numbers"}
+export function usernamefunc(username){
+    if (!username){
+        throw "Username undefined or null"
+    }
+    if (typeof(username) !== "string"){
+        throw "Username not string"
+    }
+    username = username.trim();
+    if (username.length === 0){
+        throw "Username length is 0"
+    }
+    if (username.length < 5){
+        throw 'Username is not long enough'
+    }
+    if (numberinstring(username)){
+        throw "Username contains numbers. Do not provide numbers"
+    }
 }
 export function passwordfunc(password){
-    if (typeof(password) !== "string"){throw 'password not string'}
-    password = password.trim()
-    if (password.length === 0){throw "password empty"}
-    if (password.includes(" ")){
-      throw "invalid password contains a space"
-    }
-    if (password.length < 8){
-        throw "password length less than 8"
-    }
-    if (!numberinstring(password) || !uppercasechar(password) || !special(password)){
-        throw "invalid password"
-      }
+    if (!password) throw "Password undefined or null"
+    if (typeof(password) !== 'string') throw "Password not string"
+    password = password.trim();
+    if (password.length === 0) throw "Password is empty"
+    if (password.includes(' ')) throw "Password contains a space"
+    if (password.length < 8) throw "Password too short"
+    if (!numberinstring(password) || !uppercasechar(password) || !special(password)){throw "Invalid password, password needs to have at least one number, one special character, and one uppercase character"}
 }
-export function confirmpasswordfunc(p, p1){
-    if (p !== p1){throw "Passwords are not matching"}
+export function confirmpasswordfunc(p1, p2){
+    if (p1 !== p2) throw "Passwords are not the same"
+}
+export function commenthelper(cmt){
+    if (!cmt) throw "Comment not there";
+    if (typeof(cmt) !== 'string') throw "Comment not a string"
+    cmt = cmt.trim();
+    if (cmt.length === 0) throw "Comment is empty"
+    if (cmt.length < 5) throw "Comment too short";
+}
+export function rating(r){
+    
 }

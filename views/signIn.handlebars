@@ -13,3 +13,34 @@
         <button name="submit_button" id="submit_button">Submit</button>
     </form>
  </main>
+
+{{#if missing}}
+  <div class="missing">
+      <p>Missing arguments</p>
+    <br>
+    <ul>
+        {{#each missings}}
+          <li>{{this}}</li>
+        {{/each}}
+    </ul>
+  </div>
+{{/if}}
+
+ {{#if error}}
+  <div class="errors">
+    <p>Errors</p>
+    <br>
+    <ul>
+        {{#each errors}}
+        <li>{{this}}</li>
+        {{/each}}
+    </ul>
+  </div>
+{{/if}}
+
+
+{{#if invalid}}
+  <div class="invalid">
+    {{invalidmsg}}
+  </div>
+{{/if}}
