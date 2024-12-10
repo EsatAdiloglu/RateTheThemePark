@@ -10,7 +10,6 @@ import foodStallData from "../data/foodStall.js"
 import foodStallRatingData from "../data/foodStallRating.js"
 import helper from "../helper.js";
 import { ObjectId } from "mongodb";
-import { foodstalls } from "../config/mongoCollections.js";
 
 // ------------------------- WORKS
 router.route('/')
@@ -159,7 +158,6 @@ router.route('/:id/comments')
 .get(async (req, res) => {
     // get the themepark by id function and then render the comments
     const themeParkId = req.params.id;
-    console.log('Here');
 
     try {
         const validatedId = helper.checkId(themeParkId, 'id');
@@ -181,40 +179,11 @@ router.route('/:id/comments/addThemeParkComment')
     res.render('addThemeParkCommentPage', {_id: req.params.id})
 })
 .post(async(req, res) => {
-<<<<<<< HEAD
-=======
 
->>>>>>> sai
     const newThemeParkCommentInfo = req.body;
     if (!newThemeParkCommentInfo || Object.keys(newThemeParkCommentInfo).length < 1) {
         return res.status(400).json({error: "The request body is empty"});
     }
-<<<<<<< HEAD
-
-    const {theme_park_comment} = newThemeParkCommentInfo;
-    const userName = req.session.user.userName;
-    console.log(theme_park_comment);
-    console.log(userName);
-
-    try {
-        // Validate the theme park ID and input fields
-        req.params.id = helper.checkId(req.params.id, "id");
-        helper.checkString(userName)
-        helper.checkString(theme_park_comment);
-    } catch (e) {
-        console.log(e);
-        return res.status(400).json({error: e});
-    }
-
-    try {
-        const user = await userData.getUserByUsername(req.session.user.userName);
-        await commentsData.createComment(userName, req.params.id, theme_park_comment, 0);
-        return res.status(200).redirect(`/themepark/${req.params.id}/comments`);
-    } catch (e) {
-        console.log(e);
-        return res.status(404).json({error: e});
-    }
-=======
 
     const {theme_park_comment} = newThemeParkCommentInfo;
     const userName = req.session.user.userName;
@@ -243,7 +212,6 @@ router.route('/:id/comments/addThemeParkComment')
     // add the comment to the the theme park comments
     // check the validity of the arguments, need to check clientside as well
 
->>>>>>> sai
 })
 // -------------------------------------E OF COMMENTS---------------------------------------------
 
@@ -402,11 +370,7 @@ router.route('/:id/rides/:rideid/addComment')
 
 
 // -------------------------------------- FOOD STALLS --------------------------------------
-<<<<<<< HEAD
-// ----------------------------------------- WORKS
-=======
 // same logic as rride 
->>>>>>> sai
 router.route('/:id/foodstalls')
 .get(async (req, res) => {
     // get the themepark by id function and render the foodstall page
@@ -419,6 +383,7 @@ router.route('/:id/foodstalls')
     try {
         const foodstallarray = (await foodStallData.getFoodStallsByThemePark(req.params.id)).foodStalls;
         console.log(req.params.id, foodstallarray);
+        return res.status(200).render('themeParkFoodStallsPage', {tpid: req.params.id, foodstalls: foodstallarray});
         return res.status(200).render('themeParkFoodStallsPage', {tpid: req.params.id, foodStalls: foodstallarray});
     } catch (e) {
         console.log(e);
@@ -518,6 +483,7 @@ router.route('/:id/foodstalls/:foodstallid/addComment')
 .post(async(req, res) => {
     // add the comment to the specific food stall
 })
+
 
 // -------------------------------------E OF FOOD STALL---------------------------------------------
 
