@@ -10,9 +10,9 @@ Theme Park Comment Page (INDIVIDUAL THEME PARK)
 <ul>
   {{#each comments}}
     <li>
-      User: {{username}}, Staff: {{staffRating}}, Cleanliness: {{cleanlinessRating}}, Crowds: {{crowdsRating}}, Diversity: {{diveristyRating}}, Review: {{review}}
+      User: {{userName}} Comment: {{commentBody}}
     </li>
   {{/each}}
 </ul>
 
-<a href = '/themepark/{{_id}}/comments/addThemeParkComment'>RYAN</a>
+<a href = '/themepark/{{_id}}/comments/addThemeParkComment'>Add theme park comment</a>

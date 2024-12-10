@@ -35,7 +35,6 @@ const createComment = async (
     }
     const thing = await collection.findOne({_id: new ObjectId(thingId)})
     if (thing === null) throw `Error: the thing that is being commented on doesn't have the id of ${thingId}`
-
     const newComment = {
         userName: userName,
         thingId: thingId,
@@ -46,9 +45,10 @@ const createComment = async (
     if(!commentInfo.acknowledged || !commentInfo.insertedId) throw "Error: could not add a new food stall rating"
 
     const commentId = commentInfo.insertedId.toString()
-
+    
     const updatedComments = {comments: [...thing.comments, commentId]}
     const updatedCommentsResult = await collection.findOneAndUpdate({_id: new ObjectId(thingId)}, {$set: updatedComments})
+
     if(!updatedCommentsResult) throw "Error: could not add comment to the thing"
 }
 
@@ -56,9 +56,8 @@ const getComments = async (id) => {
     id = helper.checkId(id)
 
 
-
     const commentCollections = await comments();
-    const commentArray = await commentCollections.find({placeId: new ObjectId(id)}).toArray();
+    const commentArray = await commentCollections.find({thingId: id}).toArray();
 
     const formattedComments = commentArray.map((comment) => ({
         _id: comment._id.toString(),

@@ -6,7 +6,7 @@
  <h1> Add A Ride Rating </h1>
  <main>
     <p>Please enter the following information to add a rating to the ride</p>
-    <form id = "riderating">
+    <form id = "riderating" method = 'POST' action = '/themepark/{{tpid}}/rides/{{rpid}}/addRating'>
         <label for="ride_waitime">Ride Wait Time Rating</label>
         <input type="number" name="ride_waitime" id="ride_waitime">
         <br>
