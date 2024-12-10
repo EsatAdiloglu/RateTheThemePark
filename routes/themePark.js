@@ -379,7 +379,7 @@ router.route('/:id/foodstalls')
     try {
         const foodstallarray = (await foodStallData.getFoodStallsByThemePark(req.params.id)).foodStalls;
         console.log(req.params.id, foodstallarray);
-        return res.status(200).render('themeParkFoodStallsPage', {tpid: req.params.id, foodstalls: foodstallarray});
+        return res.status(200).render('themeParkFoodStallsPage', {tpid: req.params.id, foodStalls: foodstallarray});
     } catch (e) {
         console.log(e);
         return res.status(404).json({error:e});

@@ -51,16 +51,16 @@ const getFoodStallsByThemePark = async (id) => {
     if (!ObjectId.isValid(id)) throw "Invalid Theme Park ID";
 
     const foodStallsCollection = await foodstalls();
-    const stalls = await foodStallsCollection.find({themeParkId: new ObjectId(id)}).toArray();
+    const foodstallarray = await foodStallsCollection.find({parkFoodStallIsLocatedIn: new ObjectId(id)}).toArray();
 
-    if (stalls.length === 0) {
+    if (foodstallarray.length === 0) {
         return {
             themeParkId: id,
             foodStalls: []
         };
     }
 
-    const formattedStalls = stalls.map(stall => ({
+    const formattedStalls = foodstallarray.map(stall => ({
         _id: stall._id.toString(),
         foodStallName: stall.foodStallName,
         parkFoodStallIsLocatedIn: stall.parkFoodStallIsLocatedIn, // might need a toString()
