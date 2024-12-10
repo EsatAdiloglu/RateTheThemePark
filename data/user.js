@@ -42,7 +42,7 @@ export const signUpUser = async (name, username, password) => {
     const newUser = {
         _id: new ObjectId(),
         name: name,
-        userName: username,
+        userName: username.toLowerCase(),
         password: hashedPassword,
         themeParkRatings: [],
         rideRatings: [],
@@ -99,7 +99,7 @@ export const signInUser = async(username, password) => {
 const getUserByUsername = async (userName) => {
     userName = helper.checkString(userName);
     const userCollection = await users(); 
-    const user = await userCollection.findOne({ username: userName.toLowerCase() }); 
+    const user = await userCollection.findOne({ userName: userName.toLowerCase() }); 
     if (!user) throw `Error: User with username '${userName}' not found.`;
     user._id = user._id.toString(); 
     return user;

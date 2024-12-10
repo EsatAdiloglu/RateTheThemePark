@@ -7,10 +7,9 @@
     - button for comments
  --}}
 
- <h1>{{ride}}</h1>
+ <h1>{{ride.rideName}}</h1>
 
- <h3>{{themepark}}</h3>
 
- <a href = '/themepark/{{_id}}/rides/{{_rideid}}/ratings'>Ratings</a>
+ <a href = '/themepark/{{tpid}}/rides/{{ride._id}}/ratings'>Ratings</a>
 
-  <a href = '/themepark/{{_id}}/rides/{{_rideid}}/comments'>Comments</a>
+  <a href = '/themepark/{{tpid}}/rides/{{ride._id}}/comments'>Comments</a>

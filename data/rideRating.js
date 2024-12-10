@@ -26,7 +26,7 @@ const createRideRating = async (
     helper.checkRating(waitTimeRating)
     helper.checkRating(comfortabilityRating)
     helper.checkRating(enjoymentRating)
-    review = helper.checkString(review)
+    // review = helper.checkString(review)
 
     const newRideRating = {
         userName: userName,
@@ -34,7 +34,7 @@ const createRideRating = async (
         waitTimeRating: waitTimeRating,
         comfortabilityRating: comfortabilityRating,
         enjoymentRating: enjoymentRating,
-        review: review,
+        review: "review",
         comments: [],
         reports: []
     }
@@ -44,9 +44,8 @@ const createRideRating = async (
     if(!rideRatingInfo.acknowledged || !rideRatingInfo.insertedId) throw "Error: could not add a new ride rating"
 
     const ratingId = rideRatingInfo.insertedId.toString()
-
     const updateRideRating = {ratings: [...ride.ratings, ratingId]}
-    const updateRideResult = await rideRatingCollections.findOneAndUpdate({_id: rideObjectId}, {$set: updateRideRating})
+    const updateRideResult = await rideCollections.findOneAndUpdate({_id: rideObjectId}, {$set: updateRideRating})
     if(!updateRideResult) throw "Error: could not add rating to ride"
 
     const updateUserRating = {rideRatings: [...user.rideRatings, ratingId]}
@@ -85,7 +84,7 @@ const getRideRatingsByRide = async (id) => {
         userName: rating.userName,
         waitTimeRating: rating.waitTimeRating,
         comfortabilityRating: rating.comfortabilityRating,
-        enjoymentAndExperienceRating: rating.enjoymentAndExperienceRating,
+        enjoymentRating: rating.enjoymentRating,
         review: rating.review,
         comments: rating.comments, //rating.comments.map(commentId => commentId.toString()),
         reports: rating.reports //rating.reports.map(reportId => reportId.toString())

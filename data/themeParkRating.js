@@ -27,7 +27,6 @@ const createThemeParkRating = async (
     helper.checkRating(cleanlinessRating)
     helper.checkRating(crowdsRating)
     helper.checkRating(diversityRating)
-    review = helper.checkString(review)
 
     const newThemeParkRating = {
         userName: userName,
@@ -36,7 +35,6 @@ const createThemeParkRating = async (
         cleanlinessRating: cleanlinessRating,
         crowdsRating: crowdsRating,
         diversityRating: diversityRating,
-        review: review,
         comments: [],
         reports: []
     }
@@ -90,7 +88,6 @@ const getThemeParkRatings = async (id) => {
         cleanlinessRating: rating.cleanlinessRating,
         crowdsRating: rating.crowdsRating,
         diversityRating: rating.diversityRating,
-        review: rating.review,
         comments: rating.comments, //rating.comments.map(commentId => commentId.toString()),
         reports: rating.reports //rating.reports.map(reportId => reportId.toString())
     }));
