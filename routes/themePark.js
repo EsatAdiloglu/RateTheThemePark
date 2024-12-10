@@ -10,6 +10,7 @@ import foodStallData from "../data/foodStall.js"
 import foodStallRatingData from "../data/foodStallRating.js"
 import helper from "../helper.js";
 import { ObjectId } from "mongodb";
+import { foodstalls } from "../config/mongoCollections.js";
 
 // ------------------------- WORKS
 router.route('/')
@@ -365,34 +366,36 @@ router.route('/:id/rides/:rideid/addComment')
 
 
 // -------------------------------------- FOOD STALLS --------------------------------------
-// same logic as rride 
+// ----------------------------------------- WORKS
 router.route('/:id/foodstalls')
 .get(async (req, res) => {
     // get the themepark by id function and render the foodstall page
-    try{
-        req.params.id = helper.checkId(req.params.id,"id")
+    try {
+        req.params.id = helper.checkId(req.params.id,"id");
+    } catch (e) {
+        return res.status(400).json({error:e});
     }
-    catch(e){
-        return res.status(400).json({error: e})
-    }
-    try{
-        const themePark = themeParkData.getThemeParkById(req.params.id)
-        return res.status(200).render('themeParkRidesPage', {themepark: themePark})
-    }
-    catch(e){
-        return res.status(404).json({error:e})
-    }
-})
 
+    try {
+        const foodstallarray = (await foodStallData.getFoodStallsByThemePark(req.params.id)).foodStalls;
+        console.log(req.params.id, foodstallarray);
+        return res.status(200).render('themeParkFoodStallsPage', {tpid: req.params.id, foodstalls: foodstallarray});
+    } catch (e) {
+        console.log(e);
+        return res.status(404).json({error:e});
+    }
+});
+
+// CURRENTLY ON THIS
 router.route('/:id/foodstalls/addfoodstall')
 .get(async(req, res) => {
-    return res.render('addFoodStallPage')
+    return res.render('addFoodStallPage', {_id: req.params.id})
 })
 .post(async (req, res) => {
     const newFoodStallInfo = req.body
     if(!newFoodStallInfo || Object.keys(newFoodStallInfo) < 1) return res.status(400).json({error: "The request body is empty"})
     try{
-        req.params.id = helper.checkId(req.params.id,"id")
+        req.params.id = helper.checkString(req.params.id);
         newFoodStallInfo.food_stall_name = helper.checkString(newFoodStallInfo.food_stall_name)
     }
     catch(e){
@@ -403,9 +406,10 @@ router.route('/:id/foodstalls/addfoodstall')
         await foodStallData.createFoodStall(req.params.id, newFoodStallInfo.food_stall_name)
 
         //replace this with where you want to render to
-        return res.status(200).render("addFoodStallPage")
+        return res.status(200).redirect(`/themepark/${req.params.id}/foodstalls`)  
     }
     catch(e){
+        console.log(e);
         return res.status(404).json({error:e})
     }
 })
@@ -413,7 +417,17 @@ router.route('/:id/foodstalls/addfoodstall')
 
 router.route('/:id/foodstalls/:foodstallid')
 .get(async(req, res) => {
-    return res.render('foodStallPage')
+    try {
+        const themeParkId = helper.checkId(req.params.id,"Theme Park ID");
+        const foodstallId = helper.checkId(req.params.foodstallid, "Food Stall ID");
+
+        const foodstall = await foodStallData.getFoodStallById(foodstallId);
+
+        return res.render('foodStallPage', {tpid: req.params.id, foodstall: foodstall});
+    } catch (e) {
+        console.log(e);
+        return res.status(400).json({error:e});
+    }
 })
 
 router.route('/:id/foodstalls/:foodstallid/ratings')

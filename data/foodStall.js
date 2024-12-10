@@ -14,8 +14,10 @@ const createFoodStall = async (
     const themePark = await themeParkCollections.findOne({_id: themeParkId});
     if (themePark === null) throw `Error: there is no theme park with id ${id}`
     
+    const foodStallCollections = await foodstalls();
+    const foodStallExist = await foodStallCollections.find({parkFoodStallIsLocatedIn: themeParkId}).toArray()
+    if (foodStallExist.some((foodstall) => foodstall.foodStallName.toLowerCase() === foodStallName.toLowerCase())) throw "Error: a foodstall with that name already exists"
     const newFoodStall = {
-        _id: new ObjectId(),
         foodStallName: foodStallName,
         parkFoodStallIsLocatedIn: themeParkId,
         foodQualityRating: 0,
@@ -24,7 +26,7 @@ const createFoodStall = async (
         comments: [],
         reports: []
     }
-    const foodStallCollections = await foodstalls();
+
     const foodStallInfo = await foodStallCollections.insertOne(newFoodStall);
     if(!foodStallInfo.acknowledged || !foodStallInfo.insertedId) throw "Error: could not add a new food stall park"
     const foodStallId = foodStallInfo.insertedId.toString();
@@ -46,16 +48,6 @@ const getFoodStallById = async (id) => {
 }
 
 const getFoodStallsByThemePark = async (id) => {
-    // if (!ObjectId.isValid(id)) throw "Invalid Theme Park ID";
-    
-    // const foodStallsCollection = await foodstalls();
-    // const stalls = await foodStallsCollection.find({ themeParkId: new ObjectId(id)}).toArray();
-    
-    // if (!stalls || stalls.length === 0) {
-    //     throw "No food stalls found for the given Theme Park ID";
-    // }
-    // return stalls;
-
     if (!ObjectId.isValid(id)) throw "Invalid Theme Park ID";
 
     const foodStallsCollection = await foodstalls();
@@ -83,4 +75,4 @@ const getFoodStallsByThemePark = async (id) => {
         foodStalls: formattedStalls
     };
 }
-export default {createFoodStall, getFoodStallById}
+export default {createFoodStall, getFoodStallById, getFoodStallsByThemePark}

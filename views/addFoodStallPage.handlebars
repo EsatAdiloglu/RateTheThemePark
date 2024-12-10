@@ -1,9 +1,13 @@
  <h1> Add A Food Stall </h1>
  <main>
     <p>Please enter the following information to add a food stall</p>
-    <form id = "food_stall">
+    <form id = "addfoodstall" method="POST" action="/themepark/{{_id}}/foodstalls/addfoodstall">
         <label for="food_stall_name">Food Stall Name</label>
         <input type="string" name="food_stall_name" id="food_stall_name">
+        <br>
+
+        <label for="foods_served">Enter any foods served</label>
+        <input type="string" name="foods_served" id="foods_served">
         <br>
         <button>Submit</button>
     </form>
