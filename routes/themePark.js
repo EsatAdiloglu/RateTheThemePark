@@ -432,12 +432,27 @@ router.route('/:id/foodstalls/:foodstallid')
 
 router.route('/:id/foodstalls/:foodstallid/ratings')
 .get(async(req, res) => {
-    return res.render('foodStallRatingPage')
+    try {
+        const themeParkId = helper.checkId(req.params.id, "Theme Park ID");
+        const foodstallId = helper.checkId(req.params.id, "Food Stall ID");
+        
+        const themePark = await themeParkData.getThemeParkById(themeParkId);
+        const foodstall = themePark.foodstalls.find((foodstall) => foodstall.toString() === foodstallId);
+        
+        if (!foodstall) {
+            return res.status(404).json({error: "Food stall not fond in the theme park"});
+        }
+        
+        const foodstallsratings = (await foodStallData.getFoodStallRatings(req.params.foodstallid)).ratings;
+        return res.render('foodStallRatingPage', {tpid: req.params.id, fpid: req.params.foodstallid, ratings: foodstallsratings});
+    } catch (e) {
+        return res.status(400).json({error:e});
+    } 
 })
 
 router.route('/:id/foodstalls/:foodstallid/addRating')
 .get(async(req, res) => {
-    return res.render("addFoodStallRatingPage")
+    return res.render("addFoodStallRatingPage", {tpid: req.params.id, fpid: req.params.foodstallid});
 })
 .post(async(req, res) => {
     const newFoodStallRatingInfo = req.body
@@ -449,7 +464,7 @@ router.route('/:id/foodstalls/:foodstallid/addRating')
         helper.checkRating(newFoodStallRatingInfo.food_quality)
         helper.checkRating(newFoodStallRatingInfo.food_wait_time)
 
-        newFoodStallRatingInfo.food_stall_review = helper.checkString(newFoodStallRatingInfo.food_stall_review)
+        // newFoodStallRatingInfo.food_stall_review = helper.checkString(newFoodStallRatingInfo.food_stall_review)
     }
     catch(e){
         return res.status(400).json({error: e})
@@ -458,10 +473,10 @@ router.route('/:id/foodstalls/:foodstallid/addRating')
     try{
         const user = await userData.getUserByUsername(req.session.user.userName)
         const {food_quality, food_wait_time, food_stall_review} = newFoodStallRatingInfo
-        await foodStallRatingData.createFoodStallRating(user.userName, req.params.foodstallid, food_quality, food_wait_time, food_stall_review)
+        await foodStallRatingData.createFoodStallRating(user.userName, req.params.foodstallid, food_quality, food_wait_time)
 
         //replace this with where you want to render to
-        return res.status(200).render("addFoodStallRatingPage")
+        return res.status(200).redirect(`/themepark/${req.params.id}/foodstalls/${req.params.foodstallid}/ratings`); 
     }
     catch(e){
         return res.status(404).json({error:e})
