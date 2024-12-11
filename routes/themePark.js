@@ -543,31 +543,50 @@ router.route('/:id/foodstalls/:foodstallid')
 
 router.route('/:id/foodstalls/:foodstallid/ratings')
 .get(async(req, res) => {
-    try{
-        req.params.id = helper.checkId(req.params.id, "Theme Park Id")
-        req.params.foodstallid = helper.checkId(req.params.foodstallid, "Food Stall Id")
+    try {
+        const themeParkId = helper.checkId(req.params.id, "Theme Park ID");
+        const foodstallId = helper.checkId(req.params.id, "Food Stall ID");
+        
+        const themePark = await themeParkData.getThemeParkById(themeParkId);
+        const foodstall = themePark.foodstalls.find((foodstall) => foodstall.toString() === foodstallId);
+        
+        if (!foodstall) {
+            return res.status(404).json({error: "Food stall not fond in the theme park"});
+        }
+        
+        const foodstallsratings = (await foodStallData.getFoodStallRatings(req.params.foodstallid)).ratings;
+        return res.render('foodStallRatingPage', {tpid: req.params.id, fpid: req.params.foodstallid, ratings: foodstallsratings});
+    } catch (e) {
+        return res.status(400).json({error:e});
+    } 
+})
 
-        req.params.id = xss(req.params.id)
-        req.params.foodstallid = xss(req.params.foodstallid)
+router.route('/:id/foodstalls/:foodstallid/addRating')
+.get(async(req, res) => {
+    return res.render("addFoodStallRatingPage", {tpid: req.params.id, fpid: req.params.foodstallid});
+})
+.post(async(req, res) => {
+    const newFoodStallRatingInfo = req.body
+    if(!newFoodStallRatingInfo || Object.keys(newFoodStallRatingInfo) < 1) return res.status(400).json({error: "The request body is empty"})
+
+    try{
+        req.params.foodstallid = helper.checkId(req.params.foodstallid, "foodStallId")
+
+        helper.checkRating(newFoodStallRatingInfo.food_quality)
+        helper.checkRating(newFoodStallRatingInfo.food_wait_time)
+
+        // newFoodStallRatingInfo.food_stall_review = helper.checkString(newFoodStallRatingInfo.food_stall_review)
     }
     catch(e){
         return res.status(400).json({error: `${e}`})
     }
     try{
-        const themepark = await themeParkData.getThemeParkById(req.params.id);
-        const foodStall = await foodStallData.getFoodStallById(req.params.foodstallid);
-        if(!themepark.foodStalls.some((f) => f === foodStall._id.toString())) throw `Error: the foodstall ${foodstall.foodStallName} doesn't exist in the themepark ${themepark.themeParkName}`
+        const user = await userData.getUserByUsername(req.session.user.userName)
+        const {food_quality, food_wait_time, food_stall_review} = newFoodStallRatingInfo
+        await foodStallRatingData.createFoodStallRating(user.userName, req.params.foodstallid, food_quality, food_wait_time)
 
-        const foodStallRatings = (await foodStallRatingData.getFoodStallRatings(req.params.foodstallid)).ratings;
-        const averages = await foodStallRatingData.getAverageFoodStallRatings(req.params.foodstallid)
-        
-        return res.render('foodStallRatingPage',{
-            fpid: req.params.foodstallid,
-            ratings: foodStallRatings,
-            title: `Ratings for ${foodStall.foodStallName}`,
-            averages: averages,
-            script_partial: 'foodStallRating_script'
-        })
+        //replace this with where you want to render to
+        return res.status(200).redirect(`/themepark/${req.params.id}/foodstalls/${req.params.foodstallid}/ratings`); 
     }
     catch(e){
         return res.status(404).json({error: `${e}`})
