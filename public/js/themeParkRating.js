@@ -9,7 +9,7 @@
         crowds = $("#theme_park_crowds"),
         diversity = $("#theme_park_diversity"),
         error = $(`#error`),
-        test = $(`button[type="submit"]`)
+        submitButton = $(`button[type="submit"]`)
 
     const checkNumber = (num, numName) => {
         if(typeof num === "string" && num.trim() < 1) throw `Error: ${numName} wasn't given`
@@ -74,7 +74,7 @@
                 url: '/api/addThemeParkRating',
                 contentType: "application/json",
                 data: JSON.stringify({
-                    themeParkId: test.data("id"),
+                    themeParkId: submitButton.data("id"),
                     themeParkStaff: staffRating,
                     themeParkCleanliness: cleanlinessRating,
                     themeParkCrowds: crowdsRating,
