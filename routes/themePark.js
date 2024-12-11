@@ -309,7 +309,13 @@ router.route('/:id/rides/:rideid/ratings')
 
         const ridesratings = (await rideRatingData.getRideRatingsByRide(req.params.rideid)).ratings;
         console.log(ridesratings)
-        return res.render('rideRatingPage', {tpid: req.params.id, rpid: req.params.rideid, ratings: ridesratings});
+        return res.render('rideRatingPage', {
+            tpid: req.params.id, 
+            rpid: req.params.rideid, 
+            ratings: ridesratings, 
+            title: "Rating on Rides",
+            script_partial: 'rideRating_script'
+        });
     } catch (e) {
         console.log(e);
         return res.status(400).json({error:e});
