@@ -3,3 +3,19 @@
 
     ratings of a specific foodstall
  --}}
+
+<h1> Ratings of Foodstalls </h1>
+
+
+<main>
+	<ol>
+		{{#each ratings}}
+		<li>
+			Username: {{userName}}
+			foodQualityRating {{foodQualityRating}}, waitTimeRating {{waitTimeRating}} 
+		</li>
+		{{/each}}
+	</ol>
+</main>
+
+<a href = `/themepark/{{tpid}}/foodstalls/{{rpid}}/addRating`> Add rating on foodstall</a>
