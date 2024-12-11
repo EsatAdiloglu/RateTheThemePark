@@ -18,9 +18,31 @@ Theme Park Rating Page (INDIVIDUAL THEME PARK)
         "diveristyRating": 6
         "review --}}
 
-<h1>Ratings for {{themeparkname}}</h1>
+<div id = "error"></div>
+<button  id="addThemeParkRating">Add a rating to the theme park</button>
+<div id="rating" hidden>
+    <h2>Add a rating</h2>
+    <p>Please enter the following information to add a rating to a theme park</p>
+    <form id = "ratingForm">
+        <label for="theme_park_staff">Staff Rating</label>
+        <input type="number" name="theme_park_staff" id="theme_park_staff">
+        <br>
+        <label for="theme_park_cleanliness">Cleanliness Rating</label>
+        <input type="number" name="theme_park_cleanliness" id="theme_park_cleanliness">
+        <br>
+        <label for="theme_park_crowds">Crowds Rating</label>
+        <input type="number" name="theme_park_crowds" id="theme_park_crowds">
+        <br>
+        <label for="theme_park_diversity">Diversity Rating</label>
+        <input type="number" name="theme_park_diversity" id="theme_park_diversity">
+        <br>
+        {{!-- <label for="theme_park_review">Enter Your Review</label>
+        <input type="string" name="theme_park_review" id="theme_park_review"> --}}
+        <button data-id={{themepark}} type="submit">Submit</button>
+    </form>
+</div>
 
-<ul>
+<ul id="ratingsList">
   {{#each ratings}}
     <li>
       <p>{{userName}}</p>
@@ -33,4 +55,3 @@ Theme Park Rating Page (INDIVIDUAL THEME PARK)
   {{/each}}
 </ul>
 
-<a href="/themepark/{{themepark}}/ratings/addThemeParkRating">Add a rating to the theme park</a>

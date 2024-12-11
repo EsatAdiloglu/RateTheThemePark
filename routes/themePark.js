@@ -104,9 +104,10 @@ router.route('/:id/ratings')
             const ratingsData = await themeParkRatingData.getThemeParkRatings(req.params.id);
 
             return res.status(200).render('themeParkRatingPage', {
-                themeparkname: themePark.themeParkName,
+                title: `Ratings for ${themePark.themeParkName}`,
                 themepark: themePark2,
-                ratings: ratingsData.ratings
+                ratings: ratingsData.ratings,
+                script_partial: 'themeParkRating_script'
             });
         } catch (e) {
             console.log(e)
