@@ -6,7 +6,6 @@ import themeParkRatingData from "../data/themeParkRating.js"
 
 router.route("/addThemeParkRating").post(async (req, res) => {
     const themeParkRatingInfo = req.body
-    console.log(themeParkRatingInfo)
     try{
         themeParkRatingInfo.themeParkId = helper.checkId(themeParkRatingInfo.themeParkId, "Theme Park Id")
         helper.checkRating(themeParkRatingInfo.themeParkStaff)
