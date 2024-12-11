@@ -73,4 +73,4 @@ const getFoodStallsByThemePark = async (id) => {
         foodStalls: formattedStalls
     };
 }
-export default {createFoodStall, getFoodStallById}
+export default {createFoodStall, getFoodStallById, getFoodStallsByThemePark}

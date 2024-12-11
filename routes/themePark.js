@@ -320,14 +320,14 @@ router.route('/:id/rides/:rideid/addRating')
 .get(async(req, res) => {
     try{
         req.params.id = helper.checkId(req.params.id, "theme park id")
-        req.params.rideId = helper.checkId(req.params.rideId, "ride id")
+        req.params.rideid = helper.checkId(req.params.rideid, "ride id")
     }
     catch(e){
         return res.send(400).json({error: e})
     }
     try{
         const themepark = await themeParkData.getThemeParkById(req.params.id)
-        const ride = await rideData.getRideById(req.params.rideId)
+        const ride = await rideData.getRideById(req.params.rideid)
         if(!themepark.rides.some((r) => r === ride._id.toString())) throw `Error: the ride ${ride.rideName} doesn't exist in theme park ${themepark.themeParkName}` 
         res.render('addRideRatingPage', {tpid: req.params.id, rpid: req.params.rideid})
     }
@@ -374,14 +374,14 @@ router.route('/:id/rides/:rideid/addRating')
 router.route('/:id/rides/:rideid/comments').get(async(req, res) => {
     try{
         req.params.id = helper.checkId(req.params.id, "theme park id")
-        req.params.rideId = helper.checkId(req.params.rideId, "ride id")
+        req.params.rideid = helper.checkId(req.params.rideid, "ride id")
     }
     catch(e){
         return res.send(400).json({error: e})
     }
     try{
         const themepark = await themeParkData.getThemeParkById(req.params.id)
-        const ride = await rideData.getRideById(req.params.rideId)
+        const ride = await rideData.getRideById(req.params.rideid)
         if(!themepark.rides.some((r) => r === ride._id.toString())) throw `Error: the ride ${ride.rideName} doesn't exist in theme park ${themepark.themeParkName}` 
         const rideComments  = (await commentsData.getComments(ride._id.toString())).comments
         return res.status(200).render('rideCommentPage', {_id: themepark._id.toString(), _rideId: ride._id.toString(), comments: rideComments})
@@ -398,18 +398,19 @@ router.route('/:id/rides/:rideid/addComment')
 .get(async(req, res) => {
     try{
         req.params.id = helper.checkId(req.params.id, "theme park id")
-        req.params.rideId = helper.checkId(req.params.rideId, "ride id")
+        req.params.rideid = helper.checkId(req.params.rideid, "ride id")
     }
     catch(e){
         return res.send(400).json({error: e})
     }
     try{
         const themepark = await themeParkData.getThemeParkById(req.params.id)
-        const ride = await rideData.getRideById(req.params.rideId)
+        const ride = await rideData.getRideById(req.params.rideid)
         if(!themepark.rides.some((r) => r === ride._id.toString())) throw `Error: the ride ${ride.rideName} doesn't exist in theme park ${themepark.themeParkName}` 
-        return res.render('addRideCommentPage', {themeId: themepark._id.toString(), rideId: ride._id.toString()})
+        return res.render('addRideCommentPage', {themeId: themepark._id.toString(), rideId: req.params.rideid })
     }
     catch(e){
+        console.log(e);
         return res.send(404).json({error: e})
     }
     
@@ -435,7 +436,7 @@ router.route('/:id/rides/:rideid/addComment')
 
     try{
         const themepark = await themeParkData.getThemeParkById(req.params.id)
-        const ride = await rideData.getRideById(req.params.rideId)
+        const ride = await rideData.getRideById(req.params.rideid)
         if(!themepark.rides.some((r) => r === ride._id.toString())) throw `Error: the ride ${ride.rideName} doesn't exist in theme park ${themepark.themeParkName}` 
 
         await commentsData.createComment(userName, ride._id.toString(), rideComment, 1)
