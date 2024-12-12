@@ -709,16 +709,78 @@ router.route('/:id/foodstalls/:foodstallid/ratings')
 //         return res.status(404).json({error:e})
 //     }
 // })
+router.route('/:id/foodstalls/:foodstallid/comments')
+.get(async(req, res) => {
+    try{
+        req.params.id = helper.checkId(req.params.id, "theme park id");
+        req.params.foodstallid = helper.checkId(req.params.foodstallid, "foodstall id");
 
-router.route('/:id/foodstalls/:foodstallid/comments').get(async(req, res) => {})
+        req.params.id = xss(req.params.id)
+        req.params.foodstallid = xss(req.params.foodstallid)
+    } catch (e) {
+        return res.send(400).json({error: `${e}`});
+    }
+    try {
+        const themepark = await themeParkData.getThemeParkById(req.params.id) 
+        const foodstall = await foodStallData.getFoodStallById(req.params.foodstallid)
+        if (!themepark.foodstalls.some((f) => f === foodstall._id.toString())) throw `Error: the foodstall ${foodstall.foodStallName} doesn't exist in theme park ${themepark.themeParkName}`
+        const foodstallComments = (await commentsData.getComments(foodstall._id.toString())).comments
+        return res.status(200).render('foodStallCommentPage', {_id: themepark._id.toString(), _foodstallId: foodstall._id.toString(), comments: foodstallComments})
+    } catch (e) {
+        return res.send(404).json({error: `${e}`})
+    } 
+})
 
 router.route('/:id/foodstalls/:foodstallid/addComment')
 .get(async(req, res) => {
     // get the addComment page
-    res.render('addFoodStallCommentPage') //need to do
+	try { 
+        req.params.id = helper.checkId(req.params.id, "theme park id");
+        req.params.foodstallid = helper.checkId(req.params.foodstallid, "foodstall id");
+
+        req.params.id = xss(req.params.id)
+        req.params.foodstallid = xss(req.params.foodstallid)
+    } catch (e) {
+        return res.send(400).json({error: `${e}`});
+    }
+    
+    try {
+        const themepark = await themeParkData.getThemeParkById(req.params.id);
+        const foodstall = await foodStallData.getFoodStallById(req.params.foodstallid);
+        if (!themepark.foodstalls.some((f) => f === foodstall._id.toString())) throw `Error: the foodstall ${foodstall.foodStallName} doesn't exist in theme park ${themepark.themeParkName}`;
+        return res.render('addFoodStallCommentPage', {themeId: themepark._id.toString(), foodstallId: req.params.foodstallid}) 
+    } catch (e) {
+        return res.send(404).json({error: `${e}`});
+    }
 })
 .post(async(req, res) => {
     // add the comment to the specific food stall
+    const newFoodStallCommentInfo = req.body;
+    if(!newFoodStallRatingInfo || Object.keys(newFoodStallRatingInfo) < 1) return res.status(400).json({error: "The request body is empty"});
+    let userName = undefined;
+    let foodstallComment = undefined;
+    try {
+        req.params.foodstallid = helper.checkId(req.params.foodstallid, "foodstall id");
+        req.params.id = helper.checkId(req.params.id, "theme park id");
+        userName = helper.checkString(req.session.user.userName);
+        foodstallComment = helper.checkString(newFoodStallCommentInfo.foodstall_comment);
+
+        req.params.id = xss(req.params.id)
+        req.params.foodstallid = xss(req.params.foodstallid)
+        userName = xss(userName)
+        foodstallComment = xss(foodstallComment)
+    } catch (e) {
+        return res.status(400).json({error: `${e}`});
+    }
+    try {
+        const themepark = await themeParkData.getThemeParkById(req.params.id);
+        const foodstall = await foodStallData.getFoodStallById(req.params.foodstallid);
+        if (!themepark.foodstalls.some((f) => f === foodstall._id.toString())) throw `Error: the foodstall ${foodstall.foodStallName} doesn't exist in theme park ${themepark.themeParkName}`;
+        await commentsData.createComment(userName, foodstall._id.toString(), foodstallComment, 1); 
+        return res.status(200).redirect(`/themepark/${themepark._id.toString()}/foodstalls/${foodstall._id.toString()}/comments`);
+    } catch (e) {
+        return res.status(404).json({error: `${e}`});
+    }
 })
 
 
