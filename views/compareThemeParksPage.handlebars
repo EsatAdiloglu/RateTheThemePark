@@ -6,24 +6,28 @@
 <a href = '/themepark'><button>Rate my Theme Park</button></a>
 
  <main>
-    <p>Select the theme parks you want to compare from both dropdowns</p>
-    <form method="POST" action="/comparethemepark" id="compareparkform">
-        <label for="firstpark">First Theme Park</label>
-        <select name = "firstparkform" id = "firstparkform">
-            {{#each parks}}
-            <option value = {{themeParkName}}> {{themeParkName}}</option>
+    <p>Put the ID of the theme parks you want to compare! IDs are below. </p>
+    
+    <form id = "themeParkCompareForm" method = "POST" action = "/themepark/comparethemeparksresults" >
+        <p>First park results:</p>
+        <select id = "firstPark">
+            {{#each parkOne}}
+                <option value = {{_id}}> {{themeParkName}}</option>
             {{/each}}
         </select>
-        <br>
-        <label for="secondpark">Second Theme Park</label>
-        <select name = "secondparkform" id = "secondparkform">
-            {{#each parks}}
-            <option value = {{themeParkName}}> {{themeParkName}}</option>
+        <p>Second park results:</p>
+        <select id = "secondPark">
+            {{#each parkTwo}}
+                <option value = {{_id}}> {{themeParkName}}</option>
             {{/each}}
         </select>
-        <button name="submit_button" id="submit_button">Submit</button>
+        <button id = 'getparksbutton'>Submit</button>
     </form>
-    <ol id = "compareresults">
 
-    </ol>
+    {{#each parkOne}}
+        <p>{{themeParkName}} </p>
+        <p>ID: {{_id}}</p>
+        <p></p>
+    {{/each}}
+    
  </main>

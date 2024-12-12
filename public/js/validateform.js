@@ -1,3 +1,4 @@
+
 let addthemeparkform = document.getElementById('tp'); //a
 let nameInput = document.getElementById('theme_park_name');
 let streetInput = document.getElementById('theme_park_street');
@@ -484,6 +485,29 @@ if (signinform){
           }
     })
 }
+
+const compareForm = document.getElementById("themeParkCompareForm");
+const firstSelect = document.getElementById("firstPark");
+const secondSelect = document.getElementById("secondPark");
+
+compareForm.addEventListener('submit', async (event) => {
+  const res = event.preventDefault();
+  console.log(firstSelect.value)
+console.log(secondSelect.value)
+
+  const result = await fetch("/themepark/comparethemeparksresults", 
+      {
+          method:'POST',
+          headers: {
+              'Content-Type': 'application/json', // Set the appropriate Content-Type
+            },
+          body: JSON.stringify({ parkOne : firstSelect.value , parkTwo : secondSelect.value})})
+
+    console.log(result)
+    const url = result.url
+    window.location.href = url
+})
+
 // ---------------------------------- SIGNUP ----------------------------------------------------------
 let signupform = document.getElementById('signup-form')
 let signupname = document.getElementById('name');
