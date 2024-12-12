@@ -124,7 +124,7 @@ const getAverageRatings = async(id) => {
         avgCleanlinessRating: avgCleanliness.toFixed(2),
         avgCrowdRating: avgCrowds.toFixed(2),
         avgDiversityRating: avgDiversity.toFixed(2),
-        numRatings: ratingLength.length > 0 ? ratings.length : 0
+        numRatings: ratings.length > 0 ? ratings.length : 0
     }
 
 
