@@ -49,6 +49,8 @@ export const signUpUser = async (name, username, password) => {
         foodStallRatings: [],
         likedRatings: [],
         dislikedRatings: [],
+        likes: [],
+        dislikes: [],
         comments: [],
         reports: []
     }

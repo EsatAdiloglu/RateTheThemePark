@@ -15,7 +15,7 @@ const checkRating = (num) => {
     if (num % 1 !== 0) throw "Error: num isn't an integer"
 }
 const checkId = (id, idName) => {
-  id = checkString(id)
+  id = checkString(id, idName)
   if(!ObjectId.isValid(id)) throw `Error: ${idName} is a valid Object id`
   return id
 }

@@ -52,7 +52,7 @@ const createFoodStallRating = async (
     const updateUserRating = {foodStallRatings: [...user.foodStallRatings, ratingId]}
     const updateUserResult = await userCollections.findOneAndUpdate({userName: userName}, {$set: updateUserRating})
     if(!updateUserResult) throw "Error: could not add rating to user"
-
+    console.log("hello")
     return await getFoodStallRatingById(ratingId)
 }
 
@@ -60,7 +60,7 @@ const getFoodStallRatingById = async (id) => {
     id = helper.checkString(id)
     if(!ObjectId.isValid(id)) throw "Error: id isn't an object id"
     id = new ObjectId(id)
-    const foodStallRatingCollections = await rideratings();
+    const foodStallRatingCollections = await foodstallratings();
     const foodStallRating = await foodStallRatingCollections.findOne({_id: new ObjectId(id)})
     if (foodStallRating === null) throw `Error: a food stall rating doesn't have an id of ${id}`
     foodStallRating._id = foodStallRating._id.toString()
@@ -79,10 +79,11 @@ const getFoodStallRatings = async (id) => {
             ratings: []
         };
     }
-
+    console.log("worldapf[dasdkoanwsdfoeafsdrgea")
+    console.log(ratings)
     const formattedFoodStallRatings = ratings.map(rating => ({
         _id: rating._id.toString(),
-        userID: rating.userID.toString(),
+        userName: rating.userName.toString(),
         foodQualityRating: rating.foodQualityRating,
         waitTimeRating: rating.waitTimeRating,
         review: rating.review,

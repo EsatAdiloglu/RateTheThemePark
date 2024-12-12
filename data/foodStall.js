@@ -59,7 +59,6 @@ const getFoodStallsByThemePark = async (id) => {
             foodStalls: []
         };
     }
-
     const formattedStalls = foodstallarray.map(stall => ({
         _id: stall._id.toString(),
         foodStallName: stall.foodStallName,
