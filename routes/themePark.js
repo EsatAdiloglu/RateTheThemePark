@@ -53,7 +53,6 @@ router.route('/listofthemeparks')
 .post(async (req, res) => {
     try {
          const themeParkInput = req.body.themeParkInput;
-        //  console.log(themeParkInput);
 
         const newThemePark = await themeParkData.getThemeParksByName(themeParkInput);
         return res.status(200).render("listOfThemeParks", {parks: newThemePark})
@@ -100,7 +99,6 @@ router.route('/:id/ratings')
         // Fetch theme park and render ratings page
         try {
             const themePark = await themeParkData.getThemeParkById(req.params.id);
-            console.log('Theme Park:', themePark);
             const ratingsData = await themeParkRatingData.getThemeParkRatings(req.params.id);
 
             return res.status(200).render('themeParkRatingPage', {
@@ -109,7 +107,6 @@ router.route('/:id/ratings')
                 ratings: ratingsData.ratings
             });
         } catch (e) {
-            console.log(e)
             return res.status(404).json({error: e});
         }
 })
@@ -148,7 +145,6 @@ router.route('/:id/ratings/addThemeParkRating')
         return res.status(200).redirect(`/themepark/${req.params.id}/ratings`)
     }
     catch(e){
-        console.log(e)
         return res.status(404).json({error: e})
     }
 })
@@ -169,7 +165,6 @@ router.route('/:id/comments')
             comments: themeParkComments,
         });
     } catch (e) {
-        console.log(e)
         return res.status(400).json({error: e});
     }
 })
@@ -194,7 +189,6 @@ router.route('/:id/comments/addThemeParkComment')
         helper.checkString(userName)
         helper.checkString(theme_park_comment);
     } catch (e) {
-        console.log(e);
         return res.status(400).json({error: e});
     }
 
@@ -202,7 +196,6 @@ router.route('/:id/comments/addThemeParkComment')
         await commentsData.createComment(userName, req.params.id, theme_park_comment, 0);
         return res.status(200).redirect(`/themepark/${req.params.id}/comments`);
     } catch (e) {
-        console.log(e);
         return res.status(404).json({error: e});
     }
 
@@ -225,11 +218,9 @@ router.route('/:id/rides')
     try{
         //const themePark = themeParkData.getThemeParkById(req.params.id)
         const ridesarray = (await rideData.getRidesByThemePark(req.params.id)).rides;
-        console.log(req.params.id, ridesarray);
         return res.status(200).render('themeParkRidesPage', {tpid: req.params.id, rides: ridesarray})
     }
     catch(e){
-        console.log(e);
         return res.status(404).json({error:e})
     }
 })
@@ -260,7 +251,6 @@ router.route('/:id/rides/addRide')
         return res.status(200).redirect(`/themepark/${req.params.id}/rides`)
     }
     catch(e){
-        console.log(e);
         return res.status(404).json({error:e})
     }
 })
@@ -285,7 +275,6 @@ router.route('/:id/rides/:rideid')
         
         res.render('ridePage', {tpid: req.params.id, ride: ride});
     } catch (e) {
-        console.log(e);
         res.status(400).json({error: e});
     }
 })
@@ -307,10 +296,8 @@ router.route('/:id/rides/:rideid/ratings')
         }
 
         const ridesratings = (await rideRatingData.getRideRatingsByRide(req.params.rideid)).ratings;
-        console.log(ridesratings)
         return res.render('rideRatingPage', {tpid: req.params.id, rpid: req.params.rideid, ratings: ridesratings});
     } catch (e) {
-        console.log(e);
         return res.status(400).json({error:e});
     }
 })
@@ -357,7 +344,6 @@ router.route('/:id/rides/:rideid/addRating')
 
     try {
         const user = await userData.getUserByUsername(req.session.user.userName)
-        console.log(user.userName)
         const {ride_waitime, ride_comfortability, ride_enjoyment} = newRideRatingInfo
         await rideRatingData.createRideRating(user.userName, req.params.rideid, ride_waitime, ride_comfortability, ride_enjoyment)
 
@@ -410,7 +396,6 @@ router.route('/:id/rides/:rideid/addComment')
         return res.render('addRideCommentPage', {themeId: themepark._id.toString(), rideId: req.params.rideid })
     }
     catch(e){
-        console.log(e);
         return res.send(404).json({error: e})
     }
     
@@ -461,10 +446,8 @@ router.route('/:id/foodstalls')
 
     try {
         const foodstallarray = (await foodStallData.getFoodStallsByThemePark(req.params.id)).foodStalls;
-        console.log(req.params.id, foodstallarray);
         return res.status(200).render('themeParkFoodStallsPage', {tpid: req.params.id, foodStalls: foodstallarray});
     } catch (e) {
-        console.log(e);
         return res.status(404).json({error:e});
     }
 });
@@ -492,7 +475,6 @@ router.route('/:id/foodstalls/addfoodstall')
         return res.status(200).redirect(`/themepark/${req.params.id}/foodstalls`)  
     }
     catch(e){
-        console.log(e);
         return res.status(404).json({error:e})
     }
 })
@@ -508,7 +490,6 @@ router.route('/:id/foodstalls/:foodstallid')
 
         return res.render('foodStallPage', {tpid: req.params.id, foodstall: foodstall});
     } catch (e) {
-        console.log(e);
         return res.status(400).json({error:e});
     }
 })

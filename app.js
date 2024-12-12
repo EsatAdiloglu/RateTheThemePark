@@ -14,17 +14,19 @@ const staticDir = express.static('public');
 
 app.set('views', path.join(__dirname, 'views'));
 const handlebarsInstance = exphbs.create({
-    defaultLayout: 'main',
-    // Specify helpers which are only registered on this instance.
-    helpers: {
-      asJSON: (obj, spacing) => {
-        if (typeof spacing === 'number')
-          return new Handlebars.SafeString(JSON.stringify(obj, null, spacing));
-  
-        return new Handlebars.SafeString(JSON.stringify(obj));
-      }
-    }
-  });
+  defaultLayout: 'main',
+  // Specify helpers which are only registered on this instance.
+  helpers: {
+    asJSON: (obj, spacing) => {
+      if (typeof spacing === 'number')
+        return new Handlebars.SafeString(JSON.stringify(obj, null, spacing));
+
+      return new Handlebars.SafeString(JSON.stringify(obj));
+    },
+
+    partialsDir: ['views/partials/']
+  }
+});
 
 app.use('/public', staticDir);
 app.use(express.json());
