@@ -5,6 +5,7 @@ import userData from "../data/user.js"
 import themeParkRatingData from "../data/themeParkRating.js"
 import rideRatingData from "../data/rideRating.js"
 import foodStallRatingData from "../data/foodStallRating.js"
+import xss from "xss";
 
 router.route("/addThemeParkRating").post(async (req, res) => {
     const themeParkRatingInfo = req.body
@@ -14,6 +15,12 @@ router.route("/addThemeParkRating").post(async (req, res) => {
         helper.checkRating(themeParkRatingInfo.themeParkCleanliness)
         helper.checkRating(themeParkRatingInfo.themeParkCrowds)
         helper.checkRating(themeParkRatingInfo.themeParkDiversity)
+
+        themeParkRatingInfo.themeParkId = xss(themeParkRatingInfo.themeParkId)
+        themeParkRatingInfo.themeParkStaff = xss(themeParkRatingInfo.themeParkStaff)
+        themeParkRatingInfo.themeParkCleanliness = xss(themeParkRatingInfo.themeParkCleanliness)
+        themeParkRatingInfo.themeParkCrowds = xss(themeParkRatingInfo.themeParkCrowds)
+        themeParkRatingInfo.themeParkDiversity = xss(themeParkRatingInfo.themeParkDiversity)
     }
     catch(e){
         return res.status(400).json({Error: `${e}`})
@@ -43,6 +50,11 @@ router.route("/addRideRating").post(async (req, res) => {
         helper.checkRating(rideRatingInfo.waitTime)
         helper.checkRating(rideRatingInfo.comfortability)
         helper.checkRating(rideRatingInfo.enjoyment)
+
+        rideRatingInfo.rideId = xss(rideRatingInfo.rideId)
+        rideRatingInfo.waitTime = xss(rideRatingInfo.waitTime)
+        rideRatingInfo.comfortability = xss(rideRatingInfo.comfortability)
+        rideRatingInfo.enjoyment = xss(rideRatingInfo.enjoyment)
     }
     catch(e){
         return res.status(400).json({Error: `${e}`})
@@ -70,6 +82,10 @@ router.route("/addFoodStallRating").post(async (req, res) => {
         foodStallRatingInfo.foodStallId = helper.checkId(foodStallRatingInfo.foodStallId, "Food Stall Id")
         helper.checkRating(foodStallRatingInfo.quality)
         helper.checkRating(foodStallRatingInfo.waitTime)
+
+        foodStallRatingInfo.foodStallId = xss(foodStallRatingInfo.foodStallId)
+        foodStallRatingInfo.quality = xss(foodStallRatingInfo.quality)
+        foodStallRatingInfo.waitTime = xss(foodStallRatingInfo.waitTime)
     }
     catch(e){
         return res.status(400).json({Error: `${e}`})
