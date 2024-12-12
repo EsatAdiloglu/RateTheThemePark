@@ -57,7 +57,6 @@ const getFoodStallsByThemePark = async (id) => {
             foodStalls: []
         };
     }
-
     const formattedStalls = foodstallarray.map(stall => ({
         _id: stall._id.toString(),
         foodStallName: stall.foodStallName,
@@ -73,4 +72,4 @@ const getFoodStallsByThemePark = async (id) => {
         foodStalls: formattedStalls
     };
 }
-export default {createFoodStall, getFoodStallById}
+export default {createFoodStall, getFoodStallById, getFoodStallsByThemePark}

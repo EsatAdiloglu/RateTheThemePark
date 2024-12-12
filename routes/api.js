@@ -4,6 +4,7 @@ import helper from "../helper.js";
 import userData from "../data/user.js"
 import themeParkRatingData from "../data/themeParkRating.js"
 import rideRatingData from "../data/rideRating.js"
+import foodStallRatingData from "../data/foodStallRating.js"
 
 router.route("/addThemeParkRating").post(async (req, res) => {
     const themeParkRatingInfo = req.body
@@ -15,7 +16,7 @@ router.route("/addThemeParkRating").post(async (req, res) => {
         helper.checkRating(themeParkRatingInfo.themeParkDiversity)
     }
     catch(e){
-        return res.status(400).json({Error: e})
+        return res.status(400).json({Error: `${e}`})
     }
 
     try{
@@ -31,12 +32,11 @@ router.route("/addThemeParkRating").post(async (req, res) => {
         })
     }
     catch(e){
-        return res.status(404).json({Error: e})
+        return res.status(404).json({Error: `${e}`})
     }
 })
 
 router.route("/addRideRating").post(async (req, res) => {
-    console.log(req.body)
     const rideRatingInfo = req.body
     try{
         rideRatingInfo.rideId = helper.checkId(rideRatingInfo.rideId, "Ride Id")
@@ -45,7 +45,7 @@ router.route("/addRideRating").post(async (req, res) => {
         helper.checkRating(rideRatingInfo.enjoyment)
     }
     catch(e){
-        return res.status(400).json({Error: e})
+        return res.status(400).json({Error: `${e}`})
     }
 
     try{
@@ -60,7 +60,34 @@ router.route("/addRideRating").post(async (req, res) => {
         })
     }
     catch(e){
-        return res.status(404).json({Error: e})
+        return res.status(404).json({Error: `${e}`})
+    }
+})
+
+router.route("/addFoodStallRating").post(async (req, res) => {
+    const foodStallRatingInfo = req.body
+    try{
+        foodStallRatingInfo.foodStallId = helper.checkId(foodStallRatingInfo.foodStallId, "Food Stall Id")
+        helper.checkRating(foodStallRatingInfo.quality)
+        helper.checkRating(foodStallRatingInfo.waitTime)
+    }
+    catch(e){
+        return res.status(400).json({Error: `${e}`})
+    }
+
+    try{
+        const user = await userData.getUserByUsername(req.session.user.userName)
+        const {quality, waitTime} = foodStallRatingInfo
+        await foodStallRatingData.createFoodStallRating(user.userName, foodStallRatingInfo.foodStallId, quality, waitTime,"rating")
+        return res.json({
+            userName: user.userName,
+            foodQualityRating: quality,
+            waitTimeRating: waitTime,
+        })
+    }
+    catch(e){
+        console.log(e)
+        return res.json({Error: `${e}`})
     }
 })
 export default router;

@@ -297,14 +297,18 @@ router.route('/:id/rides/:rideid')
 router.route('/:id/rides/:rideid/ratings')
 .get(async(req, res) => {
     try {
-        const themeParkId = helper.checkId(req.params.id, "theme park ID");
-        const rideId = helper.checkId(req.params.rideid, "ride ID");
+        req.params.id = helper.checkId(req.params.id, "theme park ID");
+        req.params.rideid = helper.checkId(req.params.rideid, "ride ID");
+    }
+    catch(e){
+        return res.status(400).json({error: e})
+    }
+    try{
+        const themePark = await themeParkData.getThemeParkById(req.params.id);
+        const ride = await rideData.getRideById(req.params.rideid)
         
-        const themePark = await themeParkData.getThemeParkById(themeParkId);
-        const ride = themePark.rides.find((ride) => ride.toString() === rideId);
-        
-        if (!ride) {
-            return res.status(404).json({error: "Ride not found in the theme park"});
+        if (!themePark.rides.some((r) => r === ride._id.toString())) {
+            return res.status(404).json({error: `The ride ${ride.rideName} not found in the theme park ${themePark.themeParkName}`});
         }
 
         const ridesratings = (await rideRatingData.getRideRatingsByRide(req.params.rideid)).ratings;
@@ -313,12 +317,12 @@ router.route('/:id/rides/:rideid/ratings')
             tpid: req.params.id, 
             rpid: req.params.rideid, 
             ratings: ridesratings, 
-            title: "Rating on Rides",
+            title: `Ratings for ${ride.rideName}`,
             script_partial: 'rideRating_script'
         });
     } catch (e) {
         console.log(e);
-        return res.status(400).json({error:e});
+        return res.status(404).json({error:e});
     }
 })
 
@@ -507,21 +511,51 @@ router.route('/:id/foodstalls/addfoodstall')
 router.route('/:id/foodstalls/:foodstallid')
 .get(async(req, res) => {
     try {
-        const themeParkId = helper.checkId(req.params.id,"Theme Park ID");
-        const foodstallId = helper.checkId(req.params.foodstallid, "Food Stall ID");
-
-        const foodstall = await foodStallData.getFoodStallById(foodstallId);
+        req.params.id = helper.checkId(req.params.id,"Theme Park ID");
+        req.params.foodstallid = helper.checkId(req.params.foodstallid, "Food Stall ID");
+    }
+    catch(e){
+        return res.status(400).json({error:e})
+    }
+    try{
+        const themepark = await themeParkData.getThemeParkById(req.params.id);
+        const foodstall = await foodStallData.getFoodStallById(req.params.foodstallid);
+        if(!themepark.foodStalls.some((f) => f === foodstall._id.toString())) throw `Error: the foodstall ${foodstall.foodStallName} doesn't exist in the themepark ${themepark.themeParkName}`
 
         return res.render('foodStallPage', {tpid: req.params.id, foodstall: foodstall});
-    } catch (e) {
+    }
+    catch (e) {
         console.log(e);
-        return res.status(400).json({error:e});
+        return res.status(404).json({error:e});
     }
 })
 
 router.route('/:id/foodstalls/:foodstallid/ratings')
 .get(async(req, res) => {
-    return res.render('foodStallRatingPage')
+    try{
+        req.params.id = helper.checkId(req.params.id, "Theme Park Id")
+        req.params.foodstallid = helper.checkId(req.params.foodstallid, "Food Stall Id")
+    }
+    catch(e){
+        return res.status(400).json({error: e})
+    }
+    try{
+        const themepark = await themeParkData.getThemeParkById(req.params.id);
+        const foodStall = await foodStallData.getFoodStallById(req.params.foodstallid);
+        if(!themepark.foodStalls.some((f) => f === foodStall._id.toString())) throw `Error: the foodstall ${foodstall.foodStallName} doesn't exist in the themepark ${themepark.themeParkName}`
+
+        const foodStallRatings = (await foodStallRatingData.getFoodStallRatings(req.params.foodstallid)).ratings;
+        return res.render('foodStallRatingPage',{
+            fpid: req.params.foodstallid,
+            ratings: foodStallRatings,
+            title: `Ratings for ${foodStall.foodStallName}`,
+            script_partial: 'foodStallRating_script'
+        })
+    }
+    catch(e){
+        return res.status(404).json({error: `${e}`})
+    }
+    
 })
 
 router.route('/:id/foodstalls/:foodstallid/addRating')
