@@ -95,4 +95,31 @@ const getRideRatingsByRide = async (id) => {
         ratings: formattedRideRatings
     };
 }
-export default {createRideRating, getRideRatingById, getRideRatingsByRide}
+
+const getAverageRideRatings = async(id) => {
+    const ratings = (await getRideRatingsByRide(id)).ratings
+    let avgWait = 0
+    let avgComfort = 0
+    let avgEnjoyment = 0
+    
+    ratings.forEach((rating) => {
+        avgWait += parseInt(rating.waitTimeRating)
+        avgComfort += parseInt(rating.comfortabilityRating)
+        avgEnjoyment += parseInt(rating.enjoymentRating)
+    })
+    const ratingLength = ratings.length > 0 ? ratings.length : 1
+
+    avgWait /= ratingLength
+    avgComfort /= ratingLength
+    avgEnjoyment /= ratingLength
+
+    return {
+        avgWaitTimeRating: avgWait.toFixed(2),
+        avgComfortRating: avgComfort.toFixed(2),
+        avgEnjoymentRating: avgEnjoyment.toFixed(2),
+        numRatings: ratings.length
+    }
+
+
+}
+export default {createRideRating, getRideRatingById, getRideRatingsByRide, getAverageRideRatings}

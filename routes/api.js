@@ -30,9 +30,7 @@ router.route("/addThemeParkRating").post(async (req, res) => {
         const user = await userData.getUserByUsername(req.session.user.userName)
         const {themeParkStaff, themeParkCleanliness, themeParkCrowds, themeParkDiversity} = themeParkRatingInfo
         await themeParkRatingData.createThemeParkRating(user.userName, themeParkRatingInfo.themeParkId, themeParkStaff, themeParkCleanliness, themeParkCrowds, themeParkDiversity, "")
-        console.log(themeParkRatingInfo.themeParkId)
-        const averages = await themeParkRatingData.getAverageRatings(themeParkRatingInfo.themeParkId)
-        console.log(averages)
+        const averages = await themeParkRatingData.getAverageThemeParkRatings(themeParkRatingInfo.themeParkId)
         return res.json({
             userName: user.userName, 
             staffRating: themeParkStaff,
@@ -68,11 +66,13 @@ router.route("/addRideRating").post(async (req, res) => {
         const user = await userData.getUserByUsername(req.session.user.userName)
         const {waitTime, comfortability, enjoyment} = rideRatingInfo
         await rideRatingData.createRideRating(user.userName, rideRatingInfo.rideId, waitTime, comfortability, enjoyment,"")
+        const averages = await rideRatingData.getAverageRideRatings(rideRatingInfo.rideId)
         return res.json({
             userName: user.userName,
             waitTimeRating: waitTime,
             comfortabilityRating: comfortability,
-            enjoymentRating: enjoyment
+            enjoymentRating: enjoyment,
+            averageRatings: averages
         })
     }
     catch(e){
@@ -99,10 +99,12 @@ router.route("/addFoodStallRating").post(async (req, res) => {
         const user = await userData.getUserByUsername(req.session.user.userName)
         const {quality, waitTime} = foodStallRatingInfo
         await foodStallRatingData.createFoodStallRating(user.userName, foodStallRatingInfo.foodStallId, quality, waitTime,"rating")
+        const averages = await foodStallRatingData.getAverageFoodStallRatings(foodStallRatingInfo.foodStallId)
         return res.json({
             userName: user.userName,
             foodQualityRating: quality,
             waitTimeRating: waitTime,
+            averageRatings: averages
         })
     }
     catch(e){

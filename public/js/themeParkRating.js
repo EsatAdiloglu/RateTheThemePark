@@ -103,7 +103,6 @@
                         `)
                     ratingsList.append(list)
                     numRating.text(`${res.averageRatings.numRatings}`)
-                    console.log("hello")
                     avgStaff.text(`${res.averageRatings.avgStaffRating}`)
                     avgClean.text(`${res.averageRatings.avgCleanlinessRating}`)
                     avgCrowd.text(`${res.averageRatings.avgCrowdRating}`)

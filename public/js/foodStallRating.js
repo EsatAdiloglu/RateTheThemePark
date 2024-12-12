@@ -7,7 +7,10 @@
         quality = $("#food_quality"),
         waitTime = $("#food_wait_time"),
         error = $(`#error`),
-        submitButton = $(`button[type="submit"]`)
+        submitButton = $(`button[type="submit"]`),
+        avgFoodQuality = $("#avgFoodQuality"),
+        avgWait = $("#avgWait"),
+        numRating = $("#numRating")
 
     const checkNumber = (num, numName) => {
         if(typeof num === "string" && num.trim().length < 1) throw `Error: ${numName} wasn't given`
@@ -72,11 +75,14 @@
                     const list = $(`
                                 <li>
                                     <p>${res.userName}</p>
-                                    <p><strong>Food Quality:</strong> ${res.foodQualityRating}</p>
-                                    <p><strong>Wait Time:</strong> ${res.waitTimeRating}</p> 
+                                    <p><strong>Food Quality Rating:</strong> ${res.foodQualityRating}</p>
+                                    <p><strong>Wait Time Rating:</strong> ${res.waitTimeRating}</p> 
                                 </li>
                         `)
                     ratingsList.append(list)
+                    numRating.text(`${res.averageRatings.numRatings}`)
+                    avgFoodQuality.text(`${res.averageRatings.avgFoodQualityRating}`)
+                    avgWait.text(`${res.averageRatings.avgWaitTimeRating}`)
                 }
             })
 

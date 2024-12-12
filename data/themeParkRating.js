@@ -100,7 +100,7 @@ const getThemeParkRatings = async (id) => {
     };
 }
 
-const getAverageRatings = async(id) => {
+const getAverageThemeParkRatings = async(id) => {
     const ratings = (await getThemeParkRatings(id)).ratings
     let avgStaff = 0
     let avgCleanliness = 0
@@ -124,9 +124,9 @@ const getAverageRatings = async(id) => {
         avgCleanlinessRating: avgCleanliness.toFixed(2),
         avgCrowdRating: avgCrowds.toFixed(2),
         avgDiversityRating: avgDiversity.toFixed(2),
-        numRatings: ratings.length > 0 ? ratings.length : 0
+        numRatings: ratings.length
     }
 
 
 }
-export default {createThemeParkRating, getThemeParkRatingById, getThemeParkRatings, getAverageRatings}
+export default {createThemeParkRating, getThemeParkRatingById, getThemeParkRatings, getAverageThemeParkRatings}

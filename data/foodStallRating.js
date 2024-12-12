@@ -97,4 +97,23 @@ const getFoodStallRatings = async (id) => {
     }; 
 }
 
-export default {createFoodStallRating, getFoodStallRatingById, getFoodStallRatings}
+const getAverageFoodStallRatings = async(id) => {
+    const ratings = (await getFoodStallRatings(id)).ratings
+    let avgFood = 0
+    let avgWait = 0
+
+    ratings.forEach((rating) => {
+        avgFood += parseInt(rating.foodQualityRating)
+        avgWait += parseInt(rating.waitTimeRating)
+    })
+    const ratingLength = ratings.length > 0 ? ratings.length : 1
+
+    avgFood /= ratingLength
+    avgWait /= ratingLength
+    return{
+        avgFoodQualityRating: avgFood.toFixed(2),
+        avgWaitTimeRating: avgWait.toFixed(2),
+        numRatings: ratings.length
+    }
+}
+export default {createFoodStallRating, getFoodStallRatingById, getFoodStallRatings, getAverageFoodStallRatings}

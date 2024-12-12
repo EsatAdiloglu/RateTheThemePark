@@ -8,7 +8,11 @@
         comfortability = $("#ride_comfortability"),
         enjoyment = $("#ride_enjoyment"),
         error = $(`#error`),
-        submitButton = $(`button[type="submit"]`)
+        submitButton = $(`button[type="submit"]`),
+        avgWait = $('#avgWait'),
+        avgComfort = $("#avgComfort"),
+        avgEnjoyment = $("#avgEnjoyment"),
+        numRating = $("#numRating")
 
     const checkNumber = (num, numName) => {
         if(typeof num === "string" && num.trim().length < 1) throw `Error: ${numName} wasn't given`
@@ -88,6 +92,10 @@
                         `)
                     ratingsList.append(list)
                 }
+                numRating.text(`${res.averageRatings.numRatings}`)
+                avgWait.text(`${res.averageRatings.avgWaitTimeRating}`)
+                avgComfort.text(`${res.averageRatings.avgComfortRating}`)
+                avgEnjoyment.text(`${res.averageRatings.avgEnjoymentRating}`)
             })
 
         }

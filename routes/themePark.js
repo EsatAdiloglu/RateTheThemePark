@@ -123,7 +123,7 @@ router.route('/:id/ratings')
             const themePark = await themeParkData.getThemeParkById(req.params.id);
             console.log('Theme Park:', themePark);
             const ratingsData = await themeParkRatingData.getThemeParkRatings(req.params.id);
-            const averages = await themeParkRatingData.getAverageRatings(req.params.id);
+            const averages = await themeParkRatingData.getAverageThemeParkRatings(req.params.id);
 
             return res.status(200).render('themeParkRatingPage', {
                 title: `Ratings for ${themePark.themeParkName}`,
@@ -335,12 +335,15 @@ router.route('/:id/rides/:rideid/ratings')
         }
 
         const ridesratings = (await rideRatingData.getRideRatingsByRide(req.params.rideid)).ratings;
+        const averages = await rideRatingData.getAverageRideRatings(req.params.rideid);
+
         console.log(ridesratings)
         return res.render('rideRatingPage', {
             tpid: req.params.id, 
             rpid: req.params.rideid, 
             ratings: ridesratings, 
             title: `Ratings for ${ride.rideName}`,
+            averages: averages,
             script_partial: 'rideRating_script'
         });
     } catch (e) {
@@ -548,10 +551,13 @@ router.route('/:id/foodstalls/:foodstallid/ratings')
         if(!themepark.foodStalls.some((f) => f === foodStall._id.toString())) throw `Error: the foodstall ${foodstall.foodStallName} doesn't exist in the themepark ${themepark.themeParkName}`
 
         const foodStallRatings = (await foodStallRatingData.getFoodStallRatings(req.params.foodstallid)).ratings;
+        const averages = await foodStallRatingData.getAverageFoodStallRatings(req.params.foodstallid)
+        
         return res.render('foodStallRatingPage',{
             fpid: req.params.foodstallid,
             ratings: foodStallRatings,
             title: `Ratings for ${foodStall.foodStallName}`,
+            averages: averages,
             script_partial: 'foodStallRating_script'
         })
     }
