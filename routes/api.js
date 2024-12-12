@@ -30,12 +30,16 @@ router.route("/addThemeParkRating").post(async (req, res) => {
         const user = await userData.getUserByUsername(req.session.user.userName)
         const {themeParkStaff, themeParkCleanliness, themeParkCrowds, themeParkDiversity} = themeParkRatingInfo
         await themeParkRatingData.createThemeParkRating(user.userName, themeParkRatingInfo.themeParkId, themeParkStaff, themeParkCleanliness, themeParkCrowds, themeParkDiversity, "")
+        console.log(themeParkRatingInfo.themeParkId)
+        const averages = await themeParkRatingData.getAverageRatings(themeParkRatingInfo.themeParkId)
+        console.log(averages)
         return res.json({
             userName: user.userName, 
             staffRating: themeParkStaff,
             cleanlinessRating: themeParkCleanliness,
             crowdsRating: themeParkCrowds,
-            diversityRating: themeParkDiversity
+            diversityRating: themeParkDiversity,
+            averageRatings: averages
         })
     }
     catch(e){

@@ -100,4 +100,33 @@ const getThemeParkRatings = async (id) => {
     };
 }
 
-export default {createThemeParkRating, getThemeParkRatingById, getThemeParkRatings}
+const getAverageRatings = async(id) => {
+    const ratings = (await getThemeParkRatings(id)).ratings
+    let avgStaff = 0
+    let avgCleanliness = 0
+    let avgCrowds = 0
+    let avgDiversity = 0
+    
+    ratings.forEach((rating) => {
+        avgStaff += parseInt(rating.staffRating)
+        avgCleanliness += parseInt(rating.cleanlinessRating)
+        avgCrowds += parseInt(rating.crowdsRating)
+        avgDiversity += parseInt(rating.diversityRating)
+    })
+    const ratingLength = ratings.length > 0 ? ratings.length : 1
+
+    avgStaff /= ratingLength
+    avgCleanliness /= ratingLength
+    avgCrowds /= ratingLength
+    avgDiversity /= ratingLength
+    return {
+        avgStaffRating: avgStaff.toFixed(2),
+        avgCleanlinessRating: avgCleanliness.toFixed(2),
+        avgCrowdRating: avgCrowds.toFixed(2),
+        avgDiversityRating: avgDiversity.toFixed(2),
+        numRatings: ratingLength.length > 0 ? ratings.length : 0
+    }
+
+
+}
+export default {createThemeParkRating, getThemeParkRatingById, getThemeParkRatings, getAverageRatings}

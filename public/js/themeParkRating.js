@@ -9,7 +9,12 @@
         crowds = $("#theme_park_crowds"),
         diversity = $("#theme_park_diversity"),
         error = $(`#error`),
-        submitButton = $(`button[type="submit"]`)
+        submitButton = $(`button[type="submit"]`),
+        avgStaff = $("#avgStaff"),
+        avgClean = $("#avgClean"),
+        avgCrowd = $("#avgCrowd"),
+        avgDiversity = $("#avgDiversity"),
+        numRating = $("#numRating")
 
     const checkNumber = (num, numName) => {
         if(typeof num === "string" && num.trim().length < 1) throw `Error: ${numName} wasn't given`
@@ -97,6 +102,13 @@
                         </li>
                         `)
                     ratingsList.append(list)
+                    numRating.text(`${res.averageRatings.numRatings}`)
+                    console.log("hello")
+                    avgStaff.text(`${res.averageRatings.avgStaffRating}`)
+                    avgClean.text(`${res.averageRatings.avgCleanlinessRating}`)
+                    avgCrowd.text(`${res.averageRatings.avgCrowdRating}`)
+                    avgDiversity.text(`${res.averageRatings.avgDiversityRating}`)
+                    
                 }
             })
 
