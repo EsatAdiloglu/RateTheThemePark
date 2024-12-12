@@ -3,3 +3,16 @@
     /homepage/{idOfThemePark}/foodStalls/{idOfFoodStall}/comments
 
  --}}
+  <h1> Comments of Food Stalls</h1>
+ <main> 
+    <ol>
+        {{#each comments}}
+        <li>
+            {{userName}}
+            <br>
+            Comment: {{commentBody}}
+        </li>
+        {{/each}} 
+    </ol>
+ </main>
+ <a href='/themepark/{{_id}}/foodstalls/{{_foodstallId}}/addComment'> Add comment on food stall.</a>
