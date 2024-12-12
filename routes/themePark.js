@@ -486,7 +486,7 @@ router.route('/:id/foodstalls/addfoodstall')
     }
 
     try{
-        await foodStallData.createFoodStall(req.params.id, newFoodStallInfo.food_stall_name)
+        await foodStallData.createFoodStall(req.params.id, newFoodStallInfo.food_stall_name, newFoodStallInfo.foods_served)
 
         //replace this with where you want to render to
         return res.status(200).redirect(`/themepark/${req.params.id}/foodstalls`)  

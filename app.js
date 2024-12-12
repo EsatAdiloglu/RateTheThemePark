@@ -65,18 +65,6 @@ app.use('/signupuser', (req, res, next) => {
   next();
 });
 
-// -------------------------------
-// additional routes possible here
-// -------------------------------
-
-// dummy routes
-// app.get('/', (req, res) => {
-//     res.render('homePage', {title: "Rate My Theme Park"})
-// })
-// app.get('/addThemePark', (req, res) => {
-//   res.render('addThemeParkPage')
-// })
-
 configRoutes(app);
 
 app.listen(3000, () => {
