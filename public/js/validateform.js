@@ -485,7 +485,7 @@ if (signinform){
           }
     })
 }
-
+//Compare Theme Park
 const compareForm = document.getElementById("themeParkCompareForm");
 const firstSelect = document.getElementById("firstPark");
 const secondSelect = document.getElementById("secondPark");
