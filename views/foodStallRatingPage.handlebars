@@ -3,6 +3,7 @@
 
     ratings of a specific foodstall
  --}}
+<<<<<<< HEAD
   <p><strong>Number of Ratings:</strong> <span id="numRating">{{averages.numRatings}}</span></p>
  <p><strong>Food Quality Rating:</strong> <span id="avgFoodQuality">{{averages.avgFoodQualityRating}}</span>/10, <strong>Wait Time Rating:</strong> <span id="avgWait">{{averages.avgWaitTimeRating}}</span>/10</p>
  <div id="error"></div>
@@ -33,3 +34,20 @@
         {{/each}}
     </ol>
  </div>
+=======
+
+<h1> Ratings of Foodstalls </h1>
+
+<main>
+	<ol>
+		{{#each ratings}}
+		<li>
+			Username: {{userName}}
+			foodQualityRating {{foodQualityRating}}, waitTimeRating {{waitTimeRating}} 
+		</li>
+		{{/each}}
+	</ol>
+</main>
+
+<a href="/themepark/{{tpid}}/foodstalls/{{fpid}}/addRating">Add rating on foodstall</a>
+>>>>>>> 7836480 (Ryan changes)

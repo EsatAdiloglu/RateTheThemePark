@@ -361,6 +361,49 @@ router.route('/:id/rides/:rideid/ratings')
     }
 })
 
+<<<<<<< HEAD
+=======
+// render the addriderating page
+router.route('/:id/rides/:rideid/addRating')
+.get(async(req, res) => {
+    res.render('addRideRatingPage', {tpid: req.params.id, rpid: req.params.rideid})
+})
+// create a new riderating document, add it to that specific ride (kinda like nesting it )
+.post(async(req, res) => {
+    //adds a ride rating
+    const newRideRatingInfo = req.body
+    if(!newRideRatingInfo || Object.keys(newRideRatingInfo).length < 1) return res.status(400).json({error: "The request body is empty"})
+    
+    try {
+        console.log("kekw", req.params.rideid);
+        req.params.rideid = helper.checkId(req.params.rideid,"rideId")
+        console.log(req.params.rideid);
+        helper.checkRating(newRideRatingInfo.ride_waitime)
+        helper.checkRating(newRideRatingInfo.ride_comfortability)
+        helper.checkRating(newRideRatingInfo.ride_enjoyment)
+
+        //newRideRatingInfo.ride_review = helper.checkString(newRideRatingInfo.ride_review)
+    }
+    catch(e){
+        console.log("Here1" + " " +  e);
+        return res.status(400).json({error: e})
+    }
+
+    try {
+        const user = await userData.getUserByUsername(req.session.user.userName)
+        console.log(user.userName)
+        const {ride_waitime, ride_comfortability, ride_enjoyment} = newRideRatingInfo
+        await rideRatingData.createRideRating(user.userName, req.params.rideid, ride_waitime, ride_comfortability, ride_enjoyment)
+
+        //replace this with where you want to render to
+        return res.status(200).redirect(`/themepark/${req.params.id}/rides/${req.params.rideid}/ratings`)
+    }
+    catch(e){
+        console.log("Here2" + " " +  e);
+        return res.status(404).json({error: e})
+    }
+})
+>>>>>>> 7836480 (Ryan changes)
 
 // render the rideComment page, and return the commens of the specific ride 
 //-------------HOPEFULLY WORKS
@@ -545,18 +588,21 @@ router.route('/:id/foodstalls/:foodstallid/ratings')
 .get(async(req, res) => {
     try {
         const themeParkId = helper.checkId(req.params.id, "Theme Park ID");
-        const foodstallId = helper.checkId(req.params.id, "Food Stall ID");
+        const foodstallId = helper.checkId(req.params.foodstallid, "Food Stall ID");
         
         const themePark = await themeParkData.getThemeParkById(themeParkId);
-        const foodstall = themePark.foodstalls.find((foodstall) => foodstall.toString() === foodstallId);
+        console.log("Theme Park:", themePark);
+        const foodstall = themePark.foodStalls.find((stall) => stall.toString() === foodstallId);
         
         if (!foodstall) {
             return res.status(404).json({error: "Food stall not fond in the theme park"});
         }
         
-        const foodstallsratings = (await foodStallData.getFoodStallRatings(req.params.foodstallid)).ratings;
+        const foodstallsratings = (await foodStallRatingData.getFoodStallRatings(req.params.foodstallid)).ratings;
+        console.log(foodstallsratings);
         return res.render('foodStallRatingPage', {tpid: req.params.id, fpid: req.params.foodstallid, ratings: foodstallsratings});
     } catch (e) {
+        console.log(e);
         return res.status(400).json({error:e});
     } 
 })
@@ -567,22 +613,28 @@ router.route('/:id/foodstalls/:foodstallid/addRating')
 })
 .post(async(req, res) => {
     const newFoodStallRatingInfo = req.body
-    if(!newFoodStallRatingInfo || Object.keys(newFoodStallRatingInfo) < 1) return res.status(400).json({error: "The request body is empty"})
+    if(!newFoodStallRatingInfo || Object.keys(newFoodStallRatingInfo).length < 1) return res.status(400).json({error: "The request body is empty"})
 
     try{
-        req.params.foodstallid = helper.checkId(req.params.foodstallid, "foodStallId")
-
+        console.log("foodstallid before check:", req.params.foodstallid);
+        req.params.foodstallid = helper.checkId(req.params.foodstallid, "foodStallId");
+        console.log(req.params.foodstallid);
         helper.checkRating(newFoodStallRatingInfo.food_quality)
         helper.checkRating(newFoodStallRatingInfo.food_wait_time)
 
         // newFoodStallRatingInfo.food_stall_review = helper.checkString(newFoodStallRatingInfo.food_stall_review)
     }
     catch(e){
+<<<<<<< HEAD
         return res.status(400).json({error: `${e}`})
+=======
+        console.log("Here1" + " " +  e);
+        return res.status(400).json({error: e})
+>>>>>>> 7836480 (Ryan changes)
     }
     try{
         const user = await userData.getUserByUsername(req.session.user.userName)
-        const {food_quality, food_wait_time, food_stall_review} = newFoodStallRatingInfo
+        const {food_quality, food_wait_time} = newFoodStallRatingInfo
         await foodStallRatingData.createFoodStallRating(user.userName, req.params.foodstallid, food_quality, food_wait_time)
 
         //replace this with where you want to render to
