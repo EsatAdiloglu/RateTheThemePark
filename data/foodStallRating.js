@@ -58,7 +58,7 @@ const getFoodStallRatingById = async (id) => {
     id = helper.checkString(id)
     if(!ObjectId.isValid(id)) throw "Error: id isn't an object id"
     id = new ObjectId(id)
-    const foodStallRatingCollections = await rideratings();
+    const foodStallRatingCollections = await foodstallratings();
     const foodStallRating = await foodStallRatingCollections.findOne({_id: new ObjectId(id)})
     if (foodStallRating === null) throw `Error: a food stall rating doesn't have an id of ${id}`
     foodStallRating._id = foodStallRating._id.toString()
