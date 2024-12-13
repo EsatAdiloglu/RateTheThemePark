@@ -4,7 +4,8 @@ import { themeparks, foodstalls, reports } from "../config/mongoCollections.js";
 
 const createFoodStall = async (
     themeParkId,
-    foodStallName
+    foodStallName,
+    foodsServed
 ) => {
     foodStallName = helper.checkString(foodStallName);
     themeParkId = helper.checkString(themeParkId);
@@ -20,6 +21,7 @@ const createFoodStall = async (
         parkFoodStallIsLocatedIn: themeParkId,
         foodQualityRating: 0,
         waitTimeRating: 0,
+        foodsServed: foodsServed,
         ratings: [],
         comments: [],
         reports: []
@@ -63,6 +65,7 @@ const getFoodStallsByThemePark = async (id) => {
         parkFoodStallIsLocatedIn: stall.parkFoodStallIsLocatedIn, // might need a toString()
         foodQualityRating: stall.foodQualityRating,
         waitTimeRating: stall.waitTimeRating,
+        foodsServed: stall.foodsServed,
         ratings: stall.ratings, //  stall.ratings.map(ratingId => ratingId.toString()),
         reports: stall.reports // stall.reports.map(reportId => reportId.toString())
     }));

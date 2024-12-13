@@ -50,7 +50,7 @@ const createComment = async (
     if(!commentInfo.acknowledged || !commentInfo.insertedId) throw `Error: could not add a new comment to the ${name}`
 
     const commentId = commentInfo.insertedId.toString()
-    
+    console.log(name, thing)
     const updatedComments = {comments: [...thing.comments, commentId]}
     const updatedCommentsResult = await collection.findOneAndUpdate({_id: new ObjectId(thingId)}, {$set: updatedComments})
 

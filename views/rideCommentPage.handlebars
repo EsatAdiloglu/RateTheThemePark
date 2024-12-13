@@ -14,10 +14,12 @@
     <ol>
         {{#each comments}}
         <li>
-            {{comment info}}
+            {{userName}}
+            <br>
+            Comment: {{commentBody}}
         </li>
         {{/each}}
     </ol>
 </main>
 
-<a href = '/themepark/{{_id}}/rides/{{_rideid}}/addComment'>Add comment on ride</a>
+<a href = '/themepark/{{_id}}/rides/{{_rideId}}/addComment'>Add comment on ride</a>

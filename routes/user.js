@@ -144,4 +144,10 @@ router.route('/signinuser')
         }
     })
 
+router.route('/signoutuser').get(async (req, res) => {
+    //code here for GET
+    req.session.destroy();
+    return res.render('signOut')
+    });
+
 export default router;

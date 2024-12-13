@@ -16,7 +16,7 @@ const checkRating = (num) => {
 }
 const checkId = (id, idName) => {
   id = checkString(id, idName)
-  if(!ObjectId.isValid(id)) throw `Error: ${idName} is a valid Object id`
+  if(!ObjectId.isValid(id)) throw `Error: ${idName} is not a valid Object id`
   return id
 }
 
