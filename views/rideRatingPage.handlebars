@@ -12,6 +12,10 @@
         <li>
             Username: {{userName}}
            waitTimeRating {{waitTimeRating}}, comfortabilityRating {{comfortabilityRating}}, enjoymentAndExperienceRating {{ enjoymentRating}}
+            <p><strong>Number of Likes:</strong> {{numUsersLiked}}</p>
+            <p><strong>Number of Disikes:</strong> {{numUsersDisliked}}</p>
+            <button id = 'rideratinglikes'>Like</button> 
+            <button id = 'rideratingdislikes'>Dislike</button> 
         </li>
         {{/each}}
     </ol>

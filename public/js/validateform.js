@@ -486,27 +486,58 @@ if (signinform){
     })
 }
 //Compare Theme Park
-const compareForm = document.getElementById("themeParkCompareForm");
-const firstSelect = document.getElementById("firstPark");
-const secondSelect = document.getElementById("secondPark");
+let compareForm = document.getElementById("themeParkCompareForm");
+let firstSelect = document.getElementById("firstPark");
+let secondSelect = document.getElementById("secondPark");
+if (compareForm) {
+    compareForm.addEventListener('submit', async (event) => {
+        let res = event.preventDefault();
+      
+        let result = await fetch("/themepark/comparethemeparksresults", 
+            {
+                method:'POST',
+                headers: {
+                    'Content-Type': 'application/json', // Set the appropriate Content-Type
+                  },
+                body: JSON.stringify({ parkOne : firstSelect.value , parkTwo : secondSelect.value})})
+      
+          console.log(result)
+          const url = result.url
+          window.location.href = url
+      })
+}
 
-compareForm.addEventListener('submit', async (event) => {
-  const res = event.preventDefault();
-  console.log(firstSelect.value)
-console.log(secondSelect.value)
 
-  const result = await fetch("/themepark/comparethemeparksresults", 
-      {
-          method:'POST',
-          headers: {
-              'Content-Type': 'application/json', // Set the appropriate Content-Type
-            },
-          body: JSON.stringify({ parkOne : firstSelect.value , parkTwo : secondSelect.value})})
+//Theme Park Like and Dislike
+console.log("Buttons reached");
+let tplbutton = document.getElementById("themeparkratinglikes")
+let tpdbutton = document.getElementById("themeparkratingdislikes")
+let rlbutton = document.getElementById("rideratinglikes")
+let rdbutton = document.getElementById("rideratindislikes")
 
-    console.log(result)
-    const url = result.url
-    window.location.href = url
-})
+if (tplbutton) {
+    tplbutton.addEventListener('click', () => {
+        //code of what happens when a like button is pressed for theme park rating
+    })
+}
+
+if (tpdbutton) {
+    tpdbutton.addEventListener('click', () => {
+        //code of what happens when a dislike button is pressed for theme park rating
+    })
+}
+
+if (rlbutton) {
+    rlbutton.addEventListener('click', () => {
+        //code of what happens when a dislike button is pressed for ride rating
+    })
+}
+
+if (rdbutton) {
+    rdbutton.addEventListener('click', () => {
+        //code of what happens when a dislike button is pressed for ride rating
+    })
+}
 
 // ---------------------------------- SIGNUP ----------------------------------------------------------
 let signupform = document.getElementById('signup-form')
