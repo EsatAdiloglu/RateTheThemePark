@@ -35,6 +35,10 @@ const createRideRating = async (
         comfortabilityRating: comfortabilityRating,
         enjoymentRating: enjoymentRating,
         review: "review",
+        usersLiked: [],
+        usersDisliked: [],
+        numUsersLiked: 0,
+        numUsersDisliked: 0,
         comments: [],
         reports: []
     }

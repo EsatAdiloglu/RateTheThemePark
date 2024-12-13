@@ -1,3 +1,4 @@
+
 let addthemeparkform = document.getElementById('tp'); //a
 let nameInput = document.getElementById('theme_park_name');
 let streetInput = document.getElementById('theme_park_street');
@@ -484,6 +485,60 @@ if (signinform){
           }
     })
 }
+//Compare Theme Park
+let compareForm = document.getElementById("themeParkCompareForm");
+let firstSelect = document.getElementById("firstPark");
+let secondSelect = document.getElementById("secondPark");
+if (compareForm) {
+    compareForm.addEventListener('submit', async (event) => {
+        let res = event.preventDefault();
+      
+        let result = await fetch("/themepark/comparethemeparksresults", 
+            {
+                method:'POST',
+                headers: {
+                    'Content-Type': 'application/json', // Set the appropriate Content-Type
+                  },
+                body: JSON.stringify({ parkOne : firstSelect.value , parkTwo : secondSelect.value})})
+      
+          console.log(result)
+          const url = result.url
+          window.location.href = url
+      })
+}
+
+
+//Theme Park Like and Dislike
+console.log("Buttons reached");
+let tplbutton = document.getElementById("themeparkratinglikes")
+let tpdbutton = document.getElementById("themeparkratingdislikes")
+let rlbutton = document.getElementById("rideratinglikes")
+let rdbutton = document.getElementById("rideratindislikes")
+
+if (tplbutton) {
+    tplbutton.addEventListener('click', () => {
+        //code of what happens when a like button is pressed for theme park rating
+    })
+}
+
+if (tpdbutton) {
+    tpdbutton.addEventListener('click', () => {
+        //code of what happens when a dislike button is pressed for theme park rating
+    })
+}
+
+if (rlbutton) {
+    rlbutton.addEventListener('click', () => {
+        //code of what happens when a dislike button is pressed for ride rating
+    })
+}
+
+if (rdbutton) {
+    rdbutton.addEventListener('click', () => {
+        //code of what happens when a dislike button is pressed for ride rating
+    })
+}
+
 // ---------------------------------- SIGNUP ----------------------------------------------------------
 let signupform = document.getElementById('signup-form')
 let signupname = document.getElementById('name');

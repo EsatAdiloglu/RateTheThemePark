@@ -26,10 +26,12 @@
     <ol id="ratingsList">
         {{#each ratings}}
         <li>
-            <p>{{userName}}</p>
-            <p><strong>Wait Time Rating:</strong> {{waitTimeRating}}</p> 
-            <p><strong>Comfortability Rating:</strong> {{comfortabilityRating}}</p>
-            <p><strong>Enjoyment and Experience Rating:</strong> {{ enjoymentRating}}</p>
+            Username: {{userName}}
+           waitTimeRating {{waitTimeRating}}, comfortabilityRating {{comfortabilityRating}}, enjoymentAndExperienceRating {{ enjoymentRating}}
+            <p><strong>Number of Likes:</strong> {{numUsersLiked}}</p>
+            <p><strong>Number of Disikes:</strong> {{numUsersDisliked}}</p>
+            <button id = 'rideratinglikes'>Like</button> 
+            <button id = 'rideratingdislikes'>Dislike</button> 
         </li>
         {{/each}}
     </ol>
