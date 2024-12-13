@@ -167,6 +167,8 @@ router.route('/:id/comments')
             _id: req.params.id,
             themepark: themePark,
             comments: themeParkComments,
+            script_partial: "themeParkComment_script",
+            title: `${themePark.themeParkName}`
         });
     } catch (e) {
         console.log(e)
@@ -174,53 +176,53 @@ router.route('/:id/comments')
     }
 })
 // ------------------------- Works
-router.route('/:id/comments/addThemeParkComment')
-.get(async (req, res) => {
-    try{
-        req.params.id = helper.checkId(req.params.id,"Theme Park Id")
-        req.params.id = xss(req.params.id)
-    }
-    catch(e){
-        return res.status(400).json({error: `${e}`})
-    }
-    res.render('addThemeParkCommentPage', {_id: req.params.id})
-})
-.post(async(req, res) => {
+// router.route('/:id/comments/addThemeParkComment')
+// .get(async (req, res) => {
+//     try{
+//         req.params.id = helper.checkId(req.params.id,"Theme Park Id")
+//         req.params.id = xss(req.params.id)
+//     }
+//     catch(e){
+//         return res.status(400).json({error: `${e}`})
+//     }
+//     res.render('addThemeParkCommentPage', {_id: req.params.id})
+// })
+// .post(async(req, res) => {
 
-    const newThemeParkCommentInfo = req.body;
-    if (!newThemeParkCommentInfo || Object.keys(newThemeParkCommentInfo).length < 1) {
-        return res.status(400).json({error: "The request body is empty"});
-    }
+//     const newThemeParkCommentInfo = req.body;
+//     if (!newThemeParkCommentInfo || Object.keys(newThemeParkCommentInfo).length < 1) {
+//         return res.status(400).json({error: "The request body is empty"});
+//     }
 
-    let userName = req.session.user.userName;
+//     let userName = req.session.user.userName;
 
-    try {
-        // Validate the theme park ID and input fields
-        req.params.id = helper.checkId(req.params.id, "id");
-        helper.checkString(userName)
-        newThemeParkCommentInfo.theme_park_comment = helper.checkString(newThemeParkCommentInfo.theme_park_comment);
+//     try {
+//         // Validate the theme park ID and input fields
+//         req.params.id = helper.checkId(req.params.id, "id");
+//         helper.checkString(userName)
+//         newThemeParkCommentInfo.theme_park_comment = helper.checkString(newThemeParkCommentInfo.theme_park_comment);
 
-        req.params.id = xss(req.params.id)
-        userName = xss(userName)
-        newThemeParkCommentInfo.theme_park_comment = xss(newThemeParkCommentInfo.theme_park_comment)
+//         req.params.id = xss(req.params.id)
+//         userName = xss(userName)
+//         newThemeParkCommentInfo.theme_park_comment = xss(newThemeParkCommentInfo.theme_park_comment)
         
-    } catch (e) {
-        console.log(e);
-        return res.status(400).json({error: `${e}`});
-    }
+//     } catch (e) {
+//         console.log(e);
+//         return res.status(400).json({error: `${e}`});
+//     }
 
-    try {
-        await commentsData.createComment(userName, req.params.id,  newThemeParkCommentInfo.theme_park_comment, 0);
-        return res.status(200).redirect(`/themepark/${req.params.id}/comments`);
-    } catch (e) {
-        console.log(e);
-        return res.status(404).json({error: `${e}`});
-    }
+//     try {
+//         await commentsData.createComment(userName, req.params.id,  newThemeParkCommentInfo.theme_park_comment, 0);
+//         return res.status(200).redirect(`/themepark/${req.params.id}/comments`);
+//     } catch (e) {
+//         console.log(e);
+//         return res.status(404).json({error: `${e}`});
+//     }
 
-    // add the comment to the the theme park comments
-    // check the validity of the arguments, need to check clientside as well
+//     // add the comment to the the theme park comments
+//     // check the validity of the arguments, need to check clientside as well
 
-})
+// })
 // -------------------------------------E OF COMMENTS---------------------------------------------
 
 // ------------------------- Works

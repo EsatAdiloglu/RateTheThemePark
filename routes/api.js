@@ -5,6 +5,7 @@ import userData from "../data/user.js"
 import themeParkRatingData from "../data/themeParkRating.js"
 import rideRatingData from "../data/rideRating.js"
 import foodStallRatingData from "../data/foodStallRating.js"
+import commentsData from '../data/comment.js'
 import xss from "xss";
 
 router.route("/addThemeParkRating").post(async (req, res) => {
@@ -109,7 +110,36 @@ router.route("/addFoodStallRating").post(async (req, res) => {
     }
     catch(e){
         console.log(e)
-        return res.json({Error: `${e}`})
+        return res.status(404).json({Error: `${e}`})
+    }
+})
+
+router.route("/addThemeParkComment").post(async (req,res) => {
+    const themeParkComment = req.body
+    
+    try{
+        themeParkComment.themeParkId = helper.checkId(themeParkComment.themeParkId, "Theme Park Id")
+        themeParkComment.commentBody = helper.checkString(themeParkComment.commentBody)
+
+        themeParkComment.themeParkId = xss(themeParkComment.themeParkId)
+        themeParkComment.commentBody = xss(themeParkComment.commentBody)
+    }
+    catch(e){
+        return res.status(400).json({Error: `${e}`})
+    }
+
+    try{
+        const user = await userData.getUserByUsername(req.session.user.userName)
+        const {commentBody} = themeParkComment
+        await commentsData.createComment(user.userName, themeParkComment.themeParkId, commentBody, 0)
+        return res.json({
+            userName: user.userName,
+            commentBody: commentBody
+        })
+    }
+    catch(e){
+
+        return res.status(404).json({Error: `${e}`})
     }
 })
 export default router;

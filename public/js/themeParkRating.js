@@ -72,8 +72,6 @@
             error.show();
         }
         else{
-            error.hide();
-            error.empty();
             let requestConfig = {
                 method: "POST",
                 url: '/api/addThemeParkRating',
