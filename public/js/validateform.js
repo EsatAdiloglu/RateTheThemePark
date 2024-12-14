@@ -485,7 +485,7 @@ if (signinform){
           }
     })
 }
-//Compare Theme Park
+// ---------------------------------- Compare Theme Park --------------------------------------------------
 let compareForm = document.getElementById("themeParkCompareForm");
 let firstSelect = document.getElementById("firstPark");
 let secondSelect = document.getElementById("secondPark");
@@ -501,23 +501,30 @@ if (compareForm) {
                   },
                 body: JSON.stringify({ parkOne : firstSelect.value , parkTwo : secondSelect.value})})
       
-          console.log(result)
           const url = result.url
           window.location.href = url
       })
 }
 
 
-//Theme Park Like and Dislike
-console.log("Buttons reached");
+// ---------------------------------- Theme Park Like and Dislike ------------------------------------------
 let tplbutton = document.getElementById("themeparkratinglikes")
 let tpdbutton = document.getElementById("themeparkratingdislikes")
 let rlbutton = document.getElementById("rideratinglikes")
 let rdbutton = document.getElementById("rideratindislikes")
 
 if (tplbutton) {
-    tplbutton.addEventListener('click', () => {
+    tplbutton.addEventListener('click', async () => {
         //code of what happens when a like button is pressed for theme park rating
+        const themeparkid = window.location.href.split('/')[4];
+        await fetch("/themepark/addlike", 
+            {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ themeparkid: themeparkid })
+        });
     })
 }
 

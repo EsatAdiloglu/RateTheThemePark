@@ -11,7 +11,6 @@ import foodStallRatingData from "../data/foodStallRating.js"
 import helper from "../helper.js";
 import { ObjectId } from "mongodb";
 import xss from "xss";
-import { CURSOR_FLAGS, ObjectId } from "mongodb";
 
 // ------------------------- WORKS
 router.route('/')
@@ -28,15 +27,14 @@ router.route('/comparethemeparks')
 
 router.route('/comparethemeparksresults')
 .post(async (req, res) => {
-    console.log(req.body)
+
     try {
         let parkOneInput = await themeParkData.getThemeParkById(req.body.parkOne);
         let parkTwoInput = await themeParkData.getThemeParkById(req.body.parkTwo);
-        console.log(parkOneInput)
-        console.log(parkTwoInput)
+
         return res.redirect(`/themepark/compareThemeParksPage2/${req.body.parkOne}/${req.body.parkTwo}`);
     } catch (e) {
-        console.log(e);
+
         return res.status(400).json({error: e});
     }
 });
@@ -45,6 +43,17 @@ router.route('/compareThemeParksPage2/:id1/:id2').get(async(req,res) =>{
     let parkOneInput = await themeParkData.getThemeParkById(req.params.id1);
     let parkTwoInput = await themeParkData.getThemeParkById(req.params.id2);
     return res.render('compareThemeParksPage2',{parkOne: parkOneInput, parkTwo: parkTwoInput})
+})
+
+router.route('/addlike')
+.post(async(req, res) => {
+    // get the id from the req body
+    // get the themepark by id
+
+    // get the 
+    const tpid = req.body.themeparkid;
+    const themepark = await themeParkData.getThemeParkById(tpid);
+    console.log(themepark);
 })
 
 // ------------------------- WORKS
@@ -92,7 +101,7 @@ router.route('/addthemepark')
 router.route('/listofthemeparks')
 .get(async(req, res) => {
     if (req.session.user.lastsearched){
-        console.log("HERE");
+
         return res.status(200).render('listOfThemeParks', {parks: req.session.user.lastsearched})
     }
 })
@@ -106,10 +115,10 @@ router.route('/listofthemeparks')
         return res.status(400).json({error: `${e}`})
     }
     try {
-        //  console.log(themeParkInput);
+
         
         const newThemePark = await themeParkData.getThemeParksByName(themeParkInput);
-        //console.log(newThemePark);
+
         req.session.user.lastsearched = newThemePark
         return res.status(200).render("listOfThemeParks", {parks: newThemePark})
 
@@ -128,7 +137,7 @@ router.route('/listofthemeparkslocation')
         return res.status(200).render("listOfThemeParksLocations", {parks: newThemePark})
 
     } catch (e) {
-        console.log(e);
+
         return res.status(400).json({error: e});
     }
 });
@@ -437,7 +446,6 @@ router.route('/:id/rides/:rideid/ratings')
         }
 
         const ridesratings = (await rideRatingData.getRideRatingsByRide(req.params.rideid)).ratings;
-        console.log(ridesratings)
         return res.render('rideRatingPage', {
             tpid: req.params.id, 
             rpid: req.params.rideid, 
