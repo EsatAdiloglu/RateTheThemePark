@@ -8,6 +8,7 @@ import rideData from "../data/ride.js"
 import rideRatingData from "../data/rideRating.js"
 import foodStallData from "../data/foodStall.js"
 import foodStallRatingData from "../data/foodStallRating.js"
+import reportsData from '../data/report.js' 
 import helper from "../helper.js";
 import { ObjectId } from "mongodb";
 import xss from "xss";
@@ -652,5 +653,221 @@ router.route('/:id/foodstalls/:foodstallid/addComment')
 
 
 // -------------------------------------E OF FOOD STALL---------------------------------------------
+// ------------------------------------REPORTS ----------------------------------------------------------
+router.route('/:id/reports')
+.get(async (req, res) => {
+    const themeParkId = req.params.id;
+
+    try {
+        const validatedId = helper.checkId(themeParkId, 'theme park id');
+        req.params.id = xss(validatedId);
+    } catch (e) {
+        return res.status(400).json({ error: `${e}` });
+    }
+
+    try {
+        const validatedId = req.params.id;
+        const themePark = await themeParkData.getThemeParkById(validatedId);
+        const themeParkReports = (await reportsData.getReports(validatedId)).reports;
+        
+        return res.status(200).render('themeParkReportPage', {
+            _id: req.params.id,
+            themepark: themePark,
+            reports: themeParkReports,
+            script_partial: "themeParkReport_script",
+            title: `${themePark.themeParkName} - Reports`
+        });
+    } catch (e) {
+        console.log(e);
+        return res.status(404).json({ error: `${e}` });
+    }
+});
+
+// Route to render ride reports page
+router.route('/:id/rides/:rideid/reports')
+.get(async (req, res) => {
+    try {
+        req.params.id = helper.checkId(req.params.id, "theme park id");
+        req.params.rideid = helper.checkId(req.params.rideid, "ride id");
+
+        req.params.id = xss(req.params.id);
+        req.params.rideid = xss(req.params.rideid);
+    } catch (e) {
+        return res.status(400).json({ error: `${e}` });
+    }
+
+    try {
+        const themepark = await themeParkData.getThemeParkById(req.params.id);
+        const ride = await rideData.getRideById(req.params.rideid);
+
+        if (!themepark.rides.some((r) => r === ride._id.toString())) {
+            throw `Error: The ride ${ride.rideName} doesn't exist in theme park ${themepark.themeParkName}`;
+        }
+
+        const rideReports = (await reportsData.getReports(ride._id.toString())).reports;
+
+        return res.status(200).render('rideReportPage', {
+            themeId: themepark._id.toString(),
+            rideId: ride._id.toString(),
+            rideName: ride.rideName,
+            reports: rideReports,
+            script_partial: "rideReport_script",
+            title: `Reports for ${ride.rideName}`
+        });
+    } catch (e) {
+        console.log(e);
+        return res.status(404).json({ error: `${e}` });
+    }
+});
+
+// Route to render add ride report page
+router.route('/:id/rides/:rideid/addReport')
+.get(async (req, res) => {
+    try {
+        req.params.id = helper.checkId(req.params.id, "theme park id");
+        req.params.rideid = helper.checkId(req.params.rideid, "ride id");
+
+        req.params.id = xss(req.params.id);
+        req.params.rideid = xss(req.params.rideid);
+    } catch (e) {
+        return res.status(400).json({ error: `${e}` });
+    }
+
+    try {
+        const themepark = await themeParkData.getThemeParkById(req.params.id);
+        const ride = await rideData.getRideById(req.params.rideid);
+
+        if (!themepark.rides.some((r) => r === ride._id.toString())) {
+            throw `Error: The ride ${ride.rideName} doesn't exist in theme park ${themepark.themeParkName}`;
+        }
+
+        return res.render('addRideReportPage', {
+            themeId: themepark._id.toString(),
+            rideId: ride._id.toString(),
+            rideName: ride.rideName,
+            title: `Report Ride - ${ride.rideName}`
+        });
+    } catch (e) {
+        return res.status(404).json({ error: `${e}` });
+    }
+})
+
+.post(async (req, res) => {
+    const reportInfo = req.body;
+
+    if (!reportInfo || Object.keys(reportInfo).length === 0) {
+        return res.status(400).json({ error: "The request body is empty" });
+    }
+
+    let userName = undefined;
+    let reportReason = undefined;
+
+    try {
+        req.params.rideid = helper.checkId(req.params.rideid, "ride id");
+        req.params.id = helper.checkId(req.params.id, "theme park id");
+
+        userName = helper.checkString(req.session.user.userName, "user name");
+        reportReason = helper.checkString(reportInfo.report_reason, "report reason");
+
+        req.params.id = xss(req.params.id);
+        req.params.rideid = xss(req.params.rideid);
+        userName = xss(userName);
+        reportReason = xss(reportReason);
+    } catch (e) {
+        return res.status(400).json({ error: `${e}` });
+    }
+
+    try {
+        const themepark = await themeParkData.getThemeParkById(req.params.id);
+        const ride = await rideData.getRideById(req.params.rideid);
+
+        if (!themepark.rides.some((r) => r === ride._id.toString())) {
+            throw `Error: The ride ${ride.rideName} doesn't exist in theme park ${themepark.themeParkName}`;
+        }
+
+        await reportsData.createReport(userName, ride._id.toString(), reportReason);
+
+        return res.status(200).redirect(`/themepark/${themepark._id.toString()}/rides/${ride._id.toString()}/reports`);
+    } catch (e) {
+        console.error(e);
+        return res.status(500).json({ error: "Failed to submit the report" });
+    }
+});
+
+
+router.route('/:id/foodstalls/:foodstallid/reports')
+.get(async(req, res) => {
+    // Get all reports for a specific food stall
+    try {
+        req.params.id = helper.checkId(req.params.id, "theme park id");
+        req.params.foodstallid = helper.checkId(req.params.foodstallid, "foodstall id");
+
+        req.params.id = xss(req.params.id);
+        req.params.foodstallid = xss(req.params.foodstallid);
+    } catch (e) {
+        return res.status(400).json({error: `${e}`});
+    }
+
+    try {
+        const themepark = await themeParkData.getThemeParkById(req.params.id);
+        const foodstall = await foodStallData.getFoodStallById(req.params.foodstallid);
+
+        if (!themepark.foodStalls.some((f) => f === foodstall._id.toString())) {
+            throw `Error: The food stall ${foodstall.foodStallName} doesn't exist in theme park ${themepark.themeParkName}`;
+        }
+
+        const foodstallReports = (await reportsData.getReports(foodstall._id.toString())).reports;
+
+        return res.status(200).render('foodStallReportPage', {
+            themeId: themepark._id.toString(),
+            foodstallId: foodstall._id.toString(),
+            foodstallName: foodstall.foodStallName,
+            reports: foodstallReports,
+            script_partial: "foodStallReport_script",
+            title: `Reports for ${foodstall.foodStallName}`
+        });
+    } catch (e) {
+        console.log(e);
+        return res.status(404).json({error: `${e}`});
+    }
+})
+.post(async(req, res) => {
+    // Add a report for a specific food stall
+    const newFoodStallReportInfo = req.body;
+    if (!newFoodStallReportInfo || Object.keys(newFoodStallReportInfo).length < 1) {
+        return res.status(400).json({error: "The request body is empty"});
+    }
+
+    let userName = undefined;
+    let foodstallReportReason = undefined;
+
+    try {
+        req.params.foodstallid = helper.checkId(req.params.foodstallid, "foodstall id");
+        req.params.id = helper.checkId(req.params.id, "theme park id");
+        userName = helper.checkString(req.session.user.userName);
+        foodstallReportReason = helper.checkString(newFoodStallReportInfo.foodstall_report);
+
+        req.params.id = xss(req.params.id);
+        req.params.foodstallid = xss(req.params.foodstallid);
+        userName = xss(userName);
+        foodstallReportReason = xss(foodstallReportReason);
+    } catch (e) {
+        return res.status(400).json({error: `${e}`});
+    }
+
+    try {
+        const themepark = await themeParkData.getThemeParkById(req.params.id);
+        const foodstall = await foodStallData.getFoodStallById(req.params.foodstallid);
+
+        if (!themepark.foodStalls.some((f) => f === foodstall._id.toString())) {
+            throw `Error: The food stall ${foodstall.foodStallName} doesn't exist in theme park ${themepark.themeParkName}`;
+        }
+
+        await reportsData.createReport(userName, foodstall._id.toString(), foodstallReportReason, "Food Stall"); 
+        return res.status(200).redirect(`/themepark/${themepark._id.toString()}/foodstalls/${foodstall._id.toString()}/reports`);
+    } catch (e) {
+        return res.status(404).json({error: `${e}`});
+    }
+});
 
 export default router;

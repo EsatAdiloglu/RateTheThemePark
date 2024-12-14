@@ -1,0 +1,7 @@
+<h1>Report Ride: {{rideName}}</h1>
+
+<form action="/themepark/{{themeId}}/rides/{{rideId}}/addReport" method="POST">
+    <label for="report_reason">Reason for Report:</label>
+    <textarea id="report_reason" name="report_reason" placeholder="Describe the issue..." required></textarea>
+    <button type="submit">Submit Report</button>
+</form>
