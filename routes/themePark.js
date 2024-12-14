@@ -11,7 +11,7 @@ import foodStallRatingData from "../data/foodStallRating.js"
 import helper from "../helper.js";
 import { ObjectId } from "mongodb";
 import xss from "xss";
-import { themeparkratings } from "../config/mongoCollections.js";
+import { themeparkratings, rideratings } from "../config/mongoCollections.js";
 
 // ------------------------- WORKS
 router.route('/')
@@ -146,6 +146,116 @@ router.route('/adddislike')
     }
 
     const updated = await themeParkRatingData.getThemeParkRatingById(tpratingid);
+    return res.json({likes: updated.numUsersLiked, dislikes: updated.numUsersDisliked})
+})
+
+router.route('/addridelike')
+.post(async(req, res) => {
+    const rideid = req.body.rideid;
+    
+
+    const rideratingcollections = await rideratings();
+
+    const ride = await rideData.getRideById(rideid)
+    const uname = req.session.user.userName;
+    
+    let riderating;
+    let rideratingid;
+
+    for (let i = 0; i < ride.ratings.length; i++){
+        riderating = await rideRatingData.getRideRatingById(ride.ratings[i])
+        if (riderating.userName === uname){
+            rideratingid = riderating._id;
+        }
+    }
+    
+    if (!riderating.usersLiked.includes(uname)){
+        await rideratingcollections.updateOne(
+            { _id: new ObjectId(riderating._id) },  
+            { $inc: { numUsersLiked: 1 } } 
+        )
+        await rideratingcollections.updateOne(
+            { _id: new ObjectId(riderating._id) },     
+            { $push: { usersLiked: uname } } 
+          );
+    }
+    else{
+        await rideratingcollections.updateOne(
+            { _id: new ObjectId(riderating._id) },  
+            { $inc: { numUsersLiked: -1 } } 
+        )
+        await rideratingcollections.updateOne(
+            { _id: new ObjectId(riderating._id) },     
+            { $pull: { usersLiked: uname } } 
+          );
+    }
+    if (riderating.usersDisliked.includes(uname)){
+        await rideratingcollections.updateOne(
+            { _id: new ObjectId(riderating._id) },  
+            { $inc: { numUsersDisliked: -1 } } 
+        )
+        await rideratingcollections.updateOne(
+            { _id: new ObjectId(riderating._id) },     
+            { $pull: { usersDisliked: uname } } 
+          );
+    }
+
+    const updated = await rideRatingData.getRideRatingById(rideratingid)
+    return res.json({likes: updated.numUsersLiked, dislikes: updated.numUsersDisliked})
+})
+
+router.route('/addridedislike')
+.post(async(req, res) => {
+    const rideid = req.body.rideid;
+    
+
+    const rideratingcollections = await rideratings();
+
+    const ride = await rideData.getRideById(rideid)
+    const uname = req.session.user.userName;
+    
+    let riderating;
+    let rideratingid;
+
+    for (let i = 0; i < ride.ratings.length; i++){
+        riderating = await rideRatingData.getRideRatingById(ride.ratings[i])
+        if (riderating.userName === uname){
+            rideratingid = riderating._id;
+        }
+    }
+    
+    if (!riderating.usersDisliked.includes(uname)){
+        await rideratingcollections.updateOne(
+            { _id: new ObjectId(riderating._id) },  
+            { $inc: { numUsersDisliked: 1 } } 
+        )
+        await rideratingcollections.updateOne(
+            { _id: new ObjectId(riderating._id) },     
+            { $push: { usersDisliked: uname } } 
+          );
+    }
+    else{
+        await rideratingcollections.updateOne(
+            { _id: new ObjectId(riderating._id) },  
+            { $inc: { numUsersDisliked: -1 } } 
+        )
+        await rideratingcollections.updateOne(
+            { _id: new ObjectId(riderating._id) },     
+            { $pull: { usersDisliked: uname } } 
+          );
+    }
+    if (riderating.usersLiked.includes(uname)){
+        await rideratingcollections.updateOne(
+            { _id: new ObjectId(riderating._id) },  
+            { $inc: { numUsersLiked: -1 } } 
+        )
+        await rideratingcollections.updateOne(
+            { _id: new ObjectId(riderating._id) },     
+            { $pull: { usersLiked: uname } } 
+          );
+    }
+
+    const updated = await rideRatingData.getRideRatingById(rideratingid)
     return res.json({likes: updated.numUsersLiked, dislikes: updated.numUsersDisliked})
 })
 

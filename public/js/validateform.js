@@ -511,7 +511,7 @@ if (compareForm) {
 let tplbutton = document.getElementById("themeparkratinglikes")
 let tpdbutton = document.getElementById("themeparkratingdislikes")
 let rlbutton = document.getElementById("rideratinglikes")
-let rdbutton = document.getElementById("rideratindislikes")
+let rdbutton = document.getElementById("rideratingdislikes")
 
 if (tplbutton) {
     tplbutton.addEventListener('click', async () => {
@@ -547,14 +547,39 @@ if (tpdbutton) {
 }
 
 if (rlbutton) {
-    rlbutton.addEventListener('click', () => {
+    rlbutton.addEventListener('click', async () => {
         //code of what happens when a dislike button is pressed for ride rating
+
+        // we have to get the specific themepark id
+        // and the ride id and send it
+        const rideid = window.location.href.split('/')[6]
+        const res = await fetch("/themepark/addridelike", 
+            {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ rideid: rideid })
+        });
+        const result = await res.json();
+        console.log(result.likes + " " + result.dislikes);
     })
 }
 
 if (rdbutton) {
-    rdbutton.addEventListener('click', () => {
+    rdbutton.addEventListener('click', async() => {
         //code of what happens when a dislike button is pressed for ride rating
+        const rideid = window.location.href.split('/')[6]
+        const res = await fetch("/themepark/addridedislike", 
+            {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ rideid: rideid })
+        });
+        const result = await res.json();
+        console.log(result.likes + " " + result.dislikes);
     })
 }
 
