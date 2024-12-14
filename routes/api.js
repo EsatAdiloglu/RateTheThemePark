@@ -120,7 +120,7 @@ router.route("/addThemeParkComment").post(async (req,res) => {
         themeParkComment.themeParkId = helper.checkId(themeParkComment.themeParkId, "Theme Park Id")
         themeParkComment.commentBody = helper.checkString(themeParkComment.commentBody)
 
-        themeParkComment.themeParkId = xss(themeParkComment.themeParkId)
+        themeParkComment.themeParkName = xss(themeParkComment.themeParkName)
         themeParkComment.commentBody = xss(themeParkComment.commentBody)
     }
     catch(e){
@@ -130,10 +130,41 @@ router.route("/addThemeParkComment").post(async (req,res) => {
     try{
         const user = await userData.getUserByUsername(req.session.user.userName)
         const {commentBody} = themeParkComment
-        await commentsData.createComment(user.userName, themeParkComment.themeParkId, commentBody, 0)
+        const comment = await commentsData.createComment(user.userName, themeParkComment.themeParkId, commentBody, 0)
         return res.json({
             userName: user.userName,
-            commentBody: commentBody
+            commentBody: commentBody,
+            commentId: comment
+        })
+    }
+    catch(e){
+
+        return res.status(404).json({Error: `${e}`})
+    }
+})
+
+router.route("/addChildComment").post(async (req,res) => {
+    const childComment = req.body
+    
+    try{
+        childComment.commentId = helper.checkId(childComment.commentId, "Comment Id")
+        childComment.childCommentBody = helper.checkString(childComment.childCommentBody)
+
+        childComment.themeParkName = xss(childComment.themeParkName)
+        childComment.childCommentBody = xss(childComment.childCommentBody)
+    }
+    catch(e){
+        return res.status(400).json({Error: `${e}`})
+    }
+
+    try{
+        const user = await userData.getUserByUsername(req.session.user.userName)
+        const {childCommentBody} = childComment
+        const comment = await commentsData.createComment(user.userName, childComment.commentId, childCommentBody, 3)
+        return res.json({
+            userName: user.userName,
+            commentBody: childCommentBody,
+            commentId: comment
         })
     }
     catch(e){
