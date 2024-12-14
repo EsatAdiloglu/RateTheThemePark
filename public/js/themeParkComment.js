@@ -22,13 +22,11 @@
             childComment = $(div).find("div").first();
 
         let childCommentContent = childComment.find("textarea").first()
-        console.log(div)
         btn.on("click", function(){
             btn.hide();
             childComment.show()
 
             childComment.find(".cancelChildButton").off("click").on("click", () => {
-                console.log("hello bye")
                 childComment.hide();
                 btn.show();
                 childCommentContent.val("")
@@ -54,9 +52,6 @@
                 }
 
                 if(childCommentError.length > 0){
-                    console.log(childCommentContent)
-                    console.log("hello")
-                    console.log("world")
                     error.text(`${childCommentError}`)
                     error.show();
                 }
