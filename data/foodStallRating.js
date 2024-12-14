@@ -23,6 +23,11 @@ const createFoodStallRating = async (
     const foodStall = await foodStallCollections.findOne({_id: fodoStallObjectId})
     if (foodStall === null) throw `Error: there is no food stall with id ${foodStallId}`
 
+    const foodStallRatingCollections = await foodstallratings();
+
+    const alreadyRated = await foodStallRatingCollections.findOne({foodStallId: foodStallId, userName: userName});
+    if(alreadyRated !== null) throw `Error: ${userName} has already rated ${foodStall.foodStallName}`
+
     helper.checkRating(foodQualityRating)
     helper.checkRating(waitTimeRating)
     review = helper.checkString(review)
@@ -39,7 +44,7 @@ const createFoodStallRating = async (
         reports: []
     }
 
-    const foodStallRatingCollections = await foodstallratings();
+    
     const foodStallRatingRatingInfo = await foodStallRatingCollections.insertOne(newFoodStallRating)
     if(!foodStallRatingRatingInfo.acknowledged || !foodStallRatingRatingInfo.insertedId) throw "Error: could not add a new food stall rating"
 

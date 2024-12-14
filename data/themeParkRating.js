@@ -23,6 +23,11 @@ const createThemeParkRating = async (
     const themePark = await themeParkCollections.findOne({_id: themeParkObjectId})
     if (themePark === null) throw `Error: there is no theme park with id ${themeParkId}`
 
+    const themeParkRatingCollections = await themeparkratings();
+
+    const alreadyRated = await themeParkRatingCollections.findOne({themeParkId: themeParkId, userName: userName});
+    if(alreadyRated !== null) throw `Error: ${userName} has already rated ${themePark.themeParkName}`
+
     helper.checkRating(staffRating)
     helper.checkRating(cleanlinessRating)
     helper.checkRating(crowdsRating)
@@ -41,7 +46,7 @@ const createThemeParkRating = async (
         reports: []
     }
 
-    const themeParkRatingCollections = await themeparkratings();
+
     const themeParkRatingInfo = await themeParkRatingCollections.insertOne(newThemeParkRating);
     if(!themeParkRatingInfo.acknowledged || !themeParkRatingInfo.insertedId) throw "Error: could not add a new theme park rating"
     

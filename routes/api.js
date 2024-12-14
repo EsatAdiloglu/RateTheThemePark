@@ -109,7 +109,6 @@ router.route("/addFoodStallRating").post(async (req, res) => {
         })
     }
     catch(e){
-        console.log(e)
         return res.status(404).json({Error: `${e}`})
     }
 })

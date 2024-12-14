@@ -23,6 +23,11 @@ const createRideRating = async (
     const ride = await rideCollections.findOne({_id: rideObjectId})
     if (ride === null) throw `Error: there is no ride with id ${rideId}`
 
+    const rideRatingCollections = await rideratings();
+
+    const alreadyRated = await rideRatingCollections.findOne({rideId: rideId, userName: userName});
+    if(alreadyRated !== null) throw `Error: ${userName} has already rated ${ride.rideName}`
+
     helper.checkRating(waitTimeRating)
     helper.checkRating(comfortabilityRating)
     helper.checkRating(enjoymentRating)
@@ -39,7 +44,6 @@ const createRideRating = async (
         reports: []
     }
 
-    const rideRatingCollections = await rideratings();
     const rideRatingInfo = await rideRatingCollections.insertOne(newRideRating)
     if(!rideRatingInfo.acknowledged || !rideRatingInfo.insertedId) throw "Error: could not add a new ride rating"
 
