@@ -88,6 +88,10 @@
                                     <p><strong>Wait Time Rating:</strong> ${res.waitTimeRating}</p> 
                                     <p><strong>Comfortability Rating:</strong> ${res.comfortabilityRating}</p>
                                     <p><strong>Enjoyment and Experience Rating:</strong> ${res.enjoymentRating}</p>
+                                    <p><strong>Number of Likes:</strong> ${res.numUsersLiked}</p>
+                                    <p><strong>Number of Disikes:</strong> ${res.numUsersDisliked}</p>
+                                    <button id = 'rideratinglikes'>Like</button> 
+                                    <button id = 'rideratingdislikes'>Dislike</button> 
                                 </li>
                         `)
                     ratingsList.append(list)

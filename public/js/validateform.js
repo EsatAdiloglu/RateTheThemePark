@@ -512,6 +512,8 @@ let tplbutton = document.getElementById("themeparkratinglikes")
 let tpdbutton = document.getElementById("themeparkratingdislikes")
 let rlbutton = document.getElementById("rideratinglikes")
 let rdbutton = document.getElementById("rideratindislikes")
+let fslbutton = document.getElementById("foodstallratinglikes")
+let fsdbutton = document.getElementById("foodstallratindislikes")
 
 if (tplbutton) {
     tplbutton.addEventListener('click', async () => {
@@ -526,7 +528,12 @@ if (tplbutton) {
             body: JSON.stringify({ themeparkid: themeparkid })
         });
         const result = await res.json();
+        
+        //return res.redirect(`/themepark/${themeparkid}/ratings`);
+        
         // result contains likes and dislikes
+        //return await res.redirect('/themepark');
+
     })
 }
 
@@ -547,14 +554,66 @@ if (tpdbutton) {
 }
 
 if (rlbutton) {
-    rlbutton.addEventListener('click', () => {
-        //code of what happens when a dislike button is pressed for ride rating
+    rlbutton.addEventListener('click', async () => {
+        //code of what happens when a like button is pressed for ride rating
+        const rideid = window.location.href.split('/')[4];
+        const res = await fetch("/themepark/rideaddlike", 
+            {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ rideid: rideid })
+        });
+        const result = await res.json();
     })
 }
 
 if (rdbutton) {
-    rdbutton.addEventListener('click', () => {
+    rdbutton.addEventListener('click', async () => {
         //code of what happens when a dislike button is pressed for ride rating
+        const rideid = window.location.href.split('/')[4];
+        const res = await fetch("/themepark/rideadddislike", 
+            {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ rideid: rideid })
+        });
+        const result = await res.json();
+    })
+}
+
+if (fslbutton) {
+    fslbutton.addEventListener('click', async () => {
+        //code of what happens when a like button is pressed for food stall rating
+        const foodstallid = window.location.href.split('/')[4];
+        const res = await fetch("/themepark/foodstalladdlike", 
+            {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ foodstallid: foodstallid })
+        });
+        const result = await res.json();
+    })
+}
+
+if (fsdbutton) {
+    fsdbutton.addEventListener('click', async () => {
+        //code of what happens when a like button is pressed for food stall rating
+        const foodstallid = window.location.href.split('/')[4];
+        const res = await fetch("/themepark/foodstalladddislike", 
+            {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ foodstallid: foodstallid })
+        });
+        const result = await res.json();
     })
 }
 
