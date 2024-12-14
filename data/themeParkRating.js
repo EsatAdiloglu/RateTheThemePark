@@ -23,6 +23,11 @@ const createThemeParkRating = async (
     const themePark = await themeParkCollections.findOne({_id: themeParkObjectId})
     if (themePark === null) throw `Error: there is no theme park with id ${themeParkId}`
 
+    const themeParkRatingCollections = await themeparkratings();
+
+    const alreadyRated = await themeParkRatingCollections.findOne({themeParkId: themeParkId, userName: userName});
+    if(alreadyRated !== null) throw `Error: ${userName} has already rated ${themePark.themeParkName}`
+
     helper.checkRating(staffRating)
     helper.checkRating(cleanlinessRating)
     helper.checkRating(crowdsRating)
@@ -44,7 +49,7 @@ const createThemeParkRating = async (
         reports: []
     }
 
-    const themeParkRatingCollections = await themeparkratings();
+
     const themeParkRatingInfo = await themeParkRatingCollections.insertOne(newThemeParkRating);
     if(!themeParkRatingInfo.acknowledged || !themeParkRatingInfo.insertedId) throw "Error: could not add a new theme park rating"
     
@@ -103,4 +108,33 @@ const getThemeParkRatings = async (id) => {
     };
 }
 
-export default {createThemeParkRating, getThemeParkRatingById, getThemeParkRatings}
+const getAverageThemeParkRatings = async(id) => {
+    const ratings = (await getThemeParkRatings(id)).ratings
+    let avgStaff = 0
+    let avgCleanliness = 0
+    let avgCrowds = 0
+    let avgDiversity = 0
+    
+    ratings.forEach((rating) => {
+        avgStaff += parseInt(rating.staffRating)
+        avgCleanliness += parseInt(rating.cleanlinessRating)
+        avgCrowds += parseInt(rating.crowdsRating)
+        avgDiversity += parseInt(rating.diversityRating)
+    })
+    const ratingLength = ratings.length > 0 ? ratings.length : 1
+
+    avgStaff /= ratingLength
+    avgCleanliness /= ratingLength
+    avgCrowds /= ratingLength
+    avgDiversity /= ratingLength
+    return {
+        avgStaffRating: avgStaff.toFixed(2),
+        avgCleanlinessRating: avgCleanliness.toFixed(2),
+        avgCrowdRating: avgCrowds.toFixed(2),
+        avgDiversityRating: avgDiversity.toFixed(2),
+        numRatings: ratings.length
+    }
+
+
+}
+export default {createThemeParkRating, getThemeParkRatingById, getThemeParkRatings, getAverageThemeParkRatings}

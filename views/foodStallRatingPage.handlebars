@@ -3,6 +3,8 @@
 
     ratings of a specific foodstall
  --}}
+  <p><strong>Number of Ratings:</strong> <span id="numRating">{{averages.numRatings}}</span></p>
+ <p><strong>Food Quality Rating:</strong> <span id="avgFoodQuality">{{averages.avgFoodQualityRating}}</span>/10, <strong>Wait Time Rating:</strong> <span id="avgWait">{{averages.avgWaitTimeRating}}</span>/10</p>
  <div id="error"></div>
  <button id="addFoodStallRating">Add rating on food stall</button>
  <div id="rating" hidden>
@@ -25,8 +27,8 @@
         {{#each ratings}}
         <li>
             <p>{{userName}}</p>
-            <p><strong>Food Quality:</strong> {{foodQualityRating}}</p>
-            <p><strong>Wait Time:</strong> {{waitTimeRating}}</p>
+            <p><strong>Food Quality Rating:</strong> {{foodQualityRating}}</p>
+            <p><strong>Wait Time Rating:</strong> {{waitTimeRating}}</p>
         </li>
         {{/each}}
     </ol>

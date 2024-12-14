@@ -23,6 +23,11 @@ const createFoodStallRating = async (
     const foodStall = await foodStallCollections.findOne({_id: fodoStallObjectId})
     if (foodStall === null) throw `Error: there is no food stall with id ${foodStallId}`
 
+    const foodStallRatingCollections = await foodstallratings();
+
+    const alreadyRated = await foodStallRatingCollections.findOne({foodStallId: foodStallId, userName: userName});
+    if(alreadyRated !== null) throw `Error: ${userName} has already rated ${foodStall.foodStallName}`
+
     helper.checkRating(foodQualityRating)
     helper.checkRating(waitTimeRating)
     review = helper.checkString(review)
@@ -41,7 +46,7 @@ const createFoodStallRating = async (
         reports: []
     }
 
-    const foodStallRatingCollections = await foodstallratings();
+    
     const foodStallRatingRatingInfo = await foodStallRatingCollections.insertOne(newFoodStallRating)
     if(!foodStallRatingRatingInfo.acknowledged || !foodStallRatingRatingInfo.insertedId) throw "Error: could not add a new food stall rating"
 
@@ -99,4 +104,23 @@ const getFoodStallRatings = async (id) => {
     }; 
 }
 
-export default {createFoodStallRating, getFoodStallRatingById, getFoodStallRatings}
+const getAverageFoodStallRatings = async(id) => {
+    const ratings = (await getFoodStallRatings(id)).ratings
+    let avgFood = 0
+    let avgWait = 0
+
+    ratings.forEach((rating) => {
+        avgFood += parseInt(rating.foodQualityRating)
+        avgWait += parseInt(rating.waitTimeRating)
+    })
+    const ratingLength = ratings.length > 0 ? ratings.length : 1
+
+    avgFood /= ratingLength
+    avgWait /= ratingLength
+    return{
+        avgFoodQualityRating: avgFood.toFixed(2),
+        avgWaitTimeRating: avgWait.toFixed(2),
+        numRatings: ratings.length
+    }
+}
+export default {createFoodStallRating, getFoodStallRatingById, getFoodStallRatings, getAverageFoodStallRatings}

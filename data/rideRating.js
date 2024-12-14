@@ -23,6 +23,11 @@ const createRideRating = async (
     const ride = await rideCollections.findOne({_id: rideObjectId})
     if (ride === null) throw `Error: there is no ride with id ${rideId}`
 
+    const rideRatingCollections = await rideratings();
+
+    const alreadyRated = await rideRatingCollections.findOne({rideId: rideId, userName: userName});
+    if(alreadyRated !== null) throw `Error: ${userName} has already rated ${ride.rideName}`
+
     helper.checkRating(waitTimeRating)
     helper.checkRating(comfortabilityRating)
     helper.checkRating(enjoymentRating)
@@ -43,7 +48,6 @@ const createRideRating = async (
         reports: []
     }
 
-    const rideRatingCollections = await rideratings();
     const rideRatingInfo = await rideRatingCollections.insertOne(newRideRating)
     if(!rideRatingInfo.acknowledged || !rideRatingInfo.insertedId) throw "Error: could not add a new ride rating"
 
@@ -99,4 +103,31 @@ const getRideRatingsByRide = async (id) => {
         ratings: formattedRideRatings
     };
 }
-export default {createRideRating, getRideRatingById, getRideRatingsByRide}
+
+const getAverageRideRatings = async(id) => {
+    const ratings = (await getRideRatingsByRide(id)).ratings
+    let avgWait = 0
+    let avgComfort = 0
+    let avgEnjoyment = 0
+    
+    ratings.forEach((rating) => {
+        avgWait += parseInt(rating.waitTimeRating)
+        avgComfort += parseInt(rating.comfortabilityRating)
+        avgEnjoyment += parseInt(rating.enjoymentRating)
+    })
+    const ratingLength = ratings.length > 0 ? ratings.length : 1
+
+    avgWait /= ratingLength
+    avgComfort /= ratingLength
+    avgEnjoyment /= ratingLength
+
+    return {
+        avgWaitTimeRating: avgWait.toFixed(2),
+        avgComfortRating: avgComfort.toFixed(2),
+        avgEnjoymentRating: avgEnjoyment.toFixed(2),
+        numRatings: ratings.length
+    }
+
+
+}
+export default {createRideRating, getRideRatingById, getRideRatingsByRide, getAverageRideRatings}
