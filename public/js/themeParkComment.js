@@ -19,21 +19,22 @@
 
     function bindButton(div) {
         let btn = $(div).find(".childCommentBtn"),
-            childComment = $(div).find("div")
+            childComment = $(div).find("div").first();
 
-        let childCommentContent = childComment.find(".childCommentBody")
-
+        let childCommentContent = childComment.find("textarea").first()
+        console.log(div)
         btn.on("click", function(){
             btn.hide();
             childComment.show()
 
-            childComment.find(".cancelChildButton").on("click", () => {
+            childComment.find(".cancelChildButton").off("click").on("click", () => {
+                console.log("hello bye")
                 childComment.hide();
                 btn.show();
                 childCommentContent.val("")
             })
             
-            childComment.find(".childCommentForm").submit((event) => {
+            childComment.find(".childCommentForm").off("submit").submit((event) => {
                 event.preventDefault();
                 childComment.hide();
                 btn.show();
@@ -44,7 +45,6 @@
 
                 let childCommentError = ""
                 let childCommentBody = childCommentContent.val()
-                console.log(childCommentBody)
                 
                 try{
                     childCommentBody = checkString(childCommentBody)
@@ -54,6 +54,9 @@
                 }
 
                 if(childCommentError.length > 0){
+                    console.log(childCommentContent)
+                    console.log("hello")
+                    console.log("world")
                     error.text(`${childCommentError}`)
                     error.show();
                 }
@@ -78,17 +81,17 @@
                             const newComment = $(`
                                 <div data-id=${res.commentId} >
                                     User: ${res.userName} Comment: ${res.commentBody}
-                                    <button class="childComment">Add a comment</button>
+                                    <button class="childCommentBtn">Add a comment</button>
                                     <div hidden>
                                         <p>Reply</p>
-                                        <form>
-                                        <label for="childCommentForm"></label>
+                                        <form class="childCommentForm">
+                                        <label for="childCommentBody"></label>
                                         <br>
                                         <textarea name="childCommentBody" class="childCommentBody"></textarea>
                                         <br>
                                         <button type="submit">Submit Reply</button>
                                         </form>
-                                        <button class="cancelButton">Cancel</button>
+                                        <button class="cancelChildButton">Cancel</button>
                                     </div>
                                     <br>
                                 </div>`)
@@ -152,17 +155,17 @@
                     const newComment = $(`
                         <div data-id=${res.commentId} >
                             User: ${res.userName} Comment: ${res.commentBody}
-                            <button class="childComment">Add a comment</button>
+                            <button class="childCommentBtn">Add a comment</button>
                             <div hidden>
                                 <p>Reply</p>
-                                <form>
-                                <label for="childCommentForm"></label>
+                                <form class="childCommentForm">
+                                <label for="childCommentBody"></label>
                                 <br>
                                 <textarea name="childCommentBody" class="childCommentBody"></textarea>
                                 <br>
                                 <button type="submit">Submit Reply</button>
                                 </form>
-                                <button class="cancelButton">Cancel</button>
+                                <button class="cancelChildButton">Cancel</button>
                             </div>
                             <br>
                         </div>`)
