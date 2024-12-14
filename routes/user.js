@@ -2,6 +2,7 @@ import {Router} from "express"
 const router = Router();
 import { namefunc, usernamefunc, passwordfunc, confirmpasswordfunc } from "../userhelper.js";
 import { signInUser, signUpUser } from "../data/user.js";
+import xss from "xss";
 
 //.get 
 router.route('/')
@@ -45,17 +46,20 @@ router.route('/signupuser')
 
         try {
             namefunc(name);
+            name = xss(name)
         } catch (e) {
             if (!errors.includes(e)) {errors.push(e);}
         }
         try{
             usernamefunc(username);
+            username = xss(username)
         }
         catch(e){
             if (!errors.includes(e)) {errors.push(e);}
         }
         try{
             passwordfunc(password)
+            password = xss(password)
         }
         catch(e){
             if (!errors.includes(e)) {errors.push(e);}
@@ -107,12 +111,14 @@ router.route('/signinuser')
         const errors = [];
         try {
             usernamefunc(check_username)
+            check_username = xss(check_username)
         } 
         catch (e) {
             if (!errors.includes(e)) {errors.push(e);}
         }
         try {
             passwordfunc(check_password)
+            check_password = xss(check_password)
         } catch (e) {
             if (!errors.includes(e)) {errors.push(e);}       
         }
@@ -137,5 +143,11 @@ router.route('/signinuser')
             return res.status(400).render('signIn', {invalid: true, invalidmsg: "Invalid userId and/or password"})
         }
     })
+
+router.route('/signoutuser').get(async (req, res) => {
+    //code here for GET
+    req.session.destroy();
+    return res.render('signOut')
+    });
 
 export default router;

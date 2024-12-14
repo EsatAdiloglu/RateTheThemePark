@@ -6,13 +6,37 @@ Theme Park Comment Page (INDIVIDUAL THEME PARK)
 - add button (Another page)
  --}}
 
-<h1>{{themepark.themeParkName}}</h1>
-<ul>
+<a href = "/themepark/{{_id}}">Go back to theme park page</a>
+<br>
+<p id = "error"></p>
+<button id="addThemeParkComment">Add Theme Park Comment</button>
+<div id="comment" hidden>
+    <p>Please enter the following information to add a comment to a theme park</p>
+    <form id = "commentForm">
+        <label for="theme_park_comment">Theme Park Comment</label>
+        <br>
+        <textarea name="theme_park_comment" id="theme_park_comment"></textarea>
+        <br>
+        <button data-id={{_id}} type="submit">Submit comment</button>
+    </form>
+</div>
+<ul id="commentList">
   {{#each comments}}
     <li>
       User: {{userName}} Comment: {{commentBody}}
+      <button class="childComment">Add a comment</button>
+      <div hidden>
+        <p>Reply</p>
+        <form>
+          <label for="childCommentForm"></label>
+          <br>
+          <textarea name="childCommentBody" class="childCommentBody"></textarea>
+          <br>
+          <button>Submit Reply</button>
+        </form>
+        <button class="cancelButton">Cancel</button>
+      </div>
     </li>
   {{/each}}
 </ul>
 
-<a href = '/themepark/{{_id}}/comments/addThemeParkComment'>Add theme park comment</a>

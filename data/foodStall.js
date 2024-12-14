@@ -4,7 +4,8 @@ import { themeparks, foodstalls, reports } from "../config/mongoCollections.js";
 
 const createFoodStall = async (
     themeParkId,
-    foodStallName
+    foodStallName,
+    foodsServed
 ) => {
     foodStallName = helper.checkString(foodStallName);
     themeParkId = helper.checkString(themeParkId);
@@ -20,6 +21,7 @@ const createFoodStall = async (
         parkFoodStallIsLocatedIn: themeParkId,
         foodQualityRating: 0,
         waitTimeRating: 0,
+        foodsServed: foodsServed,
         ratings: [],
         comments: [],
         reports: []
@@ -46,34 +48,24 @@ const getFoodStallById = async (id) => {
 }
 
 const getFoodStallsByThemePark = async (id) => {
-    // if (!ObjectId.isValid(id)) throw "Invalid Theme Park ID";
-    
-    // const foodStallsCollection = await foodstalls();
-    // const stalls = await foodStallsCollection.find({ themeParkId: new ObjectId(id)}).toArray();
-    
-    // if (!stalls || stalls.length === 0) {
-    //     throw "No food stalls found for the given Theme Park ID";
-    // }
-    // return stalls;
-
     if (!ObjectId.isValid(id)) throw "Invalid Theme Park ID";
 
     const foodStallsCollection = await foodstalls();
-    const stalls = await foodStallsCollection.find({themeParkId: new ObjectId(id)}).toArray();
+    const foodstallarray = await foodStallsCollection.find({parkFoodStallIsLocatedIn: new ObjectId(id)}).toArray();
 
-    if (stalls.length === 0) {
+    if (foodstallarray.length === 0) {
         return {
             themeParkId: id,
             foodStalls: []
         };
     }
-
-    const formattedStalls = stalls.map(stall => ({
+    const formattedStalls = foodstallarray.map(stall => ({
         _id: stall._id.toString(),
         foodStallName: stall.foodStallName,
         parkFoodStallIsLocatedIn: stall.parkFoodStallIsLocatedIn, // might need a toString()
         foodQualityRating: stall.foodQualityRating,
         waitTimeRating: stall.waitTimeRating,
+        foodsServed: stall.foodsServed,
         ratings: stall.ratings, //  stall.ratings.map(ratingId => ratingId.toString()),
         reports: stall.reports // stall.reports.map(reportId => reportId.toString())
     }));
@@ -83,4 +75,4 @@ const getFoodStallsByThemePark = async (id) => {
         foodStalls: formattedStalls
     };
 }
-export default {createFoodStall, getFoodStallById}
+export default {createFoodStall, getFoodStallById, getFoodStallsByThemePark}

@@ -23,6 +23,11 @@ const createFoodStallRating = async (
     const foodStall = await foodStallCollections.findOne({_id: fodoStallObjectId})
     if (foodStall === null) throw `Error: there is no food stall with id ${foodStallId}`
 
+    const foodStallRatingCollections = await foodstallratings();
+
+    const alreadyRated = await foodStallRatingCollections.findOne({foodStallId: foodStallId, userName: userName});
+    if(alreadyRated !== null) throw `Error: ${userName} has already rated ${foodStall.foodStallName}`
+
     helper.checkRating(foodQualityRating)
     helper.checkRating(waitTimeRating)
     review = helper.checkString(review)
@@ -41,7 +46,7 @@ const createFoodStallRating = async (
         reports: []
     }
 
-    const foodStallRatingCollections = await foodstallratings();
+    
     const foodStallRatingRatingInfo = await foodStallRatingCollections.insertOne(newFoodStallRating)
     if(!foodStallRatingRatingInfo.acknowledged || !foodStallRatingRatingInfo.insertedId) throw "Error: could not add a new food stall rating"
 
@@ -54,7 +59,6 @@ const createFoodStallRating = async (
     const updateUserRating = {foodStallRatings: [...user.foodStallRatings, ratingId]}
     const updateUserResult = await userCollections.findOneAndUpdate({userName: userName}, {$set: updateUserRating})
     if(!updateUserResult) throw "Error: could not add rating to user"
-
     return await getFoodStallRatingById(ratingId)
 }
 
@@ -62,7 +66,7 @@ const getFoodStallRatingById = async (id) => {
     id = helper.checkString(id)
     if(!ObjectId.isValid(id)) throw "Error: id isn't an object id"
     id = new ObjectId(id)
-    const foodStallRatingCollections = await rideratings();
+    const foodStallRatingCollections = await foodstallratings();
     const foodStallRating = await foodStallRatingCollections.findOne({_id: new ObjectId(id)})
     if (foodStallRating === null) throw `Error: a food stall rating doesn't have an id of ${id}`
     foodStallRating._id = foodStallRating._id.toString()
@@ -84,7 +88,7 @@ const getFoodStallRatings = async (id) => {
 
     const formattedFoodStallRatings = ratings.map(rating => ({
         _id: rating._id.toString(),
-        userID: rating.userID.toString(),
+        userName: rating.userName.toString(),
         foodQualityRating: rating.foodQualityRating,
         waitTimeRating: rating.waitTimeRating,
         review: rating.review,
@@ -98,4 +102,23 @@ const getFoodStallRatings = async (id) => {
     }; 
 }
 
-export default {createFoodStallRating, getFoodStallRatingById, getFoodStallRatings}
+const getAverageFoodStallRatings = async(id) => {
+    const ratings = (await getFoodStallRatings(id)).ratings
+    let avgFood = 0
+    let avgWait = 0
+
+    ratings.forEach((rating) => {
+        avgFood += parseInt(rating.foodQualityRating)
+        avgWait += parseInt(rating.waitTimeRating)
+    })
+    const ratingLength = ratings.length > 0 ? ratings.length : 1
+
+    avgFood /= ratingLength
+    avgWait /= ratingLength
+    return{
+        avgFoodQualityRating: avgFood.toFixed(2),
+        avgWaitTimeRating: avgWait.toFixed(2),
+        numRatings: ratings.length
+    }
+}
+export default {createFoodStallRating, getFoodStallRatingById, getFoodStallRatings, getAverageFoodStallRatings}

@@ -49,8 +49,11 @@ export const signUpUser = async (name, username, password) => {
         foodStallRatings: [],
         likedRatings: [],
         dislikedRatings: [],
+        likes: [],
+        dislikes: [],
         comments: [],
-        reports: []
+        reports: [],
+        lastsearched: []
     }
     const userInfo = await userCollections.insertOne(newUser);
     if (!userInfo.acknowledged || !userInfo.insertedId) {
