@@ -54,6 +54,8 @@ const createComment = async (
     const updatedCommentsResult = await collection.findOneAndUpdate({_id: new ObjectId(thingId)}, {$set: updatedComments})
 
     if(!updatedCommentsResult) throw `Error: could not add comment to the ${name}`
+
+    return commentId
 }
 
 const getComments = async (id) => {
@@ -71,10 +73,27 @@ const getComments = async (id) => {
         comments: comment.comments
     }))
 
+    for(let i = 0; i < formattedComments.length; i++){
+        const comment = formattedComments[i]
+        const childCommentArray = await commentCollections.find({thingId: comment._id}).toArray();
+
+        comment.comments = childCommentArray.map((child) => ({
+            _id: child._id.toString(),
+            userName: child.userName,
+            thingId: child.thingId,
+            commentBody: child.commentBody,
+            comments: child.comments
+        }))
+
+        formattedComments[i] = comment
+
+    }
+
     return {
         thingId: id,
         comments: formattedComments
     }
-} 
+}
+
 
 export default {createComment, getComments}
