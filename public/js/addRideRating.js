@@ -25,7 +25,7 @@ if (rideRatingForm) {
         errorDiv.hidden = true;
         if (validRating(waitTimeInput.value) && validRating(comfortabilityInput.value) 
         && validRating(enjoymentInput.value)) {
-            console.log(good)
+            //console.log(good)
         } else {
             rideRatingForm.reset();
             waitTimeInput.focus();

@@ -517,7 +517,7 @@ if (tplbutton) {
     tplbutton.addEventListener('click', async () => {
         //code of what happens when a like button is pressed for theme park rating
         const themeparkid = window.location.href.split('/')[4];
-        await fetch("/themepark/addlike", 
+        const res = await fetch("/themepark/addlike", 
             {
             method: "POST",
             headers: {
@@ -525,12 +525,24 @@ if (tplbutton) {
             },
             body: JSON.stringify({ themeparkid: themeparkid })
         });
+        const result = await res.json();
+        // result contains likes and dislikes
     })
 }
 
 if (tpdbutton) {
-    tpdbutton.addEventListener('click', () => {
-        //code of what happens when a dislike button is pressed for theme park rating
+    tpdbutton.addEventListener('click', async () => {
+        //code of what happens when a like button is pressed for theme park rating
+        const themeparkid = window.location.href.split('/')[4];
+        const res = await fetch("/themepark/adddislike", 
+            {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ themeparkid: themeparkid })
+        });
+        const result = await res.json();
     })
 }
 

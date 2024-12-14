@@ -11,6 +11,7 @@ import foodStallRatingData from "../data/foodStallRating.js"
 import helper from "../helper.js";
 import { ObjectId } from "mongodb";
 import xss from "xss";
+import { themeparkratings } from "../config/mongoCollections.js";
 
 // ------------------------- WORKS
 router.route('/')
@@ -47,13 +48,105 @@ router.route('/compareThemeParksPage2/:id1/:id2').get(async(req,res) =>{
 
 router.route('/addlike')
 .post(async(req, res) => {
-    // get the id from the req body
-    // get the themepark by id
-
-    // get the 
+    const tpratingcollections = await themeparkratings();
     const tpid = req.body.themeparkid;
     const themepark = await themeParkData.getThemeParkById(tpid);
-    console.log(themepark);
+    const uname = req.session.user.userName
+    let tprating;
+    let tpratingid;
+
+    for (let i = 0; i < themepark.ratings.length; i++){
+        tprating = await themeParkRatingData.getThemeParkRatingById(themepark.ratings[i]);
+        if (tprating.userName === uname){
+            tpratingid = tprating._id
+            break
+        }
+    }
+    if (!tprating.usersLiked.includes(uname)){
+        await tpratingcollections.updateOne(
+            { _id: new ObjectId(tprating._id) },  
+            { $inc: { numUsersLiked: 1 } } 
+        )
+        await tpratingcollections.updateOne(
+            { _id: new ObjectId(tprating._id) },     
+            { $push: { usersLiked: uname } } 
+          );
+    }
+    else{
+        await tpratingcollections.updateOne(
+            { _id: new ObjectId(tprating._id) },  
+            { $inc: { numUsersLiked: -1 } } 
+        )
+        await tpratingcollections.updateOne(
+            { _id: new ObjectId(tprating._id) },     
+            { $pull: { usersLiked: uname } } 
+          );
+    }
+
+    if (tprating.usersDisliked.includes(uname)){
+        await tpratingcollections.updateOne(
+            { _id: new ObjectId(tprating._id) },  
+            { $inc: { numUsersDisliked: -1 } } 
+        )
+        await tpratingcollections.updateOne(
+            { _id: new ObjectId(tprating._id) },     
+            { $pull: { usersDisliked: uname } } 
+          );
+    }
+    const updated = await themeParkRatingData.getThemeParkRatingById(tpratingid);
+    return res.json({likes: updated.numUsersLiked, dislikes: updated.numUsersDisliked})
+})
+
+router.route('/adddislike')
+.post(async(req, res) => {
+    const tpratingcollections = await themeparkratings();
+    const tpid = req.body.themeparkid;
+    const themepark = await themeParkData.getThemeParkById(tpid);
+    const uname = req.session.user.userName
+    let tprating;
+    let tpratingid;
+
+    for (let i = 0; i < themepark.ratings.length; i++){
+        tprating = await themeParkRatingData.getThemeParkRatingById(themepark.ratings[i]);
+        if (tprating.userName === uname){
+            tpratingid = tprating._id
+            break
+        }
+    }
+    if (!tprating.usersDisliked.includes(uname)){
+        await tpratingcollections.updateOne(
+            { _id: new ObjectId(tprating._id) },  
+            { $inc: { numUsersDisliked: 1 } } 
+        )
+        await tpratingcollections.updateOne(
+            { _id: new ObjectId(tprating._id) },     
+            { $push: { usersDisliked: uname } } 
+          );
+    }
+    else{
+        await tpratingcollections.updateOne(
+            { _id: new ObjectId(tprating._id) },  
+            { $inc: { numUsersDisliked: -1 } } 
+        )
+        await tpratingcollections.updateOne(
+            { _id: new ObjectId(tprating._id) },     
+            { $pull: { usersDisliked: uname } } 
+          );
+    }
+
+    if (tprating.usersLiked.includes(uname)){
+        await tpratingcollections.updateOne(
+            { _id: new ObjectId(tprating._id) },  
+            { $inc: { numUsersLiked: -1 } } 
+        )
+        await tpratingcollections.updateOne(
+            { _id: new ObjectId(tprating._id) },     
+            { $pull: { usersLiked: uname } } 
+          );
+    }
+
+    const updated = await themeParkRatingData.getThemeParkRatingById(tpratingid);
+    return res.json({likes: updated.numUsersLiked, dislikes: updated.numUsersDisliked})
 })
 
 // ------------------------- WORKS
@@ -399,7 +492,7 @@ router.route('/:id/rides/:rideid/ratings')
         const ridesratings = (await rideRatingData.getRideRatingsByRide(req.params.rideid)).ratings;
         const averages = await rideRatingData.getAverageRideRatings(req.params.rideid);
 
-        console.log(ridesratings)
+        //console.log(ridesratings)
         return res.render('rideRatingPage', {
             tpid: req.params.id, 
             rpid: req.params.rideid, 
