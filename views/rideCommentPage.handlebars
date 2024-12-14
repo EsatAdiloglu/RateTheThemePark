@@ -7,19 +7,39 @@
     - list of comments
     - add button
  --}}
-
-  <h1>Comments on Rides</h1>
-
- <main>
-    <ol>
-        {{#each comments}}
-        <li>
-            {{userName}}
-            <br>
-            Comment: {{commentBody}}
-        </li>
-        {{/each}}
-    </ol>
-</main>
-
-<a href = '/themepark/{{_id}}/rides/{{_rideId}}/addComment'>Add comment on ride</a>
+<p id = "error"></p>
+<button id="addComment">Add Ride Comment</button>
+<div id="comment" hidden>
+    <p>Please enter the following information to add a comment to {{rideName}}</p>
+    <form id = "commentForm">
+        <label for="commentBody">Ride Comment</label>
+        <br>
+        <textarea name="commentBody" id="commentBody"></textarea>
+        <br>
+        <button data-id={{_rideId}} data-index-number="1" type="submit">Submit comment</button>
+    </form>
+    <button id="cancelButton">Cancel</button>
+</div>
+<div id="commentList">
+  {{#each comments}}
+    <div data-id="{{_id}}">
+      User: {{userName}} Comment: {{commentBody}}
+      <button class="childCommentBtn">Add a comment</button>
+      <div hidden>
+        <p>Reply</p>
+        <form class="childCommentForm">
+          <label for="childCommentForm"></label>
+          <br>
+          <textarea name="childCommentBody" class="childCommentBody"></textarea>
+          <br>
+          <button  type="submit">Submit Reply</button>
+        </form>
+        <button class="cancelChildButton">Cancel</button>
+      </div>
+      <br>
+      {{#each comments}}
+        <p>{{commentBody}}</p>
+      {{/each}}
+    </div>
+  {{/each}}
+</div>

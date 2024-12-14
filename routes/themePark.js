@@ -166,10 +166,10 @@ router.route('/:id/comments')
         const themeParkComments = (await commentsData.getComments(validatedId)).comments;
         return res.status(200).render('themeParkCommentPage', {
             _id: req.params.id,
-            themepark: themePark,
             comments: themeParkComments,
-            script_partial: "themeParkComment_script",
-            title: `${themePark.themeParkName}`
+            themeParkName: themePark.themeParkName,
+            script_partial: "comment_script",
+            title: `Comments on ${themePark.themeParkName}`
         });
     } catch (e) {
         console.log(e)
@@ -381,7 +381,14 @@ router.route('/:id/rides/:rideid/comments').get(async(req, res) => {
         const ride = await rideData.getRideById(req.params.rideid)
         if(!themepark.rides.some((r) => r === ride._id.toString())) throw `Error: the ride ${ride.rideName} doesn't exist in theme park ${themepark.themeParkName}` 
         const rideComments  = (await commentsData.getComments(ride._id.toString())).comments
-        return res.status(200).render('rideCommentPage', {_id: themepark._id.toString(), _rideId: ride._id.toString(), comments: rideComments})
+        return res.status(200).render('rideCommentPage', 
+            {
+            _rideId: ride._id.toString(), 
+            comments: rideComments,
+            rideName: ride.rideName,
+            title: `Comments on ${ride.rideName}`,
+            script_partial: "comment_script"
+        })
     }
     catch(e){
         return res.status(404).json({error: `${e}`})
@@ -391,68 +398,68 @@ router.route('/:id/rides/:rideid/comments').get(async(req, res) => {
 
 // render the ride comment page, just get the id of theme park id ride id, get the userId, push the ID do the {} thing 
 //-------------HOPEFULLY WORKS
-router.route('/:id/rides/:rideid/addComment')
-.get(async(req, res) => {
-    try{
-        req.params.id = helper.checkId(req.params.id, "theme park id")
-        req.params.rideid = helper.checkId(req.params.rideid, "ride id")
+// router.route('/:id/rides/:rideid/addComment')
+// .get(async(req, res) => {
+//     try{
+//         req.params.id = helper.checkId(req.params.id, "theme park id")
+//         req.params.rideid = helper.checkId(req.params.rideid, "ride id")
 
-        req.params.id = xss(req.params.id)
-        req.params.rideid = xss(req.params.rideid)
-    }
-    catch(e){
-        return res.status(400).json({error: `${e}`})
-    }
-    try{
-        const themepark = await themeParkData.getThemeParkById(req.params.id)
-        const ride = await rideData.getRideById(req.params.rideid)
-        if(!themepark.rides.some((r) => r === ride._id.toString())) throw `Error: the ride ${ride.rideName} doesn't exist in theme park ${themepark.themeParkName}` 
-        return res.render('addRideCommentPage', {themeId: themepark._id.toString(), rideId: req.params.rideid })
-    }
-    catch(e){
-        return res.status(404).json({error: `${e}`})
-    }
+//         req.params.id = xss(req.params.id)
+//         req.params.rideid = xss(req.params.rideid)
+//     }
+//     catch(e){
+//         return res.status(400).json({error: `${e}`})
+//     }
+//     try{
+//         const themepark = await themeParkData.getThemeParkById(req.params.id)
+//         const ride = await rideData.getRideById(req.params.rideid)
+//         if(!themepark.rides.some((r) => r === ride._id.toString())) throw `Error: the ride ${ride.rideName} doesn't exist in theme park ${themepark.themeParkName}` 
+//         return res.render('addRideCommentPage', {themeId: themepark._id.toString(), rideId: req.params.rideid })
+//     }
+//     catch(e){
+//         return res.status(404).json({error: `${e}`})
+//     }
     
-})
-// create a comment document, add speicfic ride by id, check valididations for ids, 
-.post(async(req, res) => {
-    const newRideCommentInfo = req.body;
-    if(!newRideCommentInfo || Object.keys(newRideCommentInfo).length < 1){
-        return res.status(400).json({error: "The request body is empty"})
-    }
+// })
+// // create a comment document, add speicfic ride by id, check valididations for ids, 
+// .post(async(req, res) => {
+//     const newRideCommentInfo = req.body;
+//     if(!newRideCommentInfo || Object.keys(newRideCommentInfo).length < 1){
+//         return res.status(400).json({error: "The request body is empty"})
+//     }
 
-    let userName = undefined
-    let rideComment = undefined
-    try{
-        req.params.rideid = helper.checkId(req.params.rideid, "ride id")
-        req.params.id = helper.checkId(req.params.id, "theme park id")
+//     let userName = undefined
+//     let rideComment = undefined
+//     try{
+//         req.params.rideid = helper.checkId(req.params.rideid, "ride id")
+//         req.params.id = helper.checkId(req.params.id, "theme park id")
 
-        userName = helper.checkString(req.session.user.userName)
+//         userName = helper.checkString(req.session.user.userName)
 
-        rideComment = helper.checkString(newRideCommentInfo.ride_comment)
+//         rideComment = helper.checkString(newRideCommentInfo.ride_comment)
 
-        req.params.id = xss(req.params.id)
-        req.params.rideid = xss(req.params.rideid)
-        userName = xss(userName)
-        rideComment = xss(rideComment)
+//         req.params.id = xss(req.params.id)
+//         req.params.rideid = xss(req.params.rideid)
+//         userName = xss(userName)
+//         rideComment = xss(rideComment)
         
-    }
-    catch(e){
-        return res.status(400).json({error: `${e}`})
-    }
+//     }
+//     catch(e){
+//         return res.status(400).json({error: `${e}`})
+//     }
 
-    try{
-        const themepark = await themeParkData.getThemeParkById(req.params.id)
-        const ride = await rideData.getRideById(req.params.rideid)
-        if(!themepark.rides.some((r) => r === ride._id.toString())) throw `Error: the ride ${ride.rideName} doesn't exist in theme park ${themepark.themeParkName}` 
+//     try{
+//         const themepark = await themeParkData.getThemeParkById(req.params.id)
+//         const ride = await rideData.getRideById(req.params.rideid)
+//         if(!themepark.rides.some((r) => r === ride._id.toString())) throw `Error: the ride ${ride.rideName} doesn't exist in theme park ${themepark.themeParkName}` 
 
-        await commentsData.createComment(userName, ride._id.toString(), rideComment, 1)
-        return res.status(200).redirect(`/themepark/${themepark._id.toString()}/rides/${ride._id.toString()}/comments`)
-    }
-    catch(e){
-        return res.status(404).json({error: `${e}`})
-    }
-})
+//         await commentsData.createComment(userName, ride._id.toString(), rideComment, 1)
+//         return res.status(200).redirect(`/themepark/${themepark._id.toString()}/rides/${ride._id.toString()}/comments`)
+//     }
+//     catch(e){
+//         return res.status(404).json({error: `${e}`})
+//     }
+// })
 
 
 // -------------------------------------- FOOD STALLS --------------------------------------
@@ -593,63 +600,70 @@ router.route('/:id/foodstalls/:foodstallid/comments')
         const foodstall = await foodStallData.getFoodStallById(req.params.foodstallid)
         if (!themepark.foodStalls.some((f) => f === foodstall._id.toString())) throw `Error: the foodstall ${foodstall.foodStallName} doesn't exist in theme park ${themepark.themeParkName}`
         const foodstallComments = (await commentsData.getComments(foodstall._id.toString())).comments
-        return res.status(200).render('foodStallCommentPage', {_id: themepark._id.toString(), _foodstallId: foodstall._id.toString(), comments: foodstallComments})
+        return res.status(200).render('foodStallCommentPage', 
+            {
+                _foodstallId: foodstall._id.toString(), 
+                comments: foodstallComments,
+                foodStallName: foodstall.foodStallName,
+                title: `Comments on ${foodstall.foodStallName}`,
+                script_partial: "comment_script"
+            })
     } catch (e) {
         return res.status(404).json({error: `${e}`})
     } 
 })
 
-router.route('/:id/foodstalls/:foodstallid/addComment')
-.get(async(req, res) => {
-    // get the addComment page
-	try { 
-        req.params.id = helper.checkId(req.params.id, "theme park id");
-        req.params.foodstallid = helper.checkId(req.params.foodstallid, "foodstall id");
+// router.route('/:id/foodstalls/:foodstallid/addComment')
+// .get(async(req, res) => {
+//     // get the addComment page
+// 	try { 
+//         req.params.id = helper.checkId(req.params.id, "theme park id");
+//         req.params.foodstallid = helper.checkId(req.params.foodstallid, "foodstall id");
 
-        req.params.id = xss(req.params.id)
-        req.params.foodstallid = xss(req.params.foodstallid)
-    } catch (e) {
-        return res.status(400).json({error: `${e}`});
-    }
+//         req.params.id = xss(req.params.id)
+//         req.params.foodstallid = xss(req.params.foodstallid)
+//     } catch (e) {
+//         return res.status(400).json({error: `${e}`});
+//     }
     
-    try {
-        const themepark = await themeParkData.getThemeParkById(req.params.id);
-        const foodstall = await foodStallData.getFoodStallById(req.params.foodstallid);
-        if (!themepark.foodStalls.some((f) => f === foodstall._id.toString())) throw `Error: the foodstall ${foodstall.foodStallName} doesn't exist in theme park ${themepark.themeParkName}`;
-        return res.render('addFoodStallCommentPage', {themeId: themepark._id.toString(), foodstallId: req.params.foodstallid}) 
-    } catch (e) {
-        return res.status(404).json({error: `${e}`});
-    }
-})
-.post(async(req, res) => {
-    // add the comment to the specific food stall
-    const newFoodStallCommentInfo = req.body;
-    if(!newFoodStallCommentInfo || Object.keys(newFoodStallCommentInfo) < 1) return res.status(400).json({error: "The request body is empty"});
-    let userName = undefined;
-    let foodstallComment = undefined;
-    try {
-        req.params.foodstallid = helper.checkId(req.params.foodstallid, "foodstall id");
-        req.params.id = helper.checkId(req.params.id, "theme park id");
-        userName = helper.checkString(req.session.user.userName);
-        foodstallComment = helper.checkString(newFoodStallCommentInfo.foodstall_comment);
+//     try {
+//         const themepark = await themeParkData.getThemeParkById(req.params.id);
+//         const foodstall = await foodStallData.getFoodStallById(req.params.foodstallid);
+//         if (!themepark.foodStalls.some((f) => f === foodstall._id.toString())) throw `Error: the foodstall ${foodstall.foodStallName} doesn't exist in theme park ${themepark.themeParkName}`;
+//         return res.render('addFoodStallCommentPage', {themeId: themepark._id.toString(), foodstallId: req.params.foodstallid}) 
+//     } catch (e) {
+//         return res.status(404).json({error: `${e}`});
+//     }
+// })
+// .post(async(req, res) => {
+//     // add the comment to the specific food stall
+//     const newFoodStallCommentInfo = req.body;
+//     if(!newFoodStallCommentInfo || Object.keys(newFoodStallCommentInfo) < 1) return res.status(400).json({error: "The request body is empty"});
+//     let userName = undefined;
+//     let foodstallComment = undefined;
+//     try {
+//         req.params.foodstallid = helper.checkId(req.params.foodstallid, "foodstall id");
+//         req.params.id = helper.checkId(req.params.id, "theme park id");
+//         userName = helper.checkString(req.session.user.userName);
+//         foodstallComment = helper.checkString(newFoodStallCommentInfo.foodstall_comment);
 
-        req.params.id = xss(req.params.id)
-        req.params.foodstallid = xss(req.params.foodstallid)
-        userName = xss(userName)
-        foodstallComment = xss(foodstallComment)
-    } catch (e) {
-        return res.status(400).json({error: `${e}`});
-    }
-    try {
-        const themepark = await themeParkData.getThemeParkById(req.params.id);
-        const foodstall = await foodStallData.getFoodStallById(req.params.foodstallid);
-        if (!themepark.foodStalls.some((f) => f === foodstall._id.toString())) throw `Error: the foodstall ${foodstall.foodStallName} doesn't exist in theme park ${themepark.themeParkName}`;
-        await commentsData.createComment(userName, foodstall._id.toString(), foodstallComment, 2); 
-        return res.status(200).redirect(`/themepark/${themepark._id.toString()}/foodstalls/${foodstall._id.toString()}/comments`);
-    } catch (e) {
-        return res.status(404).json({error: `${e}`});
-    }
-})
+//         req.params.id = xss(req.params.id)
+//         req.params.foodstallid = xss(req.params.foodstallid)
+//         userName = xss(userName)
+//         foodstallComment = xss(foodstallComment)
+//     } catch (e) {
+//         return res.status(400).json({error: `${e}`});
+//     }
+//     try {
+//         const themepark = await themeParkData.getThemeParkById(req.params.id);
+//         const foodstall = await foodStallData.getFoodStallById(req.params.foodstallid);
+//         if (!themepark.foodStalls.some((f) => f === foodstall._id.toString())) throw `Error: the foodstall ${foodstall.foodStallName} doesn't exist in theme park ${themepark.themeParkName}`;
+//         await commentsData.createComment(userName, foodstall._id.toString(), foodstallComment, 2); 
+//         return res.status(200).redirect(`/themepark/${themepark._id.toString()}/foodstalls/${foodstall._id.toString()}/comments`);
+//     } catch (e) {
+//         return res.status(404).json({error: `${e}`});
+//     }
+// })
 
 
 // -------------------------------------E OF FOOD STALL---------------------------------------------
