@@ -1,28 +1,22 @@
-<a href="/themepark/{{_id}}">Go back to theme park page</a>
+<h1> Reports for {{themeParkName}}</h1>
+<a href="/themepark/{{themeId}}">Go back to theme park page</a>
 <br>
 <p id="error"></p>
-<button id="addThemeParkReport">Report Theme Park</button>
 
-<div id="report" hidden>
-    <p>Please enter the following information to report this theme park</p>
-    <form id="reportForm">
-        <label for="theme_park_report">Reason for Reporting</label>
-        <br>
-        <textarea name="theme_park_report" id="theme_park_report"></textarea>
-        <br>
-        <button data-id="{{_id}}" type="submit">Submit Report</button>
-    </form>
-    <button id="cancelReportButton">Cancel</button>
-</div>
+<form action="/themepark/{{themeId}}/addReport" method="GET">
+    <button type="submit" id="addThemeParkReport">Report Theme Park</button>
+</form>
 
 <div id="reportList">
-    <h3>Reports for {{themepark}}:</h3>
-  <h3>Reports:</h3>
-  {{#each reports}}
+    <h3>Reports:</h3>
+    {{#each reports}}
     <div data-id="{{_id}}">
-      <strong>User:</strong> {{userName}} <br>
-      <strong>Report:</strong> {{reportBody}}
-      <br><br>
+        <strong>User:</strong> {{userName}} <br>
+        <strong>Report:</strong> {{reportBody}} <br>
+        <br><br>
     </div>
-  {{/each}}
+    {{else}}
+    <p>No reports have been submitted for this theme park yet.</p>
+    {{/each}}
 </div>
+

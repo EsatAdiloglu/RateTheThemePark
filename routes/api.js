@@ -188,35 +188,4 @@ router.route("/addChildComment").post(async (req,res) => {
         return res.status(404).json({Error: `${e}`})
     }
 })
-// router.route("/addRideReport").post(async (req, res) => {
-//     const rideReportInfo = req.body;
-
-//     try {
-//         rideReportInfo.rideId = helper.checkId(rideReportInfo.rideId, "Ride Id");
-//         rideReportInfo.reportBody = helper.checkString(rideReportInfo.reportBody, "Report Body");
-//         rideReportInfo.rideId = xss(rideReportInfo.rideId);
-//         rideReportInfo.reportBody = xss(rideReportInfo.reportBody);
-//     } catch (e) {
-//         return res.status(400).json({Error: `${e}`});
-//     }
-
-//     try {
-//         const user = await userData.getUserByUsername(req.session.user.userName);
-        
-//         const reportId = await reportsData.createReport(
-//             user.userName,    
-//             rideReportInfo.rideId,
-//             rideReportInfo.reportBody, 
-//             1 
-//         );
-
-//         return res.json({
-//             message: "Report submitted successfully.",
-//             reportId: reportId,
-//             reportedBy: user.userName,
-//         });
-//     } catch (e) {
-//         return res.status(500).json({Error: `Failed to report the ride: ${e}`});
-//     }
-// })
 export default router;
