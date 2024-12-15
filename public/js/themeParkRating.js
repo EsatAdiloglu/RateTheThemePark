@@ -102,8 +102,8 @@
                         <p><strong>Diversity Rating:</strong> ${res.diversityRating}</p>
                         <p class="numtplikes"><strong>Number of Likes:</strong> 0 </p>
                         <p class="numtpdislikes"><strong>Number of Dislikes:</strong> 0 </p>
-                        <button class="themeparkratinglikes" data-id="${_id}">Like</button> 
-                        <button class="themeparkratingdislikes" data-id="${_id}">Dislike</button> 
+                        <button class="themeparkratinglikes" data-id="${res._id}">Like</button> 
+                        <button class="themeparkratingdislikes" data-id="${res._id}">Dislike</button> 
                         </li>
                         `)
                     ratingsList.append(list)
