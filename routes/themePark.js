@@ -975,9 +975,12 @@ router.route('/:id/rides/:rideid/reports')
 
         const rideReports = (await reportsData.getReports(ride._id.toString())).reports;
 
+        const themeId = themepark._id.toString();
+        const rideId = ride._id.toString();
+
         return res.status(200).render('rideReportPage', {
-            themeId: themepark._id.toString(),
-            rideId: ride._id.toString(),
+            themeId: themeId,
+            rideId: rideId,
             rideName: ride.rideName,
             reports: rideReports,
             script_partial: "rideReport_script",
@@ -1031,9 +1034,11 @@ router.route('/:id/rides/:rideid/addReport')
     let reportReason = undefined;
 
     try {
+        console.log("Report Info:", req.body);
         req.params.rideid = helper.checkId(req.params.rideid, "ride id");
         req.params.id = helper.checkId(req.params.id, "theme park id");
 
+        console.log("Session User:", req.session.user);
         userName = helper.checkString(req.session.user.userName, "user name");
         reportReason = helper.checkString(reportInfo.report_reason, "report reason");
 
@@ -1042,6 +1047,7 @@ router.route('/:id/rides/:rideid/addReport')
         userName = xss(userName);
         reportReason = xss(reportReason);
     } catch (e) {
+        console.log(e);
         return res.status(400).json({error: `${e}`});
     }
 
@@ -1053,15 +1059,26 @@ router.route('/:id/rides/:rideid/addReport')
             throw `Error: The ride ${ride.rideName} doesn't exist in theme park ${themepark.themeParkName}`;
         }
 
-        await reportsData.createReport(userName, ride._id.toString(), reportReason);
+        console.log("Inputs to createReport:", {
+            userName,
+            rideId: ride._id.toString(),
+            reportReason
+        });
 
-        return res.status(200).redirect(`/themepark/${themepark._id.toString()}/rides/${ride._id.toString()}/reports`);
+        await reportsData.createReport(userName, ride._id.toString(), reportReason, 1);
+
+        // return res.status(200).redirect(`/themepark/${themepark._id.toString()}/rides/${ride._id.toString()}/reports`);
+        return res.status(200).redirect(`/themepark/${themepark._id.toString()}/rides/${ride._id.toString()}/reportSuccess`);
     } catch (e) {
         console.error(e);
         return res.status(500).json({error: "Failed to submit the report"});
     }
 });
 
+router.route('/:id/rides/:rideid/reportSuccess')
+.get((req, res) => {
+    res.render('reportSuccessPage', {title: 'Report Successfully Submitted'});
+});
 
 router.route('/:id/foodstalls/:foodstallid/reports')
 .get(async(req, res) => {
