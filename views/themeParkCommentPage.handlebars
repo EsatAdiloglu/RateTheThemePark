@@ -37,11 +37,17 @@ Theme Park Comment Page (INDIVIDUAL THEME PARK)
         </form>
         <button class="cancelChildButton">Cancel</button>
       </div>
+      {{#if edit}}
+        <br>
+        <button>Update Comment</button>
+        <button>Delete Comment</button>
+      {{/if}}
       <br>
       {{#each comments}}
-        <p>Reply</p>
-        <p>User: {{userName}} Comment: {{commentBody}}</p>
+        <p>&emsp;&emsp;User: {{userName}} Comment: {{commentBody}}</p>
+
       {{/each}}
+      
     </div>
   {{/each}}
 </div>

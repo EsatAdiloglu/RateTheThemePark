@@ -12,7 +12,7 @@ router.route('/')
 
 router.route('/signupuser')
     .get(async(req, res) => {
-        return res.render('signUp')})
+        return res.render('signUp', {title: "Rate my Theme Park"})})
     .post(async(req, res) => {
         const missing = []
         let {name, username, password, confirmPassword} = req.body
@@ -89,7 +89,7 @@ router.route('/signupuser')
     })
 router.route('/signinuser')
     .get(async(req, res) => {
-    return res.render('signIn')})
+    return res.render('signIn', {title: "Sign In"})})
     .post(async(req, res) => {
         let {check_username, check_password} = req.body;
 
@@ -147,7 +147,7 @@ router.route('/signinuser')
 router.route('/signoutuser').get(async (req, res) => {
     //code here for GET
     req.session.destroy();
-    return res.render('signOut')
+    return res.render('signOut', {title: "Signed Out"})
     });
 
 export default router;

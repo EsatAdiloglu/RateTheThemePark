@@ -11,11 +11,8 @@
  {{!-- List of rides returned 
     basically links to each ride
  --}}
-
- <h1>Theme Park Rides</h1>
 <a href = "/themepark/{{tpid}}">Go back to theme park page</a>
 
-<main>
     <ol>
         {{#each rides}}
         <li>
@@ -23,7 +20,7 @@
         </li>
         {{/each}}
     </ol>
-</main>
+
 
 
  <a href = '/themepark/{{tpid}}/rides/addRide'>Add ride</a>
