@@ -13,12 +13,12 @@ if (rideForm) {
         streetInput.classList.remove('inputClass');
         cityInput.classList.remove('inputClass');
         stateInput.classList.remove('inputClass');
-        console.log("clicked");
+        //console.log("clicked");
     } else {
         nameInput.focus();
         nameInput.className = 'inputClass';
         streetInput.className = 'inputClass';
-        cityInput.className = 'inputClass';S
+        cityInput.className = 'inputClass';
         cityInput.className = 'inputClass';
     }
   });

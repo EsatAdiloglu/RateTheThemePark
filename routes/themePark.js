@@ -12,12 +12,253 @@ import reportsData from '../data/report.js'
 import helper from "../helper.js";
 import { ObjectId } from "mongodb";
 import xss from "xss";
+import { themeparkratings, rideratings } from "../config/mongoCollections.js";
 
 // ------------------------- WORKS
 router.route('/')
 .get(async (req, res)  => {
     return res.render('homePage', {title: "Rate My Theme Park"})
 });
+
+router.route('/comparethemeparks')
+.get(async (req, res)  => {
+    const allParks = await themeParkData.getAllThemeParks();
+    return res.render('compareThemeParksPage', {parkOne: allParks, parkTwo: allParks});
+    //return res.render('compareThemeParksPage', {park: allParks})
+})
+
+router.route('/comparethemeparksresults')
+.post(async (req, res) => {
+
+    try {
+        let parkOneInput = await themeParkData.getThemeParkById(req.body.parkOne);
+        let parkTwoInput = await themeParkData.getThemeParkById(req.body.parkTwo);
+
+        return res.redirect(`/themepark/compareThemeParksPage2/${req.body.parkOne}/${req.body.parkTwo}`);
+    } catch (e) {
+
+        return res.status(400).json({error: e});
+    }
+});
+
+router.route('/compareThemeParksPage2/:id1/:id2').get(async(req,res) =>{
+    let parkOneInput = await themeParkData.getThemeParkById(req.params.id1);
+    let parkTwoInput = await themeParkData.getThemeParkById(req.params.id2);
+    return res.render('compareThemeParksPage2',{parkOne: parkOneInput, parkTwo: parkTwoInput})
+})
+
+router.route('/addlike')
+.post(async(req, res) => {
+    const tpratingcollections = await themeparkratings();
+    const tpid = req.body.themeparkid;
+    const themepark = await themeParkData.getThemeParkById(tpid);
+    const uname = req.session.user.userName
+    let tprating;
+    let tpratingid;
+
+    for (let i = 0; i < themepark.ratings.length; i++){
+        tprating = await themeParkRatingData.getThemeParkRatingById(themepark.ratings[i]);
+        if (tprating.userName === uname){
+            tpratingid = tprating._id
+            break
+        }
+    }
+    if (!tprating.usersLiked.includes(uname)){
+        await tpratingcollections.updateOne(
+            { _id: new ObjectId(tprating._id) },  
+            { $inc: { numUsersLiked: 1 } } 
+        )
+        await tpratingcollections.updateOne(
+            { _id: new ObjectId(tprating._id) },     
+            { $push: { usersLiked: uname } } 
+          );
+    }
+    else{
+        await tpratingcollections.updateOne(
+            { _id: new ObjectId(tprating._id) },  
+            { $inc: { numUsersLiked: -1 } } 
+        )
+        await tpratingcollections.updateOne(
+            { _id: new ObjectId(tprating._id) },     
+            { $pull: { usersLiked: uname } } 
+          );
+    }
+
+    if (tprating.usersDisliked.includes(uname)){
+        await tpratingcollections.updateOne(
+            { _id: new ObjectId(tprating._id) },  
+            { $inc: { numUsersDisliked: -1 } } 
+        )
+        await tpratingcollections.updateOne(
+            { _id: new ObjectId(tprating._id) },     
+            { $pull: { usersDisliked: uname } } 
+          );
+    }
+    const updated = await themeParkRatingData.getThemeParkRatingById(tpratingid);
+    return res.json({likes: updated.numUsersLiked, dislikes: updated.numUsersDisliked})
+})
+
+router.route('/adddislike')
+.post(async(req, res) => {
+    const tpratingcollections = await themeparkratings();
+    const tpid = req.body.themeparkid;
+    const themepark = await themeParkData.getThemeParkById(tpid);
+    const uname = req.session.user.userName
+    let tprating;
+    let tpratingid;
+
+    for (let i = 0; i < themepark.ratings.length; i++){
+        tprating = await themeParkRatingData.getThemeParkRatingById(themepark.ratings[i]);
+        if (tprating.userName === uname){
+            tpratingid = tprating._id
+            break
+        }
+    }
+    if (!tprating.usersDisliked.includes(uname)){
+        await tpratingcollections.updateOne(
+            { _id: new ObjectId(tprating._id) },  
+            { $inc: { numUsersDisliked: 1 } } 
+        )
+        await tpratingcollections.updateOne(
+            { _id: new ObjectId(tprating._id) },     
+            { $push: { usersDisliked: uname } } 
+          );
+    }
+    else{
+        await tpratingcollections.updateOne(
+            { _id: new ObjectId(tprating._id) },  
+            { $inc: { numUsersDisliked: -1 } } 
+        )
+        await tpratingcollections.updateOne(
+            { _id: new ObjectId(tprating._id) },     
+            { $pull: { usersDisliked: uname } } 
+          );
+    }
+
+    if (tprating.usersLiked.includes(uname)){
+        await tpratingcollections.updateOne(
+            { _id: new ObjectId(tprating._id) },  
+            { $inc: { numUsersLiked: -1 } } 
+        )
+        await tpratingcollections.updateOne(
+            { _id: new ObjectId(tprating._id) },     
+            { $pull: { usersLiked: uname } } 
+          );
+    }
+
+    const updated = await themeParkRatingData.getThemeParkRatingById(tpratingid);
+    return res.json({likes: updated.numUsersLiked, dislikes: updated.numUsersDisliked})
+})
+
+router.route('/addridelike')
+.post(async(req, res) => {
+    const rideid = req.body.rideid;
+    
+
+    const rideratingcollections = await rideratings();
+
+    const ride = await rideData.getRideById(rideid)
+    const uname = req.session.user.userName;
+    
+    let riderating;
+    let rideratingid;
+
+    for (let i = 0; i < ride.ratings.length; i++){
+        riderating = await rideRatingData.getRideRatingById(ride.ratings[i])
+        if (riderating.userName === uname){
+            rideratingid = riderating._id;
+        }
+    }
+    
+    if (!riderating.usersLiked.includes(uname)){
+        await rideratingcollections.updateOne(
+            { _id: new ObjectId(riderating._id) },  
+            { $inc: { numUsersLiked: 1 } } 
+        )
+        await rideratingcollections.updateOne(
+            { _id: new ObjectId(riderating._id) },     
+            { $push: { usersLiked: uname } } 
+          );
+    }
+    else{
+        await rideratingcollections.updateOne(
+            { _id: new ObjectId(riderating._id) },  
+            { $inc: { numUsersLiked: -1 } } 
+        )
+        await rideratingcollections.updateOne(
+            { _id: new ObjectId(riderating._id) },     
+            { $pull: { usersLiked: uname } } 
+          );
+    }
+    if (riderating.usersDisliked.includes(uname)){
+        await rideratingcollections.updateOne(
+            { _id: new ObjectId(riderating._id) },  
+            { $inc: { numUsersDisliked: -1 } } 
+        )
+        await rideratingcollections.updateOne(
+            { _id: new ObjectId(riderating._id) },     
+            { $pull: { usersDisliked: uname } } 
+          );
+    }
+
+    const updated = await rideRatingData.getRideRatingById(rideratingid)
+    return res.json({likes: updated.numUsersLiked, dislikes: updated.numUsersDisliked})
+})
+
+router.route('/addridedislike')
+.post(async(req, res) => {
+    const rideid = req.body.rideid;
+    
+
+    const rideratingcollections = await rideratings();
+
+    const ride = await rideData.getRideById(rideid)
+    const uname = req.session.user.userName;
+    
+    let riderating;
+    let rideratingid;
+
+    for (let i = 0; i < ride.ratings.length; i++){
+        riderating = await rideRatingData.getRideRatingById(ride.ratings[i])
+        if (riderating.userName === uname){
+            rideratingid = riderating._id;
+        }
+    }
+    
+    if (!riderating.usersDisliked.includes(uname)){
+        await rideratingcollections.updateOne(
+            { _id: new ObjectId(riderating._id) },  
+            { $inc: { numUsersDisliked: 1 } } 
+        )
+        await rideratingcollections.updateOne(
+            { _id: new ObjectId(riderating._id) },     
+            { $push: { usersDisliked: uname } } 
+          );
+    }
+    else{
+        await rideratingcollections.updateOne(
+            { _id: new ObjectId(riderating._id) },  
+            { $inc: { numUsersDisliked: -1 } } 
+        )
+        await rideratingcollections.updateOne(
+            { _id: new ObjectId(riderating._id) },     
+            { $pull: { usersDisliked: uname } } 
+          );
+    }
+    if (riderating.usersLiked.includes(uname)){
+        await rideratingcollections.updateOne(
+            { _id: new ObjectId(riderating._id) },  
+            { $inc: { numUsersLiked: -1 } } 
+        )
+        await rideratingcollections.updateOne(
+            { _id: new ObjectId(riderating._id) },     
+            { $pull: { usersLiked: uname } } 
+          );
+    }
+
+    const updated = await rideRatingData.getRideRatingById(rideratingid)
+    return res.json({likes: updated.numUsersLiked, dislikes: updated.numUsersDisliked})
+})
 
 // ------------------------- WORKS
 router.route('/addthemepark')
@@ -64,7 +305,7 @@ router.route('/addthemepark')
 router.route('/listofthemeparks')
 .get(async(req, res) => {
     if (req.session.user.lastsearched){
-        console.log("HERE");
+
         return res.status(200).render('listOfThemeParks', {parks: req.session.user.lastsearched})
     }
 })
@@ -78,15 +319,30 @@ router.route('/listofthemeparks')
         return res.status(400).json({error: `${e}`})
     }
     try {
-        //  console.log(themeParkInput);
+
         
         const newThemePark = await themeParkData.getThemeParksByName(themeParkInput);
-        //console.log(newThemePark);
+
         req.session.user.lastsearched = newThemePark
         return res.status(200).render("listOfThemeParks", {parks: newThemePark})
 
     } catch (e) {
-        return res.status(404).json({error: `${e}`});
+        return res.status(400).json({error: e});
+    }
+});
+
+router.route('/listofthemeparkslocation')
+.post(async (req, res) => {
+    try {
+         const themeParkLocationInput = req.body.themeParkLocationInput;
+        //  console.log(themeParkInput);
+
+        const newThemePark = await themeParkData.getThemeParksByLocation(themeParkLocationInput);
+        return res.status(200).render("listOfThemeParksLocations", {parks: newThemePark})
+
+    } catch (e) {
+
+        return res.status(400).json({error: e});
     }
 });
 
@@ -347,7 +603,7 @@ router.route('/:id/rides/:rideid/ratings')
         const ridesratings = (await rideRatingData.getRideRatingsByRide(req.params.rideid)).ratings;
         const averages = await rideRatingData.getAverageRideRatings(req.params.rideid);
 
-        console.log(ridesratings)
+        //console.log(ridesratings)
         return res.render('rideRatingPage', {
             tpid: req.params.id, 
             rpid: req.params.rideid, 

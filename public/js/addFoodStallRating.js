@@ -21,7 +21,7 @@ if (foodRatingForm) {
         reviewInput.classList.remove('inputClass');
         errorDiv.hidden = true;
         if (validRating(waitTimeInput.value) && validRating(foodQualityInput.value)) {
-            console.log(good)
+            //console.log(good)
         } else {
             foodRatingForm.reset();
             foodQualityInput.className = 'inputClass';
