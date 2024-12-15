@@ -513,7 +513,14 @@ let tpdbutton = document.getElementById("themeparkratingdislikes")
 let rlbutton = document.getElementById("rideratinglikes")
 let rdbutton = document.getElementById("rideratingdislikes")
 let fslbutton = document.getElementById("foodstallratinglikes")
-let fsdbutton = document.getElementById("foodstallratindislikes")
+let fsdbutton = document.getElementById("foodstallratingdislikes")
+
+let numtplikes = document.getElementById('numtplikes')
+let numtpdislikes = document.getElementById('numtpdislikes')
+let ridenumlikes = document.getElementById('ridenumlikes')
+let ridenumdislikes = document.getElementById('ridenumdislikes')
+let fsnumlikes = document.getElementById('fsnumlikes')
+let fsnumdislikes = document.getElementById('fsnumdislikes')
 
 if (tplbutton) {
     tplbutton.addEventListener('click', async () => {
@@ -533,6 +540,8 @@ if (tplbutton) {
         
         // result contains likes and dislikes
         //return await res.redirect('/themepark');
+        numtplikes.innerHTML = `<strong>Number of Likes:</strong> ${result.likes}`
+        numtpdislikes.innerHTML = `<strong>Number of Dislikes:</strong> ${result.dislikes}`
 
     })
 }
@@ -550,7 +559,10 @@ if (tpdbutton) {
             body: JSON.stringify({ themeparkid: themeparkid })
         });
         const result = await res.json();
+            numtplikes.innerHTML = `<strong>Number of Likes:</strong> ${result.likes}`
+        numtpdislikes.innerHTML = `<strong>Number of Dislikes:</strong> ${result.dislikes}`
     })
+
 }
 
 if (rlbutton) {
@@ -568,8 +580,11 @@ if (rlbutton) {
             },
             body: JSON.stringify({ rideid: rideid })
         });
+        
         const result = await res.json();
-        console.log(result.likes + " " + result.dislikes);
+        ridenumlikes.innerHTML = `<strong>Number of Likes:</strong> ${result.likes}`;
+        ridenumdislikes.innerHTML = `<strong>Number of Dislikes:</strong> ${result.dislikes}`;
+
     })
 }
 
@@ -587,9 +602,46 @@ if (rdbutton) {
         });
         const result = await res.json();
         console.log(result.likes + " " + result.dislikes);
+        ridenumlikes.innerHTML = `<strong>Number of Likes:</strong> ${result.likes}`;
+        ridenumdislikes.innerHTML = `<strong>Number of Dislikes:</strong> ${result.dislikes}`;
     })
 }
 
+if (fslbutton){
+    fslbutton.addEventListener('click', async() => {
+        const fsid = window.location.href.split('/')[6]
+        const res = await fetch("/themepark/addfslike", 
+            {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ fsid: fsid })
+        });
+        
+        const result = await res.json();
+
+        fsnumlikes.innerHTML = `<strong>Number of Likes:</strong> ${result.likes}`;
+        fsnumdislikes.innerHTML = `<strong>Number of Dislikes:</strong> ${result.dislikes}`;
+    })
+}
+if (fsdbutton){
+    fsdbutton.addEventListener('click', async() => {
+        const fsid = window.location.href.split('/')[6]
+        const res = await fetch("/themepark/addfsdislike", 
+            {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ fsid: fsid })
+        });
+        
+        const result = await res.json();
+        fsnumlikes.innerHTML = `<strong>Number of Likes:</strong> ${result.likes}`;
+        fsnumdislikes.innerHTML = `<strong>Number of Dislikes:</strong> ${result.dislikes}`;
+    })
+}
 // ---------------------------------- SIGNUP ----------------------------------------------------------
 let signupform = document.getElementById('signup-form')
 let signupname = document.getElementById('name');
