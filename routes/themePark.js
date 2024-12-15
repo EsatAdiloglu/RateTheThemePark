@@ -662,7 +662,7 @@ router.route('/:id/reports')
         const validatedId = helper.checkId(themeParkId, 'theme park id');
         req.params.id = xss(validatedId);
     } catch (e) {
-        return res.status(400).json({ error: `${e}` });
+        return res.status(400).json({error: `${e}`});
     }
 
     try {
@@ -672,18 +672,17 @@ router.route('/:id/reports')
         
         return res.status(200).render('themeParkReportPage', {
             _id: req.params.id,
-            themepark: themePark,
+            themepark: themePark.themeParkName,
             reports: themeParkReports,
             script_partial: "themeParkReport_script",
             title: `${themePark.themeParkName} - Reports`
         });
     } catch (e) {
         console.log(e);
-        return res.status(404).json({ error: `${e}` });
+        return res.status(404).json({error: `${e}`});
     }
 });
 
-// Route to render ride reports page
 router.route('/:id/rides/:rideid/reports')
 .get(async (req, res) => {
     try {
@@ -720,7 +719,6 @@ router.route('/:id/rides/:rideid/reports')
     }
 });
 
-// Route to render add ride report page
 router.route('/:id/rides/:rideid/addReport')
 .get(async (req, res) => {
     try {
@@ -748,7 +746,7 @@ router.route('/:id/rides/:rideid/addReport')
             title: `Report Ride - ${ride.rideName}`
         });
     } catch (e) {
-        return res.status(404).json({ error: `${e}` });
+        return res.status(404).json({error: `${e}`});
     }
 })
 
@@ -756,7 +754,7 @@ router.route('/:id/rides/:rideid/addReport')
     const reportInfo = req.body;
 
     if (!reportInfo || Object.keys(reportInfo).length === 0) {
-        return res.status(400).json({ error: "The request body is empty" });
+        return res.status(400).json({error: "The request body is empty"});
     }
 
     let userName = undefined;
@@ -774,7 +772,7 @@ router.route('/:id/rides/:rideid/addReport')
         userName = xss(userName);
         reportReason = xss(reportReason);
     } catch (e) {
-        return res.status(400).json({ error: `${e}` });
+        return res.status(400).json({error: `${e}`});
     }
 
     try {
@@ -790,14 +788,13 @@ router.route('/:id/rides/:rideid/addReport')
         return res.status(200).redirect(`/themepark/${themepark._id.toString()}/rides/${ride._id.toString()}/reports`);
     } catch (e) {
         console.error(e);
-        return res.status(500).json({ error: "Failed to submit the report" });
+        return res.status(500).json({error: "Failed to submit the report"});
     }
 });
 
 
 router.route('/:id/foodstalls/:foodstallid/reports')
 .get(async(req, res) => {
-    // Get all reports for a specific food stall
     try {
         req.params.id = helper.checkId(req.params.id, "theme park id");
         req.params.foodstallid = helper.checkId(req.params.foodstallid, "foodstall id");
@@ -832,7 +829,6 @@ router.route('/:id/foodstalls/:foodstallid/reports')
     }
 })
 .post(async(req, res) => {
-    // Add a report for a specific food stall
     const newFoodStallReportInfo = req.body;
     if (!newFoodStallReportInfo || Object.keys(newFoodStallReportInfo).length < 1) {
         return res.status(400).json({error: "The request body is empty"});
