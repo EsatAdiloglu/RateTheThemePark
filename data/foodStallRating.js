@@ -38,8 +38,10 @@ const createFoodStallRating = async (
         foodQualityRating: foodQualityRating,
         waitTimeRating: waitTimeRating,
         review: review,
-        likes: [],
-        dislikes: [],
+        usersLiked: [],
+        usersDisliked: [],
+        numUsersLiked: 0,
+        numUsersDisliked: 0,
         comments: [],
         reports: []
     }
@@ -57,7 +59,6 @@ const createFoodStallRating = async (
     const updateUserRating = {foodStallRatings: [...user.foodStallRatings, ratingId]}
     const updateUserResult = await userCollections.findOneAndUpdate({userName: userName}, {$set: updateUserRating})
     if(!updateUserResult) throw "Error: could not add rating to user"
-    console.log("hello")
     return await getFoodStallRatingById(ratingId)
 }
 
@@ -84,8 +85,6 @@ const getFoodStallRatings = async (id) => {
             ratings: []
         };
     }
-    console.log("worldapf[dasdkoanwsdfoeafsdrgea")
-    console.log(ratings)
     const formattedFoodStallRatings = ratings.map(rating => ({
         _id: rating._id.toString(),
         userName: rating.userName.toString(),

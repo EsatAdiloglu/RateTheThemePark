@@ -6,7 +6,7 @@ if (rideForm) {
     event.preventDefault();
     if (nameInput.value.trim()) {
         nameInput.classList.remove('inputClass');
-        console.log("clicked");
+
     } else {
         nameInput.focus();
         nameInput.className = 'inputClass';

@@ -9,15 +9,15 @@ Theme Park Comment Page (INDIVIDUAL THEME PARK)
 <a href = "/themepark/{{_id}}">Go back to theme park page</a>
 <br>
 <p id = "error"></p>
-<button id="addThemeParkComment">Add Theme Park Comment</button>
+<button id="addComment">Add Theme Park Comment</button>
 <div id="comment" hidden>
-    <p>Please enter the following information to add a comment to a theme park</p>
+    <p>Please enter the following information to add a comment to {{themeParkName}}</p>
     <form id = "commentForm">
-        <label for="theme_park_comment">Theme Park Comment</label>
+        <label for="commentBody">Theme Park Comment</label>
         <br>
-        <textarea name="theme_park_comment" id="theme_park_comment"></textarea>
+        <textarea name="commentBody" id="commentBody"></textarea>
         <br>
-        <button data-id={{_id}} type="submit">Submit comment</button>
+        <button data-id={{_id}} data-index-number="0" type="submit">Submit comment</button>
     </form>
     <button id="cancelButton">Cancel</button>
 </div>
@@ -39,7 +39,8 @@ Theme Park Comment Page (INDIVIDUAL THEME PARK)
       </div>
       <br>
       {{#each comments}}
-        <p>{{commentBody}}</p>
+        <p>Reply</p>
+        <p>User: {{userName}} Comment: {{commentBody}}</p>
       {{/each}}
     </div>
   {{/each}}

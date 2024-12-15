@@ -1,3 +1,4 @@
+
 let addthemeparkform = document.getElementById('tp'); //a
 let nameInput = document.getElementById('theme_park_name');
 let streetInput = document.getElementById('theme_park_street');
@@ -484,6 +485,104 @@ if (signinform){
           }
     })
 }
+// ---------------------------------- Compare Theme Park --------------------------------------------------
+let compareForm = document.getElementById("themeParkCompareForm");
+let firstSelect = document.getElementById("firstPark");
+let secondSelect = document.getElementById("secondPark");
+if (compareForm) {
+    compareForm.addEventListener('submit', async (event) => {
+        let res = event.preventDefault();
+      
+        let result = await fetch("/themepark/comparethemeparksresults", 
+            {
+                method:'POST',
+                headers: {
+                    'Content-Type': 'application/json', // Set the appropriate Content-Type
+                  },
+                body: JSON.stringify({ parkOne : firstSelect.value , parkTwo : secondSelect.value})})
+      
+          const url = result.url
+          window.location.href = url
+      })
+}
+
+
+// ---------------------------------- Theme Park Like and Dislike ------------------------------------------
+let tplbutton = document.getElementById("themeparkratinglikes")
+let tpdbutton = document.getElementById("themeparkratingdislikes")
+let rlbutton = document.getElementById("rideratinglikes")
+let rdbutton = document.getElementById("rideratingdislikes")
+
+if (tplbutton) {
+    tplbutton.addEventListener('click', async () => {
+        //code of what happens when a like button is pressed for theme park rating
+        const themeparkid = window.location.href.split('/')[4];
+        const res = await fetch("/themepark/addlike", 
+            {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ themeparkid: themeparkid })
+        });
+        const result = await res.json();
+        // result contains likes and dislikes
+    })
+}
+
+if (tpdbutton) {
+    tpdbutton.addEventListener('click', async () => {
+        //code of what happens when a like button is pressed for theme park rating
+        const themeparkid = window.location.href.split('/')[4];
+        const res = await fetch("/themepark/adddislike", 
+            {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ themeparkid: themeparkid })
+        });
+        const result = await res.json();
+    })
+}
+
+if (rlbutton) {
+    rlbutton.addEventListener('click', async () => {
+        //code of what happens when a dislike button is pressed for ride rating
+
+        // we have to get the specific themepark id
+        // and the ride id and send it
+        const rideid = window.location.href.split('/')[6]
+        const res = await fetch("/themepark/addridelike", 
+            {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ rideid: rideid })
+        });
+        const result = await res.json();
+        console.log(result.likes + " " + result.dislikes);
+    })
+}
+
+if (rdbutton) {
+    rdbutton.addEventListener('click', async() => {
+        //code of what happens when a dislike button is pressed for ride rating
+        const rideid = window.location.href.split('/')[6]
+        const res = await fetch("/themepark/addridedislike", 
+            {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ rideid: rideid })
+        });
+        const result = await res.json();
+        console.log(result.likes + " " + result.dislikes);
+    })
+}
+
 // ---------------------------------- SIGNUP ----------------------------------------------------------
 let signupform = document.getElementById('signup-form')
 let signupname = document.getElementById('name');
