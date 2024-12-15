@@ -1,7 +1,7 @@
 //testing other way of commit
 import {ObjectId} from "mongodb";
 import helper from "../helper.js"
-import { themeparks, comments, rides, foodstalls } from "../config/mongoCollections.js";
+import { themeparks, comments, rides, foodstalls, users } from "../config/mongoCollections.js";
 
 const createComment = async (
     userName,
@@ -40,6 +40,11 @@ const createComment = async (
     }
     const thing = await collection.findOne({_id: new ObjectId(thingId)})
     if (thing === null) throw `Error: the ${name} that is being commented on doesn't have the id of ${thingId}`
+
+    const userCollections = await users();
+    const user = await userCollections.findOne({userName: userName.toLowerCase()})
+    if(user === null) throw `Error: the usr ${userName} doesn't exist`
+
     const newComment = {
         userName: userName,
         thingId: thingId,
@@ -50,28 +55,39 @@ const createComment = async (
     if(!commentInfo.acknowledged || !commentInfo.insertedId) throw `Error: could not add a new comment to the ${name}`
 
     const commentId = commentInfo.insertedId.toString()
-    const updatedComments = {comments: [...thing.comments, commentId]}
-    const updatedCommentsResult = await collection.findOneAndUpdate({_id: new ObjectId(thingId)}, {$set: updatedComments})
 
-    if(!updatedCommentsResult) throw `Error: could not add comment to the ${name}`
+    
+    const updatedThingComments = {comments: [...thing.comments, commentId]}
+    const updatedThingCommentsResult = await collection.findOneAndUpdate({_id: new ObjectId(thingId)}, {$set: updatedThingComments})
+    if(!updatedThingCommentsResult) throw `Error: could not add comment to the ${name}`
+
+    const updatedUserComments = {comments: [...user.comments, commentId]}
+    const updatedUserCommentsResult = await userCollections.findOneAndUpdate({userName: userName.toLowerCase()}, {$set: updatedUserComments})
+    if(!updatedUserCommentsResult) throw `Erorr: could not add comment for ${userName}`
 
     return commentId
 }
 
-const getComments = async (id) => {
+const getComments = async (id, user) => {
     id = helper.checkId(id)
 
 
     const commentCollections = await comments();
     const commentArray = await commentCollections.find({thingId: id}).toArray();
 
-    const formattedComments = commentArray.map((comment) => ({
-        _id: comment._id.toString(),
-        userName: comment.userName,
-        thingId: comment.thingId,
-        commentBody: comment.commentBody,
-        comments: comment.comments
-    }))
+    const formattedComments = commentArray.map(async (comment) => {
+        const formatComment = { 
+            _id: comment._id.toString(),
+            userName: comment.userName,
+            thingId: comment.thingId,
+            commentBody: comment.commentBody,
+            comments: comment.comments
+        }
+        if(comment.userName.toLowerCase() === user) formatComment.edit = true
+        else formatComment.edit = false
+
+        return formatComment
+    })
 
     for(let i = 0; i < formattedComments.length; i++){
         const comment = formattedComments[i]
@@ -96,4 +112,4 @@ const getComments = async (id) => {
 }
 
 
-export default {createComment, getComments}
+export default {createComment, getComments, deleteComments}
