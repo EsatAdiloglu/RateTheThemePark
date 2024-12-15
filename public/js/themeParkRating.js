@@ -10,6 +10,8 @@
         diversity = $("#theme_park_diversity"),
         error = $(`#error`),
         submitButton = $(`button[type="submit"]`),
+        //likeButton = $(`button[type="click"]`),
+        //dislikeButton = $(`button[type="click"]`),
         avgStaff = $("#avgStaff"),
         avgClean = $("#avgClean"),
         avgCrowd = $("#avgCrowd"),
@@ -90,12 +92,17 @@
                     error.show();
                 }
                 else{
+                    console.log(res);
                     const list = $(`<li>
                         <p>${res.userName}</p>
                         <p><strong>Staff Rating:</strong> ${res.staffRating}</p>
                         <p><strong>Cleanliness Rating:</strong> ${res.cleanlinessRating}</p>
                         <p><strong>Crowds Rating:</strong> ${res.crowdsRating}</p>
                         <p><strong>Diversity Rating:</strong> ${res.diversityRating}</p>
+                        <p><strong>Number of Likes:</strong> 0 </p>
+                        <p><strong>Number of Disikes:</strong> 0 </p>
+                        <button id = 'themeparkratinglikes'>Like</button> 
+                        <button id = 'themeparkratingdislikes'>Dislike</button> 
                         <p><strong>Comments:</strong></p>
                         </li>
                         `)
@@ -116,5 +123,7 @@
         crowds.val("")
         diversity.val("")
         addThemeParkRating.show();
-    })
+    }
+
+    )
 })(window.jQuery)

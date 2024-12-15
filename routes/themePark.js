@@ -52,7 +52,7 @@ router.route('/addlike')
     const tpratingcollections = await themeparkratings();
     const tpid = req.body.themeparkid;
     const themepark = await themeParkData.getThemeParkById(tpid);
-    const uname = req.session.user.userName
+    const uname = req.session.user.userName;
     let tprating;
     let tpratingid;
 
@@ -96,6 +96,9 @@ router.route('/addlike')
     }
     const updated = await themeParkRatingData.getThemeParkRatingById(tpratingid);
     return res.json({likes: updated.numUsersLiked, dislikes: updated.numUsersDisliked})
+    //return res.redirect(`/themepark/${tpid}/ratings`);
+    //console.log('I am here')
+    //return res.redirect(`/themepark`);
 })
 
 router.route('/adddislike')
@@ -103,7 +106,7 @@ router.route('/adddislike')
     const tpratingcollections = await themeparkratings();
     const tpid = req.body.themeparkid;
     const themepark = await themeParkData.getThemeParkById(tpid);
-    const uname = req.session.user.userName
+    const uname = req.session.user.userName;
     let tprating;
     let tpratingid;
 

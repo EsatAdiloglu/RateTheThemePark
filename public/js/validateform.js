@@ -512,6 +512,8 @@ let tplbutton = document.getElementById("themeparkratinglikes")
 let tpdbutton = document.getElementById("themeparkratingdislikes")
 let rlbutton = document.getElementById("rideratinglikes")
 let rdbutton = document.getElementById("rideratingdislikes")
+let fslbutton = document.getElementById("foodstallratinglikes")
+let fsdbutton = document.getElementById("foodstallratindislikes")
 
 if (tplbutton) {
     tplbutton.addEventListener('click', async () => {
@@ -526,7 +528,12 @@ if (tplbutton) {
             body: JSON.stringify({ themeparkid: themeparkid })
         });
         const result = await res.json();
+        
+        //return res.redirect(`/themepark/${themeparkid}/ratings`);
+        
         // result contains likes and dislikes
+        //return await res.redirect('/themepark');
+
     })
 }
 
