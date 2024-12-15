@@ -113,15 +113,31 @@ router.route("/addFoodStallRating").post(async (req, res) => {
     }
 })
 
-router.route("/addThemeParkComment").post(async (req,res) => {
-    const themeParkComment = req.body
+router.route("/addComment").post(async (req,res) => {
+    const commentInfo = req.body
     
     try{
-        themeParkComment.themeParkId = helper.checkId(themeParkComment.themeParkId, "Theme Park Id")
-        themeParkComment.commentBody = helper.checkString(themeParkComment.commentBody)
+        let str = ""
+        switch(commentInfo.option) {
+            case 0:
+                str = "Theme Park Id"
+                break;
+            case 1:
+                str = "Ride Id"
+                break;
+            case 2:
+                str = "Food Stall Id"
+                break;
+            default:
+                throw "Error: option is out of bounds"
+                break;
 
-        themeParkComment.themeParkId = xss(themeParkComment.themeParkId)
-        themeParkComment.commentBody = xss(themeParkComment.commentBody)
+        }
+        commentInfo.thingId= helper.checkId(commentInfo.thingId, str)
+        commentInfo.commentBody = helper.checkString(commentInfo.commentBody)
+
+        commentInfo.thingId = xss(commentInfo.thingId)
+        commentInfo.commentBody = xss(commentInfo.commentBody)
     }
     catch(e){
         return res.status(400).json({Error: `${e}`})
@@ -129,11 +145,42 @@ router.route("/addThemeParkComment").post(async (req,res) => {
 
     try{
         const user = await userData.getUserByUsername(req.session.user.userName)
-        const {commentBody} = themeParkComment
-        await commentsData.createComment(user.userName, themeParkComment.themeParkId, commentBody, 0)
+        const {thingId, commentBody, option} = commentInfo
+        const comment = await commentsData.createComment(user.userName, thingId, commentBody, option)
         return res.json({
             userName: user.userName,
-            commentBody: commentBody
+            commentBody: commentBody,
+            commentId: comment
+        })
+    }
+    catch(e){
+        console.log(e)
+        return res.status(404).json({Error: `${e}`})
+    }
+})
+
+router.route("/addChildComment").post(async (req,res) => {
+    const childComment = req.body
+    
+    try{
+        childComment.commentId = helper.checkId(childComment.commentId, "Comment Id")
+        childComment.childCommentBody = helper.checkString(childComment.childCommentBody)
+
+        childComment.themeParkName = xss(childComment.themeParkName)
+        childComment.childCommentBody = xss(childComment.childCommentBody)
+    }
+    catch(e){
+        return res.status(400).json({Error: `${e}`})
+    }
+
+    try{
+        const user = await userData.getUserByUsername(req.session.user.userName)
+        const {childCommentBody} = childComment
+        const comment = await commentsData.createComment(user.userName, childComment.commentId, childCommentBody, 3)
+        return res.json({
+            userName: user.userName,
+            commentBody: childCommentBody,
+            commentId: comment
         })
     }
     catch(e){

@@ -8,10 +8,11 @@ import rideData from "../data/ride.js"
 import rideRatingData from "../data/rideRating.js"
 import foodStallData from "../data/foodStall.js"
 import foodStallRatingData from "../data/foodStallRating.js"
+import reportsData from '../data/report.js' 
 import helper from "../helper.js";
 import { ObjectId } from "mongodb";
 import xss from "xss";
-import { themeparkratings } from "../config/mongoCollections.js";
+import { themeparkratings, rideratings, foodstallratings } from "../config/mongoCollections.js";
 
 // ------------------------- WORKS
 router.route('/')
@@ -152,125 +153,136 @@ router.route('/adddislike')
     return res.json({likes: updated.numUsersLiked, dislikes: updated.numUsersDisliked})
 })
 
-router.route('/rideaddlike')
+router.route('/addridelike')
 .post(async(req, res) => {
-    const rratingcollections = await rideratings();
-    const rid = req.body.rideid;
-    const ride = await rideData.getRideById(rid);
-    const uname = req.session.user.userName
-    let rrating;
-    let rratingid;
+    const rideid = req.body.rideid;
+    
+
+    const rideratingcollections = await rideratings();
+
+    const ride = await rideData.getRideById(rideid)
+    const uname = req.session.user.userName;
+    
+    let riderating;
+    let rideratingid;
 
     for (let i = 0; i < ride.ratings.length; i++){
-        rrating = await rideRatingData.getRideRatingById(ride.ratings[i]);
-        if (rrating.userName === uname){
-            rratingid = rrating._id
-            break
+        riderating = await rideRatingData.getRideRatingById(ride.ratings[i])
+        if (riderating.userName === uname){
+            rideratingid = riderating._id;
         }
     }
-    if (!rrating.usersLiked.includes(uname)){
-        await rratingcollections.updateOne(
-            { _id: new ObjectId(rrating._id) },  
+    
+    if (!riderating.usersLiked.includes(uname)){
+        await rideratingcollections.updateOne(
+            { _id: new ObjectId(riderating._id) },  
             { $inc: { numUsersLiked: 1 } } 
         )
-        await rratingcollections.updateOne(
-            { _id: new ObjectId(rrating._id) },     
+        await rideratingcollections.updateOne(
+            { _id: new ObjectId(riderating._id) },     
             { $push: { usersLiked: uname } } 
           );
     }
     else{
-        await rratingcollections.updateOne(
-            { _id: new ObjectId(rrating._id) },  
+        await rideratingcollections.updateOne(
+            { _id: new ObjectId(riderating._id) },  
             { $inc: { numUsersLiked: -1 } } 
         )
-        await rratingcollections.updateOne(
-            { _id: new ObjectId(rrating._id) },     
+        await rideratingcollections.updateOne(
+            { _id: new ObjectId(riderating._id) },     
             { $pull: { usersLiked: uname } } 
           );
     }
-
-    if (rrating.usersDisliked.includes(uname)){
-        await rratingcollections.updateOne(
-            { _id: new ObjectId(rrating._id) },  
+    if (riderating.usersDisliked.includes(uname)){
+        await rideratingcollections.updateOne(
+            { _id: new ObjectId(riderating._id) },  
             { $inc: { numUsersDisliked: -1 } } 
         )
-        await rratingcollections.updateOne(
-            { _id: new ObjectId(rrating._id) },     
+        await rideratingcollections.updateOne(
+            { _id: new ObjectId(riderating._id) },     
             { $pull: { usersDisliked: uname } } 
           );
     }
-    const updated = await rideRatingData.getRideRatingById(rratingid);
+
+    const updated = await rideRatingData.getRideRatingById(rideratingid)
     return res.json({likes: updated.numUsersLiked, dislikes: updated.numUsersDisliked})
 })
 
-router.route('/rideadddislike')
+router.route('/addridedislike')
 .post(async(req, res) => {
-    const rratingcollections = await rideratings();
-    const rid = req.body.rideid;
-    const ride = await rideData.getRideById(rid);
-    const uname = req.session.user.userName
-    let rrating;
-    let rratingid;
+    const rideid = req.body.rideid;
+    
+
+    const rideratingcollections = await rideratings();
+
+    const ride = await rideData.getRideById(rideid)
+    const uname = req.session.user.userName;
+    
+    let riderating;
+    let rideratingid;
 
     for (let i = 0; i < ride.ratings.length; i++){
-        rrating = await rideRatingData.getRideRatingById(ride.ratings[i]);
-        if (rrating.userName === uname){
-            rratingid = rrating._id
-            break
+        riderating = await rideRatingData.getRideRatingById(ride.ratings[i])
+        if (riderating.userName === uname){
+            rideratingid = riderating._id;
         }
     }
-    if (!rrating.usersDisliked.includes(uname)){
-        await rratingcollections.updateOne(
-            { _id: new ObjectId(rrating._id) },  
+    
+    if (!riderating.usersDisliked.includes(uname)){
+        await rideratingcollections.updateOne(
+            { _id: new ObjectId(riderating._id) },  
             { $inc: { numUsersDisliked: 1 } } 
         )
-        await rratingcollections.updateOne(
-            { _id: new ObjectId(rrating._id) },     
+        await rideratingcollections.updateOne(
+            { _id: new ObjectId(riderating._id) },     
             { $push: { usersDisliked: uname } } 
           );
     }
     else{
-        await rratingcollections.updateOne(
-            { _id: new ObjectId(rrating._id) },  
+        await rideratingcollections.updateOne(
+            { _id: new ObjectId(riderating._id) },  
             { $inc: { numUsersDisliked: -1 } } 
         )
-        await rratingcollections.updateOne(
-            { _id: new ObjectId(rrating._id) },     
+        await rideratingcollections.updateOne(
+            { _id: new ObjectId(riderating._id) },     
             { $pull: { usersDisliked: uname } } 
           );
     }
-
-    if (rrating.usersLiked.includes(uname)){
-        await rratingcollections.updateOne(
-            { _id: new ObjectId(rrating._id) },  
+    if (riderating.usersLiked.includes(uname)){
+        await rideratingcollections.updateOne(
+            { _id: new ObjectId(riderating._id) },  
             { $inc: { numUsersLiked: -1 } } 
         )
-        await rratingcollections.updateOne(
-            { _id: new ObjectId(rrating._id) },     
+        await rideratingcollections.updateOne(
+            { _id: new ObjectId(riderating._id) },     
             { $pull: { usersLiked: uname } } 
           );
     }
 
-    const updated = await rideRatingData.getRideRatingById(rratingid);
+    const updated = await rideRatingData.getRideRatingById(rideratingid)
     return res.json({likes: updated.numUsersLiked, dislikes: updated.numUsersDisliked})
 })
 
-router.route('/foodstalladdlike')
+router.route('/addfslike')
 .post(async(req, res) => {
+    const fsid = req.body.fsid;
+    
+
     const fsratingcollections = await foodstallratings();
-    const fsid = req.body.foodstallid;
-    const foodstall = await foodStallData.getFoodStallById(fsid);
-    const uname = req.session.user.userName
+
+    const foodstall = await foodStallData.getFoodStallById(fsid)
+    const uname = req.session.user.userName;
+    
     let fsrating;
     let fsratingid;
 
     for (let i = 0; i < foodstall.ratings.length; i++){
-        fsrating = await foodStallRatingData.getFoodStallRatingById(foodstall.ratings[i]);
+        fsrating = await foodStallRatingData.getFoodStallRatingById(foodstall.ratings[i])
         if (fsrating.userName === uname){
-            fsratingid = fsrating._id
-            break
+            fsratingid = fsrating._id;
         }
     }
+    
     if (!fsrating.usersLiked.includes(uname)){
         await fsratingcollections.updateOne(
             { _id: new ObjectId(fsrating._id) },  
@@ -291,7 +303,6 @@ router.route('/foodstalladdlike')
             { $pull: { usersLiked: uname } } 
           );
     }
-
     if (fsrating.usersDisliked.includes(uname)){
         await fsratingcollections.updateOne(
             { _id: new ObjectId(fsrating._id) },  
@@ -302,26 +313,31 @@ router.route('/foodstalladdlike')
             { $pull: { usersDisliked: uname } } 
           );
     }
-    const updated = await foodStallRatingData.getFoodStallRatingById(fsratingid);
+
+    const updated = await foodStallRatingData.getFoodStallRatingById(fsratingid)
     return res.json({likes: updated.numUsersLiked, dislikes: updated.numUsersDisliked})
 })
 
-router.route('/foodstalladddislike')
+router.route('/addfsdislike')
 .post(async(req, res) => {
+    const fsid = req.body.fsid;
+    
+
     const fsratingcollections = await foodstallratings();
-    const fsid = req.body.foodstallid;
-    const foodstall = await foodStallData.getFoodStallById(fsid);
-    const uname = req.session.user.userName
+
+    const foodstall = await foodStallData.getFoodStallById(fsid)
+    const uname = req.session.user.userName;
+    
     let fsrating;
     let fsratingid;
 
     for (let i = 0; i < foodstall.ratings.length; i++){
-        fsrating = await foodStallRatingData.getFoodStallRatingById(foodstall.ratings[i]);
+        fsrating = await foodStallRatingData.getFoodStallRatingById(foodstall.ratings[i])
         if (fsrating.userName === uname){
-            fsratingid = fsrating._id
-            break
+            fsratingid = fsrating._id;
         }
     }
+    
     if (!fsrating.usersDisliked.includes(uname)){
         await fsratingcollections.updateOne(
             { _id: new ObjectId(fsrating._id) },  
@@ -342,7 +358,6 @@ router.route('/foodstalladddislike')
             { $pull: { usersDisliked: uname } } 
           );
     }
-
     if (fsrating.usersLiked.includes(uname)){
         await fsratingcollections.updateOne(
             { _id: new ObjectId(fsrating._id) },  
@@ -354,11 +369,9 @@ router.route('/foodstalladddislike')
           );
     }
 
-    const updated = await foodStallRatingData.getFoodStallRatingById(fsratingid);
+    const updated = await foodStallRatingData.getFoodStallRatingById(fsratingid)
     return res.json({likes: updated.numUsersLiked, dislikes: updated.numUsersDisliked})
 })
-
-
 // ------------------------- WORKS
 router.route('/addthemepark')
 .get(async (req, res) => {
@@ -521,10 +534,10 @@ router.route('/:id/comments')
         const themeParkComments = (await commentsData.getComments(validatedId)).comments;
         return res.status(200).render('themeParkCommentPage', {
             _id: req.params.id,
-            themepark: themePark,
             comments: themeParkComments,
-            script_partial: "themeParkComment_script",
-            title: `${themePark.themeParkName}`
+            themeParkName: themePark.themeParkName,
+            script_partial: "comment_script",
+            title: `Comments on ${themePark.themeParkName}`
         });
     } catch (e) {
         console.log(e)
@@ -736,7 +749,14 @@ router.route('/:id/rides/:rideid/comments').get(async(req, res) => {
         const ride = await rideData.getRideById(req.params.rideid)
         if(!themepark.rides.some((r) => r === ride._id.toString())) throw `Error: the ride ${ride.rideName} doesn't exist in theme park ${themepark.themeParkName}` 
         const rideComments  = (await commentsData.getComments(ride._id.toString())).comments
-        return res.status(200).render('rideCommentPage', {_id: themepark._id.toString(), _rideId: ride._id.toString(), comments: rideComments})
+        return res.status(200).render('rideCommentPage', 
+            {
+            _rideId: ride._id.toString(), 
+            comments: rideComments,
+            rideName: ride.rideName,
+            title: `Comments on ${ride.rideName}`,
+            script_partial: "comment_script"
+        })
     }
     catch(e){
         return res.status(404).json({error: `${e}`})
@@ -746,68 +766,68 @@ router.route('/:id/rides/:rideid/comments').get(async(req, res) => {
 
 // render the ride comment page, just get the id of theme park id ride id, get the userId, push the ID do the {} thing 
 //-------------HOPEFULLY WORKS
-router.route('/:id/rides/:rideid/addComment')
-.get(async(req, res) => {
-    try{
-        req.params.id = helper.checkId(req.params.id, "theme park id")
-        req.params.rideid = helper.checkId(req.params.rideid, "ride id")
+// router.route('/:id/rides/:rideid/addComment')
+// .get(async(req, res) => {
+//     try{
+//         req.params.id = helper.checkId(req.params.id, "theme park id")
+//         req.params.rideid = helper.checkId(req.params.rideid, "ride id")
 
-        req.params.id = xss(req.params.id)
-        req.params.rideid = xss(req.params.rideid)
-    }
-    catch(e){
-        return res.status(400).json({error: `${e}`})
-    }
-    try{
-        const themepark = await themeParkData.getThemeParkById(req.params.id)
-        const ride = await rideData.getRideById(req.params.rideid)
-        if(!themepark.rides.some((r) => r === ride._id.toString())) throw `Error: the ride ${ride.rideName} doesn't exist in theme park ${themepark.themeParkName}` 
-        return res.render('addRideCommentPage', {themeId: themepark._id.toString(), rideId: req.params.rideid })
-    }
-    catch(e){
-        return res.status(404).json({error: `${e}`})
-    }
+//         req.params.id = xss(req.params.id)
+//         req.params.rideid = xss(req.params.rideid)
+//     }
+//     catch(e){
+//         return res.status(400).json({error: `${e}`})
+//     }
+//     try{
+//         const themepark = await themeParkData.getThemeParkById(req.params.id)
+//         const ride = await rideData.getRideById(req.params.rideid)
+//         if(!themepark.rides.some((r) => r === ride._id.toString())) throw `Error: the ride ${ride.rideName} doesn't exist in theme park ${themepark.themeParkName}` 
+//         return res.render('addRideCommentPage', {themeId: themepark._id.toString(), rideId: req.params.rideid })
+//     }
+//     catch(e){
+//         return res.status(404).json({error: `${e}`})
+//     }
     
-})
-// create a comment document, add speicfic ride by id, check valididations for ids, 
-.post(async(req, res) => {
-    const newRideCommentInfo = req.body;
-    if(!newRideCommentInfo || Object.keys(newRideCommentInfo).length < 1){
-        return res.status(400).json({error: "The request body is empty"})
-    }
+// })
+// // create a comment document, add speicfic ride by id, check valididations for ids, 
+// .post(async(req, res) => {
+//     const newRideCommentInfo = req.body;
+//     if(!newRideCommentInfo || Object.keys(newRideCommentInfo).length < 1){
+//         return res.status(400).json({error: "The request body is empty"})
+//     }
 
-    let userName = undefined
-    let rideComment = undefined
-    try{
-        req.params.rideid = helper.checkId(req.params.rideid, "ride id")
-        req.params.id = helper.checkId(req.params.id, "theme park id")
+//     let userName = undefined
+//     let rideComment = undefined
+//     try{
+//         req.params.rideid = helper.checkId(req.params.rideid, "ride id")
+//         req.params.id = helper.checkId(req.params.id, "theme park id")
 
-        userName = helper.checkString(req.session.user.userName)
+//         userName = helper.checkString(req.session.user.userName)
 
-        rideComment = helper.checkString(newRideCommentInfo.ride_comment)
+//         rideComment = helper.checkString(newRideCommentInfo.ride_comment)
 
-        req.params.id = xss(req.params.id)
-        req.params.rideid = xss(req.params.rideid)
-        userName = xss(userName)
-        rideComment = xss(rideComment)
+//         req.params.id = xss(req.params.id)
+//         req.params.rideid = xss(req.params.rideid)
+//         userName = xss(userName)
+//         rideComment = xss(rideComment)
         
-    }
-    catch(e){
-        return res.status(400).json({error: `${e}`})
-    }
+//     }
+//     catch(e){
+//         return res.status(400).json({error: `${e}`})
+//     }
 
-    try{
-        const themepark = await themeParkData.getThemeParkById(req.params.id)
-        const ride = await rideData.getRideById(req.params.rideid)
-        if(!themepark.rides.some((r) => r === ride._id.toString())) throw `Error: the ride ${ride.rideName} doesn't exist in theme park ${themepark.themeParkName}` 
+//     try{
+//         const themepark = await themeParkData.getThemeParkById(req.params.id)
+//         const ride = await rideData.getRideById(req.params.rideid)
+//         if(!themepark.rides.some((r) => r === ride._id.toString())) throw `Error: the ride ${ride.rideName} doesn't exist in theme park ${themepark.themeParkName}` 
 
-        await commentsData.createComment(userName, ride._id.toString(), rideComment, 1)
-        return res.status(200).redirect(`/themepark/${themepark._id.toString()}/rides/${ride._id.toString()}/comments`)
-    }
-    catch(e){
-        return res.status(404).json({error: `${e}`})
-    }
-})
+//         await commentsData.createComment(userName, ride._id.toString(), rideComment, 1)
+//         return res.status(200).redirect(`/themepark/${themepark._id.toString()}/rides/${ride._id.toString()}/comments`)
+//     }
+//     catch(e){
+//         return res.status(404).json({error: `${e}`})
+//     }
+// })
 
 
 // -------------------------------------- FOOD STALLS --------------------------------------
@@ -948,65 +968,288 @@ router.route('/:id/foodstalls/:foodstallid/comments')
         const foodstall = await foodStallData.getFoodStallById(req.params.foodstallid)
         if (!themepark.foodStalls.some((f) => f === foodstall._id.toString())) throw `Error: the foodstall ${foodstall.foodStallName} doesn't exist in theme park ${themepark.themeParkName}`
         const foodstallComments = (await commentsData.getComments(foodstall._id.toString())).comments
-        return res.status(200).render('foodStallCommentPage', {_id: themepark._id.toString(), _foodstallId: foodstall._id.toString(), comments: foodstallComments})
+        return res.status(200).render('foodStallCommentPage', 
+            {
+                _foodstallId: foodstall._id.toString(), 
+                comments: foodstallComments,
+                foodStallName: foodstall.foodStallName,
+                title: `Comments on ${foodstall.foodStallName}`,
+                script_partial: "comment_script"
+            })
     } catch (e) {
         return res.status(404).json({error: `${e}`})
     } 
 })
 
-router.route('/:id/foodstalls/:foodstallid/addComment')
+// router.route('/:id/foodstalls/:foodstallid/addComment')
+// .get(async(req, res) => {
+//     // get the addComment page
+// 	try { 
+//         req.params.id = helper.checkId(req.params.id, "theme park id");
+//         req.params.foodstallid = helper.checkId(req.params.foodstallid, "foodstall id");
+
+//         req.params.id = xss(req.params.id)
+//         req.params.foodstallid = xss(req.params.foodstallid)
+//     } catch (e) {
+//         return res.status(400).json({error: `${e}`});
+//     }
+    
+//     try {
+//         const themepark = await themeParkData.getThemeParkById(req.params.id);
+//         const foodstall = await foodStallData.getFoodStallById(req.params.foodstallid);
+//         if (!themepark.foodStalls.some((f) => f === foodstall._id.toString())) throw `Error: the foodstall ${foodstall.foodStallName} doesn't exist in theme park ${themepark.themeParkName}`;
+//         return res.render('addFoodStallCommentPage', {themeId: themepark._id.toString(), foodstallId: req.params.foodstallid}) 
+//     } catch (e) {
+//         return res.status(404).json({error: `${e}`});
+//     }
+// })
+// .post(async(req, res) => {
+//     // add the comment to the specific food stall
+//     const newFoodStallCommentInfo = req.body;
+//     if(!newFoodStallCommentInfo || Object.keys(newFoodStallCommentInfo) < 1) return res.status(400).json({error: "The request body is empty"});
+//     let userName = undefined;
+//     let foodstallComment = undefined;
+//     try {
+//         req.params.foodstallid = helper.checkId(req.params.foodstallid, "foodstall id");
+//         req.params.id = helper.checkId(req.params.id, "theme park id");
+//         userName = helper.checkString(req.session.user.userName);
+//         foodstallComment = helper.checkString(newFoodStallCommentInfo.foodstall_comment);
+
+//         req.params.id = xss(req.params.id)
+//         req.params.foodstallid = xss(req.params.foodstallid)
+//         userName = xss(userName)
+//         foodstallComment = xss(foodstallComment)
+//     } catch (e) {
+//         return res.status(400).json({error: `${e}`});
+//     }
+//     try {
+//         const themepark = await themeParkData.getThemeParkById(req.params.id);
+//         const foodstall = await foodStallData.getFoodStallById(req.params.foodstallid);
+//         if (!themepark.foodStalls.some((f) => f === foodstall._id.toString())) throw `Error: the foodstall ${foodstall.foodStallName} doesn't exist in theme park ${themepark.themeParkName}`;
+//         await commentsData.createComment(userName, foodstall._id.toString(), foodstallComment, 2); 
+//         return res.status(200).redirect(`/themepark/${themepark._id.toString()}/foodstalls/${foodstall._id.toString()}/comments`);
+//     } catch (e) {
+//         return res.status(404).json({error: `${e}`});
+//     }
+// })
+
+
+// -------------------------------------E OF FOOD STALL---------------------------------------------
+// ------------------------------------REPORTS ----------------------------------------------------------
+router.route('/:id/reports')
+.get(async (req, res) => {
+    const themeParkId = req.params.id;
+
+    try {
+        const validatedId = helper.checkId(themeParkId, 'theme park id');
+        req.params.id = xss(validatedId);
+    } catch (e) {
+        return res.status(400).json({ error: `${e}` });
+    }
+
+    try {
+        const validatedId = req.params.id;
+        const themePark = await themeParkData.getThemeParkById(validatedId);
+        const themeParkReports = (await reportsData.getReports(validatedId)).reports;
+        
+        return res.status(200).render('themeParkReportPage', {
+            _id: req.params.id,
+            themepark: themePark,
+            reports: themeParkReports,
+            script_partial: "themeParkReport_script",
+            title: `${themePark.themeParkName} - Reports`
+        });
+    } catch (e) {
+        console.log(e);
+        return res.status(404).json({ error: `${e}` });
+    }
+});
+
+// Route to render ride reports page
+router.route('/:id/rides/:rideid/reports')
+.get(async (req, res) => {
+    try {
+        req.params.id = helper.checkId(req.params.id, "theme park id");
+        req.params.rideid = helper.checkId(req.params.rideid, "ride id");
+
+        req.params.id = xss(req.params.id);
+        req.params.rideid = xss(req.params.rideid);
+    } catch (e) {
+        return res.status(400).json({ error: `${e}` });
+    }
+
+    try {
+        const themepark = await themeParkData.getThemeParkById(req.params.id);
+        const ride = await rideData.getRideById(req.params.rideid);
+
+        if (!themepark.rides.some((r) => r === ride._id.toString())) {
+            throw `Error: The ride ${ride.rideName} doesn't exist in theme park ${themepark.themeParkName}`;
+        }
+
+        const rideReports = (await reportsData.getReports(ride._id.toString())).reports;
+
+        return res.status(200).render('rideReportPage', {
+            themeId: themepark._id.toString(),
+            rideId: ride._id.toString(),
+            rideName: ride.rideName,
+            reports: rideReports,
+            script_partial: "rideReport_script",
+            title: `Reports for ${ride.rideName}`
+        });
+    } catch (e) {
+        console.log(e);
+        return res.status(404).json({ error: `${e}` });
+    }
+});
+
+// Route to render add ride report page
+router.route('/:id/rides/:rideid/addReport')
+.get(async (req, res) => {
+    try {
+        req.params.id = helper.checkId(req.params.id, "theme park id");
+        req.params.rideid = helper.checkId(req.params.rideid, "ride id");
+
+        req.params.id = xss(req.params.id);
+        req.params.rideid = xss(req.params.rideid);
+    } catch (e) {
+        return res.status(400).json({ error: `${e}` });
+    }
+
+    try {
+        const themepark = await themeParkData.getThemeParkById(req.params.id);
+        const ride = await rideData.getRideById(req.params.rideid);
+
+        if (!themepark.rides.some((r) => r === ride._id.toString())) {
+            throw `Error: The ride ${ride.rideName} doesn't exist in theme park ${themepark.themeParkName}`;
+        }
+
+        return res.render('addRideReportPage', {
+            themeId: themepark._id.toString(),
+            rideId: ride._id.toString(),
+            rideName: ride.rideName,
+            title: `Report Ride - ${ride.rideName}`
+        });
+    } catch (e) {
+        return res.status(404).json({ error: `${e}` });
+    }
+})
+
+.post(async (req, res) => {
+    const reportInfo = req.body;
+
+    if (!reportInfo || Object.keys(reportInfo).length === 0) {
+        return res.status(400).json({ error: "The request body is empty" });
+    }
+
+    let userName = undefined;
+    let reportReason = undefined;
+
+    try {
+        req.params.rideid = helper.checkId(req.params.rideid, "ride id");
+        req.params.id = helper.checkId(req.params.id, "theme park id");
+
+        userName = helper.checkString(req.session.user.userName, "user name");
+        reportReason = helper.checkString(reportInfo.report_reason, "report reason");
+
+        req.params.id = xss(req.params.id);
+        req.params.rideid = xss(req.params.rideid);
+        userName = xss(userName);
+        reportReason = xss(reportReason);
+    } catch (e) {
+        return res.status(400).json({ error: `${e}` });
+    }
+
+    try {
+        const themepark = await themeParkData.getThemeParkById(req.params.id);
+        const ride = await rideData.getRideById(req.params.rideid);
+
+        if (!themepark.rides.some((r) => r === ride._id.toString())) {
+            throw `Error: The ride ${ride.rideName} doesn't exist in theme park ${themepark.themeParkName}`;
+        }
+
+        await reportsData.createReport(userName, ride._id.toString(), reportReason);
+
+        return res.status(200).redirect(`/themepark/${themepark._id.toString()}/rides/${ride._id.toString()}/reports`);
+    } catch (e) {
+        console.error(e);
+        return res.status(500).json({ error: "Failed to submit the report" });
+    }
+});
+
+
+router.route('/:id/foodstalls/:foodstallid/reports')
 .get(async(req, res) => {
-    // get the addComment page
-	try { 
+    // Get all reports for a specific food stall
+    try {
         req.params.id = helper.checkId(req.params.id, "theme park id");
         req.params.foodstallid = helper.checkId(req.params.foodstallid, "foodstall id");
 
-        req.params.id = xss(req.params.id)
-        req.params.foodstallid = xss(req.params.foodstallid)
+        req.params.id = xss(req.params.id);
+        req.params.foodstallid = xss(req.params.foodstallid);
     } catch (e) {
         return res.status(400).json({error: `${e}`});
     }
-    
+
     try {
         const themepark = await themeParkData.getThemeParkById(req.params.id);
         const foodstall = await foodStallData.getFoodStallById(req.params.foodstallid);
-        if (!themepark.foodStalls.some((f) => f === foodstall._id.toString())) throw `Error: the foodstall ${foodstall.foodStallName} doesn't exist in theme park ${themepark.themeParkName}`;
-        return res.render('addFoodStallCommentPage', {themeId: themepark._id.toString(), foodstallId: req.params.foodstallid}) 
+
+        if (!themepark.foodStalls.some((f) => f === foodstall._id.toString())) {
+            throw `Error: The food stall ${foodstall.foodStallName} doesn't exist in theme park ${themepark.themeParkName}`;
+        }
+
+        const foodstallReports = (await reportsData.getReports(foodstall._id.toString())).reports;
+
+        return res.status(200).render('foodStallReportPage', {
+            themeId: themepark._id.toString(),
+            foodstallId: foodstall._id.toString(),
+            foodstallName: foodstall.foodStallName,
+            reports: foodstallReports,
+            script_partial: "foodStallReport_script",
+            title: `Reports for ${foodstall.foodStallName}`
+        });
     } catch (e) {
+        console.log(e);
         return res.status(404).json({error: `${e}`});
     }
 })
 .post(async(req, res) => {
-    // add the comment to the specific food stall
-    const newFoodStallCommentInfo = req.body;
-    if(!newFoodStallCommentInfo || Object.keys(newFoodStallCommentInfo) < 1) return res.status(400).json({error: "The request body is empty"});
+    // Add a report for a specific food stall
+    const newFoodStallReportInfo = req.body;
+    if (!newFoodStallReportInfo || Object.keys(newFoodStallReportInfo).length < 1) {
+        return res.status(400).json({error: "The request body is empty"});
+    }
+
     let userName = undefined;
-    let foodstallComment = undefined;
+    let foodstallReportReason = undefined;
+
     try {
         req.params.foodstallid = helper.checkId(req.params.foodstallid, "foodstall id");
         req.params.id = helper.checkId(req.params.id, "theme park id");
         userName = helper.checkString(req.session.user.userName);
-        foodstallComment = helper.checkString(newFoodStallCommentInfo.foodstall_comment);
+        foodstallReportReason = helper.checkString(newFoodStallReportInfo.foodstall_report);
 
-        req.params.id = xss(req.params.id)
-        req.params.foodstallid = xss(req.params.foodstallid)
-        userName = xss(userName)
-        foodstallComment = xss(foodstallComment)
+        req.params.id = xss(req.params.id);
+        req.params.foodstallid = xss(req.params.foodstallid);
+        userName = xss(userName);
+        foodstallReportReason = xss(foodstallReportReason);
     } catch (e) {
         return res.status(400).json({error: `${e}`});
     }
+
     try {
         const themepark = await themeParkData.getThemeParkById(req.params.id);
         const foodstall = await foodStallData.getFoodStallById(req.params.foodstallid);
-        if (!themepark.foodStalls.some((f) => f === foodstall._id.toString())) throw `Error: the foodstall ${foodstall.foodStallName} doesn't exist in theme park ${themepark.themeParkName}`;
-        await commentsData.createComment(userName, foodstall._id.toString(), foodstallComment, 2); 
-        return res.status(200).redirect(`/themepark/${themepark._id.toString()}/foodstalls/${foodstall._id.toString()}/comments`);
+
+        if (!themepark.foodStalls.some((f) => f === foodstall._id.toString())) {
+            throw `Error: The food stall ${foodstall.foodStallName} doesn't exist in theme park ${themepark.themeParkName}`;
+        }
+
+        await reportsData.createReport(userName, foodstall._id.toString(), foodstallReportReason, "Food Stall"); 
+        return res.status(200).redirect(`/themepark/${themepark._id.toString()}/foodstalls/${foodstall._id.toString()}/reports`);
     } catch (e) {
         return res.status(404).json({error: `${e}`});
     }
-})
-
-
-// -------------------------------------E OF FOOD STALL---------------------------------------------
+});
 
 export default router;

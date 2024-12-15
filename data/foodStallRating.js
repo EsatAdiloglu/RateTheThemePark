@@ -85,7 +85,6 @@ const getFoodStallRatings = async (id) => {
             ratings: []
         };
     }
-
     const formattedFoodStallRatings = ratings.map(rating => ({
         _id: rating._id.toString(),
         userName: rating.userName.toString(),
