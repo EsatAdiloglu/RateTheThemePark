@@ -99,8 +99,8 @@
                         <p><strong>Cleanliness Rating:</strong> ${res.cleanlinessRating}</p>
                         <p><strong>Crowds Rating:</strong> ${res.crowdsRating}</p>
                         <p><strong>Diversity Rating:</strong> ${res.diversityRating}</p>
-                        <p><strong>Number of Likes:</strong> ${res.numUsersLiked}</p>
-                        <p><strong>Number of Disikes:</strong> ${res.numUsersDisliked}</p>
+                        <p><strong>Number of Likes:</strong> 0 </p>
+                        <p><strong>Number of Disikes:</strong> 0 </p>
                         <button id = 'themeparkratinglikes'>Like</button> 
                         <button id = 'themeparkratingdislikes'>Dislike</button> 
                         <p><strong>Comments:</strong></p>
