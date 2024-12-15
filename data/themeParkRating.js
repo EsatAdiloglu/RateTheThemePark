@@ -26,7 +26,7 @@ const createThemeParkRating = async (
     const themeParkRatingCollections = await themeparkratings();
 
     const alreadyRated = await themeParkRatingCollections.findOne({themeParkId: themeParkId, userName: userName});
-    if(alreadyRated !== null) throw `Error: ${userName} has already rated ${themePark.themeParkName}`
+    if(alreadyRated !== null) throw `Error: You have already rated ${themePark.themeParkName}`
 
     helper.checkRating(staffRating)
     helper.checkRating(cleanlinessRating)

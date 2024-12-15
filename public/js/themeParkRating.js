@@ -16,7 +16,8 @@
         avgClean = $("#avgClean"),
         avgCrowd = $("#avgCrowd"),
         avgDiversity = $("#avgDiversity"),
-        numRating = $("#numRating")
+        numRating = $("#numRating"),
+        cancelButton = $("#cancelThemeParkRating")
 
     const checkNumber = (num, numName) => {
         if(typeof num === "string" && num.trim().length < 1) throw `Error: ${numName} wasn't given`
@@ -30,7 +31,14 @@
         addThemeParkRating.hide();
         rating.show();
     })
-
+    cancelButton.on("click", () => {
+        rating.hide()
+        addThemeParkRating.show();
+        staff.val("")
+        cleanliness.val("")
+        crowds.val("")
+        diversity.val("")
+    })
     ratingForm.submit((event) => {
         event.preventDefault();
         error.hide();
@@ -88,6 +96,7 @@
             }
             $.ajax(requestConfig).then((res) => {
                 if(res.Error) {
+                    console.log(res)
                     error.append(`<p>${res.Error}</p>`)
                     error.show();
                 }

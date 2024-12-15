@@ -24,7 +24,7 @@ router.route("/addThemeParkRating").post(async (req, res) => {
         themeParkRatingInfo.themeParkDiversity = xss(themeParkRatingInfo.themeParkDiversity)
     }
     catch(e){
-        return res.status(400).json({Error: `${e}`})
+        return res.json({Error: `${e}`})
     }
 
     try{
@@ -44,7 +44,7 @@ router.route("/addThemeParkRating").post(async (req, res) => {
         })
     }
     catch(e){
-        return res.status(404).json({Error: `${e}`})
+        return res.json({Error: `${e}`})
     }
 })
 
@@ -62,7 +62,7 @@ router.route("/addRideRating").post(async (req, res) => {
         rideRatingInfo.enjoyment = xss(rideRatingInfo.enjoyment)
     }
     catch(e){
-        return res.status(400).json({Error: `${e}`})
+        return res.json({Error: `${e}`})
     }
 
     try{
@@ -79,7 +79,7 @@ router.route("/addRideRating").post(async (req, res) => {
         })
     }
     catch(e){
-        return res.status(404).json({Error: `${e}`})
+        return res.json({Error: `${e}`})
     }
 })
 
@@ -95,7 +95,7 @@ router.route("/addFoodStallRating").post(async (req, res) => {
         foodStallRatingInfo.waitTime = xss(foodStallRatingInfo.waitTime)
     }
     catch(e){
-        return res.status(400).json({Error: `${e}`})
+        return res.json({Error: `${e}`})
     }
 
     try{
@@ -111,7 +111,7 @@ router.route("/addFoodStallRating").post(async (req, res) => {
         })
     }
     catch(e){
-        return res.status(404).json({Error: `${e}`})
+        return res.json({Error: `${e}`})
     }
 })
 
@@ -142,7 +142,7 @@ router.route("/addComment").post(async (req,res) => {
         commentInfo.commentBody = xss(commentInfo.commentBody)
     }
     catch(e){
-        return res.status(400).json({Error: `${e}`})
+        return res.json({Error: `${e}`})
     }
 
     try{
@@ -157,7 +157,7 @@ router.route("/addComment").post(async (req,res) => {
     }
     catch(e){
         console.log(e)
-        return res.status(404).json({Error: `${e}`})
+        return res.json({Error: `${e}`})
     }
 })
 

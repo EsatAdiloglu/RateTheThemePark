@@ -10,7 +10,8 @@
         submitButton = $(`button[type="submit"]`),
         avgFoodQuality = $("#avgFoodQuality"),
         avgWait = $("#avgWait"),
-        numRating = $("#numRating")
+        numRating = $("#numRating"),
+        cancelButton = $("#cancelFoodStallRating")
 
     const checkNumber = (num, numName) => {
         if(typeof num === "string" && num.trim().length < 1) throw `Error: ${numName} wasn't given`
@@ -24,7 +25,12 @@
         addFoodStallRating.hide();
         rating.show();
     })
-
+    cancelButton.on("click", () => { 
+        rating.hide();
+        addFoodStallRating.show();
+        quality.val("");
+        waitTime.val("");
+    })
     ratingForm.submit((event) => {
         event.preventDefault();
         error.hide();

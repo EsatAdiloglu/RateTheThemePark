@@ -26,7 +26,7 @@ const createRideRating = async (
     const rideRatingCollections = await rideratings();
 
     const alreadyRated = await rideRatingCollections.findOne({rideId: rideId, userName: userName});
-    if(alreadyRated !== null) throw `Error: ${userName} has already rated ${ride.rideName}`
+    if(alreadyRated !== null) throw `Error: You have already rated ${ride.rideName}`
 
     helper.checkRating(waitTimeRating)
     helper.checkRating(comfortabilityRating)
