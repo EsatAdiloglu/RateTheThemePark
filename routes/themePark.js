@@ -52,9 +52,13 @@ router.route('/addlike')
     const tpratingcollections = await themeparkratings();
     const tpid = req.body.themeparkid;
     const tpratingid = req.body.tpratingid
+    let validTpId = helper.checkId(tpid, 'theme park id');
+    validTpId = xss(validTpId)
+    let validTpRatingId = helper.checkId(tpratingid, 'theme park rating id');
+    validTpRatingId = xss(validTpRatingId)
     
     //const themepark = await themeParkData.getThemeParkById(tpid);
-    const tprating = await themeParkRatingData.getThemeParkRatingById(tpratingid)
+    const tprating = await themeParkRatingData.getThemeParkRatingById(validTpRatingId)
     const uname = req.session.user.userName;
     // let tprating;
     // let tpratingid;
@@ -111,7 +115,7 @@ router.route('/addlike')
         res.status(404).json({error: error})
     }
 
-    const updated = await themeParkRatingData.getThemeParkRatingById(tpratingid);
+    const updated = await themeParkRatingData.getThemeParkRatingById(validTpRatingId);
     return res.json({likes: updated.numUsersLiked, dislikes: updated.numUsersDisliked})
     //return res.redirect(`/themepark/${tpid}/ratings`);
     //console.log('I am here')
@@ -123,9 +127,13 @@ router.route('/adddislike')
     const tpratingcollections = await themeparkratings();
     const tpid = req.body.themeparkid;
     const tpratingid = req.body.tpratingid
+    let validTpId = helper.checkId(tpid, 'theme park id');
+    validTpId = xss(validTpId)
+    let validTpRatingId = helper.checkId(tpratingid, 'theme park rating id');
+    validTpRatingId = xss(validTpRatingId)
     
     //const themepark = await themeParkData.getThemeParkById(tpid);
-    const tprating = await themeParkRatingData.getThemeParkRatingById(tpratingid)
+    const tprating = await themeParkRatingData.getThemeParkRatingById(validTpRatingId)
     const uname = req.session.user.userName;
 
     // for (let i = 0; i < themepark.ratings.length; i++){
@@ -171,7 +179,7 @@ router.route('/adddislike')
         res.status(404).json({error: e})
     }
 
-    const updated = await themeParkRatingData.getThemeParkRatingById(tpratingid);
+    const updated = await themeParkRatingData.getThemeParkRatingById(validTpRatingId);
     return res.json({likes: updated.numUsersLiked, dislikes: updated.numUsersDisliked})
 })
 
@@ -180,12 +188,16 @@ router.route('/addridelike')
     const rideid = req.body.rideid;
     const rideratingcollections = await rideratings();
     const rideratingid = req.body.rideratingid;
-    const riderating = await rideRatingData.getRideRatingById(rideratingid)
-    console.log(riderating);
+    let validRId = helper.checkId(rideid, 'ride id');
+    validRId = xss(validRId)
+    let validRRatingId = helper.checkId(rideratingid, 'ride rating id');
+    validRRatingId = xss(validRRatingId)
+    const riderating = await rideRatingData.getRideRatingById(validRRatingId)
     const uname = req.session.user.userName;
 
     try {
         if (!riderating.usersLiked.includes(uname)){
+            console.log("hi 1")
             await rideratingcollections.updateOne(
                 { _id: new ObjectId(riderating._id) },  
                 { $inc: { numUsersLiked: 1 }, $push: { usersLiked: uname } } 
@@ -196,6 +208,7 @@ router.route('/addridelike')
             //   );
         }
         else{
+            console.log("hi 2")
             await rideratingcollections.updateOne(
                 { _id: new ObjectId(riderating._id) },  
                 { $inc: { numUsersLiked: -1 }, $pull: { usersLiked: uname }  } 
@@ -206,6 +219,7 @@ router.route('/addridelike')
             //   );
         }
         if (riderating.usersDisliked.includes(uname)){
+            console.log("hi 3")
             await rideratingcollections.updateOne(
                 { _id: new ObjectId(riderating._id) },  
                 { $inc: { numUsersDisliked: -1 }, $pull: { usersDisliked: uname }  } 
@@ -219,7 +233,7 @@ router.route('/addridelike')
         res.status(404).json({error: e})
     }
 
-    const updated = await rideRatingData.getRideRatingById(rideratingid)
+    const updated = await rideRatingData.getRideRatingById(validRRatingId)
     return res.json({likes: updated.numUsersLiked, dislikes: updated.numUsersDisliked})
 })
 
@@ -229,9 +243,12 @@ router.route('/addridedislike')
     
     const rideratingcollections = await rideratings();
     const rideratingid = req.body.rideratingid;
-    const riderating = await rideRatingData.getRideRatingById(rideratingid)
+    let validRId = helper.checkId(rideid, 'ride id');
+    validRId = xss(validRId)
+    let validRRatingId = helper.checkId(rideratingid, 'ride rating id');
+    validRRatingId = xss(validRRatingId)
+    const riderating = await rideRatingData.getRideRatingById(validRRatingId)
     const uname = req.session.user.userName;
-
     try {
         if (!riderating.usersDisliked.includes(uname)){
             await rideratingcollections.updateOne(
@@ -269,7 +286,7 @@ router.route('/addridedislike')
     
     
 
-    const updated = await rideRatingData.getRideRatingById(rideratingid)
+    const updated = await rideRatingData.getRideRatingById(validRRatingId)
     return res.json({likes: updated.numUsersLiked, dislikes: updated.numUsersDisliked})
 })
 
@@ -278,7 +295,11 @@ router.route('/addfslike')
     const fsid = req.body.foodstallid;
     const foodstallratingcollections = await foodstallratings();
     const foodstallratingid = req.body.foodstallratingid;
-    const foodstallrating = await foodStallRatingData.getFoodStallRatingById(foodstallratingid)
+    let validFsId = helper.checkId(fsid, 'food stall id');
+    validFsId = xss(validFsId)
+    let validFsRatingId = helper.checkId(foodstallratingid, 'food stall rating id');
+    validFsRatingId = xss(validFsRatingId)
+    const foodstallrating = await foodStallRatingData.getFoodStallRatingById(validFsRatingId)
     const uname = req.session.user.userName;
 
     try {
@@ -316,7 +337,7 @@ router.route('/addfslike')
         res.status(404).json({error: e})
     }
 
-    const updated = await foodStallRatingData.getFoodStallRatingById(foodstallratingid)
+    const updated = await foodStallRatingData.getFoodStallRatingById(validFsRatingId)
     return res.json({likes: updated.numUsersLiked, dislikes: updated.numUsersDisliked})
 
 })
@@ -326,7 +347,11 @@ router.route('/addfsdislike')
     const fsid = req.body.foodstallid;
     const foodstallratingcollections = await foodstallratings();
     const foodstallratingid = req.body.foodstallratingid;
-    const foodstallrating = await foodStallRatingData.getFoodStallRatingById(foodstallratingid)
+    let validFsId = helper.checkId(fsid, 'food stall id');
+    validFsId = xss(validFsId)
+    let validFsRatingId = helper.checkId(foodstallratingid, 'food stall rating id');
+    validFsRatingId = xss(validFsRatingId)
+    const foodstallrating = await foodStallRatingData.getFoodStallRatingById(validFsRatingId)
     const uname = req.session.user.userName;
 
     try {
@@ -366,7 +391,7 @@ router.route('/addfsdislike')
     
     
 
-    const updated = await foodStallRatingData.getFoodStallRatingById(foodstallratingid)
+    const updated = await foodStallRatingData.getFoodStallRatingById(validFsRatingId)
     return res.json({likes: updated.numUsersLiked, dislikes: updated.numUsersDisliked})
 })
 // ------------------------- WORKS
