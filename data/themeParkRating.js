@@ -98,6 +98,8 @@ const getThemeParkRatings = async (id) => {
         cleanlinessRating: rating.cleanlinessRating,
         crowdsRating: rating.crowdsRating,
         diversityRating: rating.diversityRating,
+        numUsersLiked: rating.numUsersLiked,
+        numUsersDisliked: rating.numUsersDisliked,
         comments: rating.comments, //rating.comments.map(commentId => commentId.toString()),
         reports: rating.reports //rating.reports.map(reportId => reportId.toString())
     }));

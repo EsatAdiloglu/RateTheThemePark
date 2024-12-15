@@ -91,6 +91,8 @@ const getFoodStallRatings = async (id) => {
         foodQualityRating: rating.foodQualityRating,
         waitTimeRating: rating.waitTimeRating,
         review: rating.review,
+        numUsersLiked: rating.numUsersLiked,
+        numUsersDisliked: rating.numUsersDisliked,
         comments: rating.comments, //rating.comments.map(commentId => commentId.toString()),
         reports: rating.reports //rating.reports.map(reportId => reportId.toString())
     }));
