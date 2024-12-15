@@ -112,4 +112,4 @@ const getComments = async (id, user) => {
 }
 
 
-export default {createComment, getComments, deleteComments}
+export default {createComment, getComments}

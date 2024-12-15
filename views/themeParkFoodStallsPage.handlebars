@@ -6,11 +6,10 @@
     //homepage/{idOfThemePark}/foodStalls
  --}}
 
- <h1> Theme Park Food Stalls </h1>
+
 <a href = "/themepark/{{tpid}}">Go back to theme park page</a>
 
 
-<main>
     <ol>
         {{#each foodStalls}}
         <li>
@@ -18,6 +17,6 @@
         </li>
         {{/each}}
     </ol>
-</main>
+
 
 <a href="/themepark/{{tpid}}/foodstalls/addfoodstall"> Add foodstall</a>
