@@ -420,7 +420,6 @@ router.route('/:id/comments')
         const validatedId = req.params.id
         const themePark = await themeParkData.getThemeParkById(validatedId);
         const themeParkComments = (await commentsData.getComments(validatedId, req.session.user.userName)).comments;
-        console.log(themeParkComments)
         return res.status(200).render('themeParkCommentPage', {
             _id: req.params.id,
             comments: themeParkComments,
