@@ -95,15 +95,15 @@
                     console.log(res);
                     const list = $(`<li>
                         <p>${res.userName}</p>
+                        <p id="tpitem" data-id="${res._id}" hidden></p>
                         <p><strong>Staff Rating:</strong> ${res.staffRating}</p>
                         <p><strong>Cleanliness Rating:</strong> ${res.cleanlinessRating}</p>
                         <p><strong>Crowds Rating:</strong> ${res.crowdsRating}</p>
                         <p><strong>Diversity Rating:</strong> ${res.diversityRating}</p>
-                        <p><strong>Number of Likes:</strong> 0 </p>
-                        <p><strong>Number of Disikes:</strong> 0 </p>
-                        <button id = 'themeparkratinglikes'>Like</button> 
-                        <button id = 'themeparkratingdislikes'>Dislike</button> 
-                        <p><strong>Comments:</strong></p>
+                        <p class="numtplikes"><strong>Number of Likes:</strong> 0 </p>
+                        <p class="numtpdislikes"><strong>Number of Dislikes:</strong> 0 </p>
+                        <button class="themeparkratinglikes" data-id="${_id}">Like</button> 
+                        <button class="themeparkratingdislikes" data-id="${_id}">Dislike</button> 
                         </li>
                         `)
                     ratingsList.append(list)

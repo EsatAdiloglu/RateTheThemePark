@@ -508,62 +508,128 @@ if (compareForm) {
 
 
 // ---------------------------------- Theme Park Like and Dislike ------------------------------------------
-let tplbutton = document.getElementById("themeparkratinglikes")
-let tpdbutton = document.getElementById("themeparkratingdislikes")
+// let tplbutton = document.getElementById("themeparkratinglikes")
+// let tpdbutton = document.getElementById("themeparkratingdislikes")
+
 let rlbutton = document.getElementById("rideratinglikes")
 let rdbutton = document.getElementById("rideratingdislikes")
+
 let fslbutton = document.getElementById("foodstallratinglikes")
 let fsdbutton = document.getElementById("foodstallratingdislikes")
 
-let numtplikes = document.getElementById('numtplikes')
-let numtpdislikes = document.getElementById('numtpdislikes')
+// let numtplikes = document.getElementById('numtplikes')
+// let numtpdislikes = document.getElementById('numtpdislikes')
+
 let ridenumlikes = document.getElementById('ridenumlikes')
 let ridenumdislikes = document.getElementById('ridenumdislikes')
+
 let fsnumlikes = document.getElementById('fsnumlikes')
 let fsnumdislikes = document.getElementById('fsnumdislikes')
 
-if (tplbutton) {
-    tplbutton.addEventListener('click', async () => {
-        //code of what happens when a like button is pressed for theme park rating
-        const themeparkid = window.location.href.split('/')[4];
-        const res = await fetch("/themepark/addlike", 
-            {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ themeparkid: themeparkid })
-        });
-        const result = await res.json();
+// if (tplbutton) {
+//     tplbutton.addEventListener('click', async () => {
+//         const themeparkratingid = document.getElementById('tpitem').dataset.id;
+//         console.log(themeparkratingid);
+//         //code of what happens when a like button is pressed for theme park rating
+//         const themeparkid = window.location.href.split('/')[4];
+//         const res = await fetch("/themepark/addlike", 
+//             {
+//             method: "POST",
+//             headers: {
+//                 "Content-Type": "application/json",
+//             },
+//             body: JSON.stringify({ themeparkid: themeparkid, tpratingid: themeparkratingid })
+//         });
+//         const result = await res.json();
         
-        //return res.redirect(`/themepark/${themeparkid}/ratings`);
+
+//         numtplikes.innerHTML = `<strong>Number of Likes:</strong> ${result.likes}`
+//         numtpdislikes.innerHTML = `<strong>Number of Dislikes:</strong> ${result.dislikes}`
+
+//     })
+// }
+
+// if (tpdbutton) {
+//     tpdbutton.addEventListener('click', async () => {
+//         const themeparkratingid = document.getElementById('tpitem').dataset.id;
+//         //code of what happens when a like button is pressed for theme park rating
+//         const themeparkid = window.location.href.split('/')[4];
+//         const res = await fetch("/themepark/adddislike", 
+//             {
+//             method: "POST",
+//             headers: {
+//                 "Content-Type": "application/json",
+//             },
+//             body: JSON.stringify({ themeparkid: themeparkid, tpratingid: themeparkratingid })
+//         });
+//         const result = await res.json();
         
-        // result contains likes and dislikes
-        //return await res.redirect('/themepark');
-        numtplikes.innerHTML = `<strong>Number of Likes:</strong> ${result.likes}`
-        numtpdislikes.innerHTML = `<strong>Number of Dislikes:</strong> ${result.dislikes}`
+//         numtplikes.innerHTML = `<strong>Number of Likes:</strong> ${result.likes}`
+//         numtpdislikes.innerHTML = `<strong>Number of Dislikes:</strong> ${result.dislikes}`
+//     })
 
-    })
-}
+// }
 
-if (tpdbutton) {
-    tpdbutton.addEventListener('click', async () => {
-        //code of what happens when a like button is pressed for theme park rating
-        const themeparkid = window.location.href.split('/')[4];
-        const res = await fetch("/themepark/adddislike", 
-            {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ themeparkid: themeparkid })
-        });
-        const result = await res.json();
+const tpratinglikebuttons = document.querySelectorAll('.themeparkratinglikes')
+if (tpratinglikebuttons){
+    for (const tplbutton of tpratinglikebuttons)
+    {
+        tplbutton.addEventListener('click', async () => {
+            const themeparkratingid = tplbutton.dataset.id;
+
+            const themeparkid = window.location.href.split('/')[4];
+            const res = await fetch("/themepark/addlike", 
+                {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ themeparkid: themeparkid, tpratingid: themeparkratingid })
+            });
+            const result = await res.json();
+            
+            const parentele = tplbutton.parentElement;
+
+            const numtplikes = parentele.querySelector('.numtplikes');
+            const numtpdislikes = parentele.querySelector('.numtpdislikes')
+    
             numtplikes.innerHTML = `<strong>Number of Likes:</strong> ${result.likes}`
-        numtpdislikes.innerHTML = `<strong>Number of Dislikes:</strong> ${result.dislikes}`
-    })
-
+            numtpdislikes.innerHTML = `<strong>Number of Dislikes:</strong> ${result.dislikes}`
+    
+        })
+    }
 }
+
+const tpratingdislikesbuttons = document.querySelectorAll('.themeparkratingdislikes')
+if (tpratingdislikesbuttons){
+    for (const tpdbutton of tpratingdislikesbuttons)
+    {
+        tpdbutton.addEventListener('click', async () => {
+            const themeparkratingid = tpdbutton.dataset.id;
+
+            const themeparkid = window.location.href.split('/')[4];
+            const res = await fetch("/themepark/adddislike", 
+                {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ themeparkid: themeparkid, tpratingid: themeparkratingid })
+            });
+            const result = await res.json();
+            
+            const parentele = tpdbutton.parentElement;
+
+            const numtplikes = parentele.querySelector('.numtplikes');
+            const numtpdislikes = parentele.querySelector('.numtpdislikes')
+    
+            numtplikes.innerHTML = `<strong>Number of Likes:</strong> ${result.likes}`
+            numtpdislikes.innerHTML = `<strong>Number of Dislikes:</strong> ${result.dislikes}`
+    
+        })
+    }
+}
+
 
 if (rlbutton) {
     rlbutton.addEventListener('click', async () => {
@@ -669,7 +735,7 @@ if (signupform){
             if (!errors.includes(e)) {errors.push(e);}
         }
         try {
-            comparepassword(signupcpassword.value)
+            comparepassword(signuppassword.value, signupcpassword.value)
         } catch (e) {
             if (!errors.includes(e)) {errors.push(e);}
         }
