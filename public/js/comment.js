@@ -73,25 +73,26 @@
                             error.show();
                         }
                         else{
-                            const newComment = $(`
-                                <div data-id=${res.commentId} >
-                                    User: ${res.userName} Comment: ${res.commentBody}
-                                    <button class="childCommentBtn">Add a comment</button>
-                                    <div hidden>
-                                        <p>Reply</p>
-                                        <form class="childCommentForm">
-                                        <label for="childCommentBody"></label>
-                                        <br>
-                                        <textarea name="childCommentBody" class="childCommentBody"></textarea>
-                                        <br>
-                                        <button type="submit">Submit Reply</button>
-                                        </form>
-                                        <button class="cancelChildButton">Cancel</button>
-                                    </div>
-                                    <br>
-                                </div>`)
+                            // const newComment = $(`
+                            //     <div data-id=${res.commentId} >
+                            //         User: ${res.userName} Comment: ${res.commentBody}
+                            //         <button class="childCommentBtn">Add a comment</button>
+                            //         <div hidden>
+                            //             <p>Reply</p>
+                            //             <form class="childCommentForm">
+                            //             <label for="childCommentBody"></label>
+                            //             <br>
+                            //             <textarea name="childCommentBody" class="childCommentBody"></textarea>
+                            //             <br>
+                            //             <button type="submit">Submit Reply</button>
+                            //             </form>
+                            //             <button class="cancelChildButton">Cancel</button>
+                            //         </div>
+                            //         <br>
+                            //     </div>`)
+                            const newComment = $(`<p>Reply</p><p>User: ${res.userName} Comment: ${res.commentBody}</p>`)
                             $(div).append(newComment)
-                            bindButton(newComment)
+                            //bindButton(newComment)
                         }
                     })
                 }
