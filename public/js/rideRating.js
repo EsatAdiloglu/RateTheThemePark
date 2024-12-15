@@ -85,13 +85,14 @@
                     const list = $(`
                                 <li>
                                     <p>${res.userName}</p>
+                                    <p id="tpitem" data-id="${res._id}" hidden></p>
                                     <p><strong>Wait Time Rating:</strong> ${res.waitTimeRating}</p> 
                                     <p><strong>Comfortability Rating:</strong> ${res.comfortabilityRating}</p>
                                     <p><strong>Enjoyment and Experience Rating:</strong> ${res.enjoymentRating}</p>
-                                    <p><strong>Number of Likes:</strong> 0 </p>
-                                    <p><strong>Number of Disikes:</strong> 0 </p>
-                                    <button id = 'rideratinglikes'>Like</button> 
-                                    <button id = 'rideratingdislikes'>Dislike</button> 
+                                    <p class = "ridenumlikes"><strong>Number of Likes:</strong> 0</p>
+                                    <p class = "ridenumdislikes"><strong>Number of Dislikes:</strong> 0</p>
+                                    <button class = "rideratinglikes" data-id =${res._id}>Like</button> 
+                                    <button class = "rideratingdislikes" data-id =${res._id}>Dislike</button> 
                                 </li>
                         `)
                     ratingsList.append(list)

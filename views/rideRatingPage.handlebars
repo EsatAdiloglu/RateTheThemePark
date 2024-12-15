@@ -32,10 +32,11 @@
             <p><strong>Wait Time Rating:</strong> {{waitTimeRating}}</p>
             <p><strong>Comfortability Rating:</strong>{{comfortabilityRating}}</p>
             <p><strong>Enjoyment and Experience Rating:</strong> {{ enjoymentRating}}</p>
-            <p id = 'ridenumlikes'><strong>Number of Likes:</strong> {{numUsersLiked}}</p>
-            <p id = 'ridenumdislikes'><strong>Number of Dislikes:</strong> {{numUsersDisliked}}</p>
-            <button id = 'rideratinglikes'>Like</button> 
-            <button id = 'rideratingdislikes'>Dislike</button> 
+            <p class = "ridenumlikes"><strong>Number of Likes:</strong> {{numUsersLiked}}</p>
+            <p class = "ridenumdislikes"><strong>Number of Dislikes:</strong> {{numUsersDisliked}}</p>
+            <button class = "rideratinglikes" data-id ={{_id}}>Like</button> 
+            <button class = "rideratingdislikes" data-id ={{_id}}>Dislike</button> 
         </li>
         {{/each}}
     </ol>
+ 
