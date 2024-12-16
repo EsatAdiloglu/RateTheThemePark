@@ -911,7 +911,7 @@ router.route('/:id/reports')
             themeParkName: themePark.themeParkName,
             reports: themeParkReports,
             script_partial: "themeParkReport_script",
-            // title: `Reports for ${themePark.themeParkName}`
+            title: `Reports for ${themePark.themeParkName}`
         });
     } catch (e) {
         console.error(e);
@@ -933,7 +933,7 @@ router.route('/:id/addReport')
         return res.render('addThemeParkReportPage', {
             themeId: themePark._id.toString(),
             themeParkName: themePark.themeParkName,
-            // title: `Report Theme Park - ${themePark.themeParkName}`
+            title: `Report Theme Park - ${themePark.themeParkName}`
         });
     } catch (e) {
         console.error(e);
@@ -1024,7 +1024,7 @@ router.route('/:id/rides/:rideid/reports')
             rideName: ride.rideName,
             reports: rideReports,
             script_partial: "rideReport_script",
-            // title: `Reports for ${ride.rideName}`
+            title: `Reports for ${ride.rideName}`
         });
     } catch (e) {
         console.log(e);
@@ -1056,7 +1056,7 @@ router.route('/:id/rides/:rideid/addReport')
             themeId: themepark._id.toString(),
             rideId: ride._id.toString(),
             rideName: ride.rideName,
-            // title: `Report Ride - ${ride.rideName}`
+            title: `Report Ride - ${ride.rideName}`
         });
     } catch (e) {
         return res.status(404).json({error: `${e}`});
@@ -1152,7 +1152,7 @@ router.route('/:id/foodstalls/:foodstallid/reports')
             foodstallName: foodstall.foodStallName,
             reports: foodstallReports,
             script_partial: "foodStallReport_script",
-            // title: `Reports for ${foodstall.foodStallName}`
+            title: `Reports for ${foodstall.foodStallName}`
         });
     } catch (e) {
         console.log(e);
@@ -1184,7 +1184,7 @@ router.route('/:id/foodstalls/:foodstallid/addReport')
             themeId: themepark._id.toString(),
             foodstallId: foodstall._id.toString(),
             foodstallName: foodstall.foodStallName,
-            // title: `Report Food Stall - ${foodstall.foodStallName}`
+            title: `Report Food Stall - ${foodstall.foodStallName}`
         });
     } catch (e) {
         return res.status(404).json({error: `${e}`});
