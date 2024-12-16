@@ -1,0 +1,43 @@
+<h1>Rate my Theme Park</h1>
+<h3>Sign Up Page</h3>
+<a href = '/signinuser'>Already have an account? Click here to sign-in</a>
+<form method = 'POST' action = '/signupuser' name = 'signup-form' id = 'signup-form'>
+
+    <label for="name">Name</label>
+    <input type="text" id="name" name="name">
+
+    <label for="username">Username</label>
+    <input type="text" id="username" name="username">
+
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password" >
+
+    <label for="confirmPassword">Confirm Password</label>
+    <input type="password" id="confirmPassword" name="confirmPassword">
+
+    <button name = "submitButton" id = "submitButton">Submit</button>
+</form>
+
+{{#if missing}}
+  <div class="missing">
+      <p>Missing arguments</p>
+    <br>
+    <ul>
+        {{#each missings}}
+          <li>{{this}}</li>
+        {{/each}}
+    </ul>
+  </div>
+{{/if}}
+
+{{#if error}}
+  <div class="errors">
+    <p>Errors</p>
+    <br>
+    <ul>
+        {{#each errors}}
+        <li>{{this}}</li>
+        {{/each}}
+    </ul>
+  </div>
+{{/if}}

@@ -1,13 +1,38 @@
+{{!-- Main theme park page with 
+
+    /homepage
+    - navigation
+    - (Button) Search by location - Another page
+    - (Button) compare theme parks - Another page
+    - (Button) Add theme park page - Another page
+ --}}
+
+
  <h1> Home Page </h1>
+
+ <a href = '/signoutuser'>Sign out</a>
  <main>
     <p>Want to search for a theme park? Enter the name on the form below</p>
-    <form id = "themeParkInput">
-        <label for="themeParkInput">Username</label>
-        <input type="themeParkInput" name="themeParkInput" id="themeParkInput">
+    <form method = "POST" action = "/themepark/listofthemeparks" id = "themeParkForm">
+        <label for="themeParkInput">Theme Park</label>
+        <input type="text" name="themeParkInput" id="themeParkInput">
+        <br>
+        <button id = 'themeparksearchbutton'>Submit</button>
     </form>
-    <button>Submit</button>
+
+    <p>Want to search for a theme park by state name? Enter the state on the form below</p>
+    <form method = "POST" action = "/themepark/listofthemeparkslocation" id = "themeParkLocationForm">
+        <label for="themeParkLocationInput">State</label>
+        <input type="text" name="themeParkLocationInput" id="themeParkLocationInput">
+        <br>
+        <button id = 'themeparklocationbutton'>Submit</button>
+    </form>
+    
     <p>Unable to find a theme park? Click this button to add a theme park!</p>
-    <button>Add a Theme Park</button>
+    <a href = "/themepark/addthemepark"><button>Add a Theme Park</button></a>
+    
+
     <p>Want to compare two different theme parks? Clikc this button to do so?</p>
-    <button>Compare Theme Parks</button>
- </main>
+    <a href = "/themepark/comparethemeparks"><button>Compare Theme Parks</button></a>
+
+</main>

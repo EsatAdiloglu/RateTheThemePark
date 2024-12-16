@@ -1,0 +1,23 @@
+{{!-- 
+
+    list of food stalls
+    - add foodstill button
+
+    //homepage/{idOfThemePark}/foodStalls
+ --}}
+
+ <h1> Theme Park Food Stalls </h1>
+<a href = "/themepark/{{tpid}}">Go back to theme park page</a>
+
+
+<main>
+    <ol>
+        {{#each foodStalls}}
+        <li>
+            <a href="/themepark/{{../tpid}}/foodstalls/{{_id}}"> {{foodStallName}} </a>
+        </li>
+        {{/each}}
+    </ol>
+</main>
+
+<a href="/themepark/{{tpid}}/foodstalls/addfoodstall"> Add foodstall</a>
