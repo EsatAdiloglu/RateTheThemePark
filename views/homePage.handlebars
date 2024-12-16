@@ -14,7 +14,7 @@
     <p>Want to search for a theme park? Enter the name on the form below</p>
     <form method = "POST" action = "/themepark/listofthemeparks" id = "themeParkForm">
         <label for="themeParkInput">Theme Park</label>
-        <input type="text" name="themeParkInput" id="themeParkInput">
+        <input type="text" name="themeParkInput" id="themeParkInput" required>
         <br>
         <button id = 'themeparksearchbutton'>Submit</button>
     </form>
@@ -22,7 +22,7 @@
     <p>Want to search for a theme park by state name? Enter the state on the form below</p>
     <form method = "POST" action = "/themepark/listofthemeparkslocation" id = "themeParkLocationForm">
         <label for="themeParkLocationInput">State</label>
-        <input type="text" name="themeParkLocationInput" id="themeParkLocationInput">
+        <input type="text" name="themeParkLocationInput" id="themeParkLocationInput" required>
         <br>
         <button id = 'themeparklocationbutton'>Submit</button>
     </form>
@@ -31,5 +31,5 @@
     <a href = "/themepark/addthemepark"><button>Add a Theme Park</button></a>
     
 
-    <p>Want to compare two different theme parks? Clikc this button to do so?</p>
+    <p>Want to compare two different theme parks? Click this button to do so?</p>
     <a href = "/themepark/comparethemeparks"><button>Compare Theme Parks</button></a>

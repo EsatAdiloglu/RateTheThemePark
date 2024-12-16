@@ -724,6 +724,8 @@ router.route('/:id/rides/:rideid/comments').get(async(req, res) => {
         const rideComments  = (await commentsData.getComments(ride._id.toString())).comments
         return res.status(200).render('rideCommentPage', 
             {
+            tpid: req.params.id,
+            rid: req.params.rideid,
             _rideId: ride._id.toString(), 
             comments: rideComments,
             rideName: ride.rideName,
@@ -839,12 +841,13 @@ router.route('/:id/foodstalls/:foodstallid/ratings')
     try{
         const themepark = await themeParkData.getThemeParkById(req.params.id);
         const foodStall = await foodStallData.getFoodStallById(req.params.foodstallid);
-        if(!themepark.foodStalls.some((f) => f === foodStall._id.toString())) throw `Error: the foodstall ${foodstall.foodStallName} doesn't exist in the themepark ${themepark.themeParkName}`
+        if(!themepark.foodStalls.some((f) => f === foodStall._id.toString())) throw `Error: the foodstall ${foodStall.foodStallName} doesn't exist in the themepark ${themepark.themeParkName}`
 
         const foodStallRatings = (await foodStallRatingData.getFoodStallRatings(req.params.foodstallid)).ratings;
         const averages = await foodStallRatingData.getAverageFoodStallRatings(req.params.foodstallid)
         
         return res.render('foodStallRatingPage',{
+            tpid: req.params.id,
             fpid: req.params.foodstallid,
             ratings: foodStallRatings,
             title: `Ratings for ${foodStall.foodStallName}`,
@@ -877,6 +880,7 @@ router.route('/:id/foodstalls/:foodstallid/comments')
         const foodstallComments = (await commentsData.getComments(foodstall._id.toString())).comments
         return res.status(200).render('foodStallCommentPage', 
             {
+                tpid: req.params.id,
                 _foodstallId: foodstall._id.toString(), 
                 comments: foodstallComments,
                 foodStallName: foodstall.foodStallName,
