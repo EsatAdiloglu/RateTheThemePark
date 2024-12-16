@@ -21,11 +21,10 @@ try {
     const park6 = await themeparksfunc.createThemePark("Adventuredome", "2880 S Las Vegas Blvd", "Las Vegas", "United States", "NV");
     const park7 = await themeparksfunc.createThemePark("Adventureland", "305 34th Ave NW", "Altoona", "United States", "IA");
     const park8 = await themeparksfunc.createThemePark("Adventureland", "2245 Broad Hollow Rd", "Farmingdale", "United States", "NY");
-    const park9 = await themeparksfunc.createThemePark("Barry Island Pleasure Park", "Barry Island", "United States", "WI");
-    const park10 = await themeparksfunc.createThemePark("Alabama Adventure", "4599 Splash Adventure Pkwy", "Bessemer", "United States", "AL");
-    const park11 = await themeparksfunc.createThemePark("Albion Boro Park", "106 E State St", "Albion", "United States", "PA");
-    const park12 = await themeparksfunc.createThemePark("Alpine Slide at Magic Mountain", "800 Wildrose Ln", "Big Bear Lake", "United States", "CA");
-    const park13 = await themeparksfunc.createThemePark("American Adventures", "250 Cobb Pkwy N", "Marietta", "United States", "GA");
+    const park9 = await themeparksfunc.createThemePark("Alabama Adventure", "4599 Splash Adventure Pkwy", "Bessemer", "United States", "AL");
+    const park10 = await themeparksfunc.createThemePark("Albion Boro Park", "106 E State St", "Albion", "United States", "PA");
+    const park11 = await themeparksfunc.createThemePark("Alpine Slide at Magic Mountain", "800 Wildrose Ln", "Big Bear Lake", "United States", "CA");
+    const park12 = await themeparksfunc.createThemePark("American Adventures", "250 Cobb Pkwy N", "Marietta", "United States", "GA");
 
     console.log("Theme parks done.");
 

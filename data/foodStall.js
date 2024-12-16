@@ -17,6 +17,7 @@ const createFoodStall = async (
     const foodStallCollections = await foodstalls();
     const exist = await foodStallCollections.find({parkRideIsLocatedIn: themeParkId}).toArray()
     if(exist.some((foodstall) => foodstall.foodStallName.toLowerCase() === foodstall.foodStallName.toLowerCase())) throw "Error: a food stall with that name already exists"
+    
     const newFoodStall = {
         _id: new ObjectId(),
         foodStallName: foodStallName,
