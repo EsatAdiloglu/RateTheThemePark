@@ -1,0 +1,125 @@
+/* header {
+    background-color: black;
+    text-decoration-color: whitesmoke;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+h1 {
+    background-color: white
+}
+
+h3 {
+    background-color: white
+}
+
+form {
+    background-color: slategrey
+}
+
+button {
+    border-color: aqua;
+}
+
+label {
+    border-color: black;
+}
+
+p {
+    background-color: darkgray;
+}
+
+main {
+    background-color: gray;
+}
+
+a {
+    background-color: gray;
+    text-decoration-color: aqua;
+}
+
+ul {
+    border-color: black;
+}
+
+ol {
+    border-color: black;
+}
+
+textarea {
+    background-color: white;
+}
+
+br {
+    background-color: white;
+}
+
+input {
+    border-color: black;
+}
+
+li {
+    border-color: red;
+} */
+
+*{
+    background-color:#A0CFD3;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    color: #2a2c24
+}
+h1 {
+    background-color: white;
+    margin-bottom: 40px;
+}
+
+h3 {
+    background-color: white
+}
+
+form {
+    background-color: #cfcfea;
+}
+
+button {
+    border-color: aqua;
+}
+
+label {
+    border-color: black;
+}
+
+p {
+    background-color: darkgray;
+}
+
+main {
+    background-color: #cfcfea;
+}
+
+a {
+    background-color: gray;
+    text-decoration-color: aqua;
+}
+
+ul {
+    border-color: black;
+}
+
+ol {
+    border-color: black;
+}
+
+textarea {
+    background-color: white;
+}
+
+br {
+    background-color: white;
+}
+
+input {
+    border-color: black;
+}
+
+li {
+    border-color: red;
+}

@@ -1,0 +1,6 @@
+<h1> Report Food Stall - {{foodstallName}}</h1>
+<form id="reportFoodStallForm" method="POST" action="/themepark/{{themeId}}/foodstalls/{{foodstallId}}/addReport">
+    <label for="foodstall_report">Reason for reporting:</label>
+    <textarea name="foodstall_report" id="foodstall_report" required></textarea>
+    <button type="submit">Submit Report</button>
+</form>

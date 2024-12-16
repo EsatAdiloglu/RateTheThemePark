@@ -1,0 +1,27 @@
+{{!-- Compare theme parks 
+    /homepage/comparethemeparks
+
+--}}
+
+<a href = '/themepark'>Go Back Rate my Theme Park</a>
+
+ <main>
+    <p>Put the ID of the theme parks you want to compare! IDs are below. </p>
+    
+    <form id = "themeParkCompareForm" method = "POST" action = "/themepark/comparethemeparksresults" >
+        <p>First park results:</p>
+        <select id = "firstPark">
+            {{#each parkOne}}
+                <option value = {{_id}}> {{themeParkName}}</option>
+            {{/each}}
+        </select>
+        <p>Second park results:</p>
+        <select id = "secondPark">
+            {{#each parkTwo}}
+                <option value = {{_id}}> {{themeParkName}}</option>
+            {{/each}}
+        </select>
+        <button id = 'getparksbutton'>Submit</button>
+    </form>
+
+ </main>
