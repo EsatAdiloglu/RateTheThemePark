@@ -61,6 +61,7 @@
                 error.hide();
                 error.empty();
 
+                const errors = []
                 let updateStaffRating = updateStaff.val(),
                     updateCleanlinessRating = updateCleanliness.val(),
                     updateCrowdRating = updateCrowd.val(),
@@ -70,27 +71,41 @@
                     checkNumber(updateStaffRating,"Theme Park Staff Rating")
                 }
                 catch(e){
-                    updateStaffRating = Number(currentStaff.text())
+                    if(typeof updateStaffRating === "string" && updateStaffRating.trim().length < 1) updateStaffRating = Number(currentStaff.text())
+                    else errors.push(e)
                 }
+
                 try{
                     checkNumber(updateCleanlinessRating, "Theme Park Stuff Cleanliness")
                 }
                 catch(e){
-                    updateCleanlinessRating = Number(currentCleanliness.text())
+                    if(typeof updateCleanlinessRating === "string" && updateStaffRating.trim().length < 1) updateCleanlinessRating = Number(currentCleanliness.text())
+                    else errors.push(e)
                 }
+            
                 try{
                     checkNumber(updateCrowdRating,"Theme Park Crowds Rating")
                 }
                 catch(e){
-                    updateCrowdRating = Number(currentCrowd.text())
+                    if(typeof updateCrowdRating === "string" && updateStaffRating.trim().length < 1) updateCrowdRating = Number(currentCrowd.text())
+                    else errors.push(e)
                 }
         
                 try{
                     checkNumber(updateDiversityRating, "Theme Park Diversity Rating")
                 }
                 catch(e){
-                    updateDiversityRating = Number(currentDiversity.text())
+                    if(typeof updateDiversityRating === "string" && updateStaffRating.trim().length < 1) updateDiversityRating = Number(currentDiversity.text())
+                    else errors.push(e)
                 }
+
+                if(errors.length > 0){
+                    errors.forEach((err) => {
+                        error.append(`<p>${err}</p>`)
+                    })
+                    error.show();
+                }
+                else{
                 let requestConfig = {
                     method: "PATCH",
                     url: "/api/addThemeParkRating",
@@ -120,13 +135,14 @@
                         currentDiversity.text(`${res.newDiversityRating}`)
                     }
                 })
-                updateRating.hide();
-                updateButton.show();
-                updateStaff.val("")
-                updateCleanliness.val("")
-                updateCrowd.val("")
-                updateDiversity.val("")
-            })
+            }
+            updateRating.hide();
+            updateButton.show();
+            updateStaff.val("")
+            updateCleanliness.val("")
+            updateCrowd.val("")
+            updateDiversity.val("")
+        })
         }
     }
     function bindDelete(li) {

@@ -148,4 +148,36 @@ const updateRating = async (
     if(!updatedResults) throw "Error: Could not update rating"
     return updatedResults
 }
-export default {createFoodStallRating, getFoodStallRatingById, getFoodStallRatings, getAverageFoodStallRatings, updateRating}
+
+const deleteRating = async (id) => {
+    id = helper.checkId(id, "Rating Id")
+
+    const foodStallRatingCollections = await foodstallratings();
+    const foodStallCollections = await foodstalls();
+    const userCollections = await users();
+
+    const exist = await foodStallRatingCollections.findOne({_id: new ObjectId(id)})
+    if(!exist) throw `Error: a rating doesn't exist with id ${id}`
+
+    const foodStall = await foodStallCollections.findOne({ratings: id})
+    if(!foodStall) throw `Error: no food stall has the rating with id ${id}`
+
+    const user = await userCollections.findOne({foodStallRatings: id})
+    if(!user) throw `Error: no user has the rating with id ${id}`
+
+    const deletedRating = await foodStallRatingCollections.findOneAndDelete({_id: new ObjectId(id)})
+    if(!deletedRating) throw "Error: could not delete rating"
+
+    const updatedUserRatings = {foodStallRatings: user.foodStallRatings.filter((rating) => rating !== id)}
+    const deletedUserRating = await userCollections.findOneAndUpdate({_id: user._id}, {$set: updatedUserRatings})
+    if(!deletedUserRating) throw "Error: could not delete rating from user"
+
+    const updatedFoodStallRatings = {ratings: foodStall.ratings.filter((rating) => rating !== id)} 
+    const deletedFoodStallRating = await foodStallCollections.findOneAndUpdate({_id: foodStall._id}, {$set: updatedFoodStallRatings}, {returnDocument: "after"})
+    if(!deletedFoodStallRating) throw "Error: could not delete rating from theme park"
+
+    return deletedFoodStallRating
+
+}
+
+export default {createFoodStallRating, getFoodStallRatingById, getFoodStallRatings, getAverageFoodStallRatings, updateRating, deleteRating}

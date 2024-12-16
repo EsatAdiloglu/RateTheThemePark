@@ -25,7 +25,7 @@
 
     }
     function bindUpdate(li) {
-        const updateButton = li.find(".updateRideRating")
+        const updateButton = li.find("#updateRideRating")
         if(updateButton.length > 0){
             let updateRating = li.find(".updateRating"),
                 updateForm = li.find("#updateForm"),
@@ -54,6 +54,7 @@
                 error.hide();
                 error.empty();
 
+                const errors = []
                 let updateWaitRating = updateWait.val(),
                     updateComfortRating = updateComfort.val(),
                     updateEnjoymentRating = updateEnjoyment.val()
@@ -62,55 +63,101 @@
                     checkNumber(updateWaitRating,"Ride Wait Time Rating")
                 }
                 catch(e){
-                    updateWaitRating = Number(currentWait.text())
+                    if(typeof updateWaitRating === "string" && updateWaitRating.trim().length < 1) updateWaitRating = Number(currentWait.text())
+                    else errors.push(e)
+                    
                 }
                 try{
                     checkNumber(updateComfortRating, "Ride Cleanliness Rating")
                 }
                 catch(e){
-                    updateComfortRating = Number(currentComfort.text())
+                    if(typeof updateComfortRating === "string" && updateWaitRating.trim().length < 1) updateComfortRating = Number(currentComfort.text())
+                    else errors.push(e)
                 }
                 try{
                     checkNumber(updateEnjoymentRating,"Ride Enjoyment Rating")
                 }
                 catch(e){
-                    updateEnjoymentRating = Number(currentEnjoyment.text())
+                    if(typeof updateEnjoymentRating === "string" && updateWaitRating.trim().length < 1) updateEnjoymentRating = Number(currentEnjoyment.text())
+                    else errors.push(e)
                 }
+                if(errors.length > 0){
+                    errors.forEach((err) => {
+                        error.append(`<p>${err}</p>`)
+                    })
+                    error.show();
+                }
+                else{
+                    let requestConfig = {
+                        method: "PATCH",
+                        url: "/api/addRideRating",
+                        contentType: "application/json",
+                        data: JSON.stringify({
+                            ratingId: li.data("id"),
+                            updateWait: updateWaitRating,
+                            updateComfort: updateComfortRating,
+                            updateEnjoyment: updateEnjoymentRating,
+                        })
+                    }
+                        $.ajax(requestConfig).then((res) => {
+                            if(res.Error) {
+                                error.append(`<p>${res.Error}</p>`)
+                                error.show();
+                            }
+                            else{
+                                numRating.text(`${res.averageRatings.numRatings}`)
+                                avgWait.text(`${res.averageRatings.avgWaitTimeRating}`)
+                                avgComfort.text(`${res.averageRatings.avgComfortRating}`)
+                                avgEnjoyment.text(`${res.averageRatings.avgEnjoymentRating}`)
+                                currentWait.text(`${res.newWaitRating}`)
+                                currentComfort.text(`${res.newComfortRating}`)
+                                currentEnjoyment.text(`${res.newEnjoymentRating}`)
+                            }
+                        })
+
+                    }
+                    updateRating.hide();
+                    updateButton.show();
+                    updateWait.val("")
+                    updateComfort.val("")
+                    updateEnjoyment.val("")
+                }
+                )
+        }
+    }
+    function bindDelete(li) {
+        const deleteButton = li.find("#deleteRideRating")
+        if(deleteButton.length > 0) {
+            deleteButton.off("click").on("click", () => {
+                error.hide();
+                error.empty();
 
                 let requestConfig = {
-                    method: "PATCH",
+                    method: "DELETE",
                     url: "/api/addRideRating",
                     contentType: "application/json",
                     data: JSON.stringify({
-                        ratingId: li.data("id"),
-                        updateWait: updateWaitRating,
-                        updateComfort: updateComfortRating,
-                        updateEnjoyment: updateEnjoymentRating,
+                        ratingId: li.data("id")
                     })
                 }
+
                 $.ajax(requestConfig).then((res) => {
                     if(res.Error) {
                         error.append(`<p>${res.Error}</p>`)
                         error.show();
                     }
                     else{
+                        li.remove();
                         numRating.text(`${res.averageRatings.numRatings}`)
                         avgWait.text(`${res.averageRatings.avgWaitTimeRating}`)
                         avgComfort.text(`${res.averageRatings.avgComfortRating}`)
                         avgEnjoyment.text(`${res.averageRatings.avgEnjoymentRating}`)
-                        currentWait.text(`${res.newWaitRating}`)
-                        currentComfort.text(`${res.newComfortRating}`)
-                        currentEnjoyment.text(`${res.newEnjoymentRating}`)
                     }
                 })
-                updateRating.hide();
-                updateButton.show();
-                updateWait.val("")
-                updateComfort.val("")
-                updateEnjoyment.val("")
             })
         }
     }
+
     addRideRating.on("click", () => {
         addRideRating.hide();
         rating.show();
@@ -186,7 +233,9 @@
                                     <p><strong>Enjoyment and Experience Rating:</strong> <span class="rideEnjoymentRating">${res.enjoymentRating}</span></p>
                                     <p class = "ridenumlikes"><strong>Number of Likes:</strong> 0</p>
                                     <p class = "ridenumdislikes"><strong>Number of Dislikes:</strong> 0</p>
-                                    <button class="updateRideRating">Update</button>
+                                    <button id="updateRideRating">Update Rating</button>
+                                    <button id="deleteRideRating">Delete Rating</button>
+                                    <br>
                                     <button class = "rideratinglikes" data-id =${res._id}>Like</button> 
                                     <button class = "rideratingdislikes" data-id =${res._id}>Dislike</button> 
                                     <div class="updateRating" hidden>
@@ -214,6 +263,7 @@
                     avgComfort.text(`${res.averageRatings.avgComfortRating}`)
                     avgEnjoyment.text(`${res.averageRatings.avgEnjoymentRating}`)
                     bindUpdate(list)
+                    bindDelete(list)
                 }
             })
 
@@ -226,5 +276,6 @@
     })
     $("#ratingsList li").each((idx, li) => {
         bindUpdate($(li))
+        bindDelete($(li))
     })
 })(window.jQuery)

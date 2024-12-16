@@ -36,7 +36,9 @@
             <p class = "ridenumlikes"><strong>Number of Likes:</strong> {{numUsersLiked}}</p>
             <p class = "ridenumdislikes"><strong>Number of Dislikes:</strong> {{numUsersDisliked}}</p>
             {{#if edit}}
-            <button class="updateRideRating">Update</button>
+            <button id="updateRideRating">Update Rating</button>
+            <button id="deleteRideRating">Delete Rating</button>
+            <br>
             {{/if}}
             <button class = "rideratinglikes" data-id ={{_id}}>Like</button> 
             <button class = "rideratingdislikes" data-id ={{_id}}>Dislike</button> 

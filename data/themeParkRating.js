@@ -163,17 +163,17 @@ const updateRating = async (
     helper.checkRating(crowdsRating)
     helper.checkRating(diversityRating)
 
+    const themeParkRatingCollections = await themeparkratings();
+
+    const exist = await themeParkRatingCollections.findOne({_id: new ObjectId(id)})
+    if(!exist) throw `Error: a rating doesn't exist with id ${id}`
+    
     const updatedRating = {
         staffRating: staffRating,
         cleanlinessRating: cleanlinessRating,
         crowdsRating: crowdsRating,
         diversityRating: diversityRating
     }
-
-    const themeParkRatingCollections = await themeparkratings();
-
-    const exist = await themeParkRatingCollections.findOne({_id: new ObjectId(id)})
-    if(!exist) throw `Error: a rating doesn't exist with id ${id}`
 
     const updatedResults = await themeParkRatingCollections.findOneAndUpdate({_id: new ObjectId(id)}, {$set: updatedRating}, {returnDocument: "after"})
     if(!updatedResults) throw "Error: Could not update rating"

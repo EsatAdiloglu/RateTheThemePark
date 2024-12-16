@@ -76,6 +76,12 @@ const getRideRatingById = async (id) => {
 
 const getRideRatingsByRide = async (id, user) => {
     if (!ObjectId.isValid(id)) throw "Invalid Ride ID";
+    user = helper.checkString(user)
+
+    const rideCollections = await rides();
+    const exist = await rideCollections.findOne({_id: new ObjectId(id)})
+    if(!exist) throw `Error: a ride doesn't exist with id ${id}`
+
 
     const rideRatingCollection = await rideratings();
     const ratings = await rideRatingCollection.find({rideId: id}).toArray();
@@ -112,7 +118,7 @@ const getRideRatingsByRide = async (id, user) => {
 }
 
 const getAverageRideRatings = async(id) => {
-    const ratings = (await getRideRatingsByRide(id)).ratings
+    const ratings = (await getRideRatingsByRide(id, "average ratings")).ratings
     let avgWait = 0
     let avgComfort = 0
     let avgEnjoyment = 0
@@ -144,6 +150,11 @@ const updateRating = async (
 ) => {
     id = helper.checkId(id, "Rating Id")
 
+    const rideRatingCollections = await rideratings();
+
+    const exist = await rideRatingCollections.findOne({_id: new ObjectId(id)})
+    if(!exist) throw `Error: a rating doesn't exist with id ${id}`
+
     helper.checkRating(waitTimeRating)
     helper.checkRating(comfortabilityRating)
     helper.checkRating(enjoymentRating)
@@ -154,9 +165,39 @@ const updateRating = async (
         enjoymentRating: enjoymentRating
     }
 
-    const rideRatingCollections = await rideratings();
     const updatedResults = await rideRatingCollections.findOneAndUpdate({_id: new ObjectId(id)}, {$set: updatedRating}, {returnDocument: "after"})
     if(!updatedResults) throw "Error: Could not update rating"
     return updatedResults
 }
-export default {createRideRating, getRideRatingById, getRideRatingsByRide, getAverageRideRatings, updateRating}
+
+const deleteRating = async (id) => {
+    id = helper.checkId(id, "Rating Id")
+
+    const rideRatingCollections = await rideratings();
+    const rideCollections = await rides();
+    const userCollections = await users();
+
+    const exist = await rideRatingCollections.findOne({_id: new ObjectId(id)})
+    if(!exist) throw `Error: a rating doesn't exist with id ${id}`
+
+    const ride = await rideCollections.findOne({ratings: id})
+    if(!ride) throw `Error: no theme park has the rating with id ${id}`
+
+    const user = await userCollections.findOne({rideRatings: id})
+    if(!user) throw `Error: no user has the rating with id ${id}`
+
+    const deletedRating = await rideRatingCollections.findOneAndDelete({_id: new ObjectId(id)})
+    if(!deletedRating) throw "Error: could not delete rating"
+
+    const updatedUserRatings = {rideRatings: user.rideRatings.filter((rating) => rating !== id)}
+    const deletedUserRating = await userCollections.findOneAndUpdate({_id: user._id}, {$set: updatedUserRatings})
+    if(!deletedUserRating) throw "Error: could not delete rating from user"
+
+    const updatedRideRatings = {ratings: ride.ratings.filter((rating) => rating !== id)} 
+    const deletedRideRating = await rideCollections.findOneAndUpdate({_id: ride._id}, {$set: updatedRideRatings}, {returnDocument: "after"})
+    if(!deletedRideRating) throw "Error: could not delete rating from theme park"
+
+    return deletedRideRating
+
+}
+export default {createRideRating, getRideRatingById, getRideRatingsByRide, getAverageRideRatings, updateRating, deleteRating}

@@ -173,6 +173,28 @@ router.route("/addRideRating").post(async (req, res) => {
         return res.json({Error: `${e}`})
     }
 })
+.delete(async (req,res) => {
+    const deleteRatingInfo = req.body
+    try{
+        deleteRatingInfo.ratingId = helper.checkId(deleteRatingInfo.ratingId, "Rating Id")
+
+        deleteRatingInfo.ratingId = xss(deleteRatingInfo.ratingId)
+    }
+    catch(e){
+        return res.json({Error: `${e}`})
+    }
+
+    try{
+        const {ratingId} = deleteRatingInfo
+        const ride = await rideRatingData.deleteRating(ratingId)
+        const averages = await rideRatingData.getAverageRideRatings(ride._id.toString())
+
+        return res.json({deleted: true, averageRatings: averages})
+    }
+    catch(e){
+        return res.json({Error: `${e}`})
+    }
+})
 
 router.route("/addFoodStallRating").post(async (req, res) => {
     const foodStallRatingInfo = req.body
@@ -235,7 +257,28 @@ router.route("/addFoodStallRating").post(async (req, res) => {
         return res.json({Error: `${e}`})
     }
 })
+.delete(async (req,res) => {
+    const deleteRatingInfo = req.body
+    try{
+        deleteRatingInfo.ratingId = helper.checkId(deleteRatingInfo.ratingId, "Rating Id")
 
+        deleteRatingInfo.ratingId = xss(deleteRatingInfo.ratingId)
+    }
+    catch(e){
+        return res.json({Error: `${e}`})
+    }
+
+    try{
+        const {ratingId} = deleteRatingInfo
+        const foodStall = await foodStallRatingData.deleteRating(ratingId)
+        const averages = await foodStallRatingData.getAverageFoodStallRatings(foodStall._id.toString())
+
+        return res.json({deleted: true, averageRatings: averages})
+    }
+    catch(e){
+        return res.json({Error: `${e}`})
+    }
+})
 
 router.route("/addComment").post(async (req,res) => {
     const commentInfo = req.body

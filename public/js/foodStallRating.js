@@ -23,7 +23,7 @@
 
     }
     function bindUpdate(li) {
-        const updateButton = li.find(".updateFoodStallRating")
+        const updateButton = li.find("#updateFoodStallRating")
         if(updateButton.length > 0){
             let updateRating = li.find(".updateRating"),
                 updateForm = li.find("#updateForm"),
@@ -50,51 +50,94 @@
                 error.hide();
                 error.empty();
 
-                let updateQualityRating = updateQuality.val()
+                const errors = []
+                let updateQualityRating = updateQuality.val(),
                     updateWaitRating = updateWait.val()
 
                 try{
                     checkNumber(updateQualityRating, "Food Stall Food Quality Rating")
                 }
                 catch(e){
-                    updateQualityRating = Number(currentQuality.text())
+                    if(typeof updateQualityRating === "String" && updateQualityRating.trim().length < 1) updateQualityRating = Number(currentQuality.text())
+                    else errors.push(e)
+                    
                 }
 
                 try{
                     checkNumber(updateWaitRating,"Food Stall Wait Time Rating")
                 }
                 catch(e){
-                    updateWaitRating = Number(currentWait.text())
+                    if(typeof updateWaitRating === "String" && updateWaitRating.trim().length < 1) updateWaitRating = Number(currentWait.text())
+                    else errors.push(e)
                 }
 
+                if(errors.length > 0){
+                    errors.forEach((err) => {
+                        error.append(`<p>${err}</p>`)
+                    })
+                    error.show();
+                }
+                else{
+                    let requestConfig = {
+                        method: "PATCH",
+                        url: "/api/addFoodStallRating",
+                        contentType: "application/json",
+                        data: JSON.stringify({
+                            ratingId: li.data("id"),
+                            updateQuality: updateQualityRating,
+                            updateWait: updateWaitRating
+                        })
+                    }
+                    $.ajax(requestConfig).then((res) => {
+                        if(res.Error) {
+                            error.append(`<p>${res.Error}</p>`)
+                            error.show();
+                        }
+                        else{
+                            numRating.text(`${res.averageRatings.numRatings}`)
+                            avgWait.text(`${res.averageRatings.avgWaitTimeRating}`)
+                            avgFoodQuality.text(`${res.averageRatings.avgFoodQualityRating}`)
+                            currentQuality.text(`${res.newQualityRating}`)
+                            currentWait.text(`${res.newWaitRating}`)
+                        }
+                    })
+
+                }
+                updateRating.hide();
+                updateButton.show();
+                updateQuality.val("")
+                updateWait.val("")
+        })
+        }
+    }
+    function bindDelete(li) {
+        const deleteButton = li.find("#deleteFoodStallRating")
+        if(deleteButton.length > 0) {
+            deleteButton.off("click").on("click", () => {
+                error.hide();
+                error.empty();
 
                 let requestConfig = {
-                    method: "PATCH",
+                    method: "DELETE",
                     url: "/api/addFoodStallRating",
                     contentType: "application/json",
                     data: JSON.stringify({
-                        ratingId: li.data("id"),
-                        updateQuality: updateQualityRating,
-                        updateWait: updateWaitRating
+                        ratingId: li.data("id")
                     })
                 }
+
                 $.ajax(requestConfig).then((res) => {
                     if(res.Error) {
                         error.append(`<p>${res.Error}</p>`)
                         error.show();
                     }
                     else{
+                        li.remove();
                         numRating.text(`${res.averageRatings.numRatings}`)
-                        avgWait.text(`${res.averageRatings.avgWaitTimeRating}`)
                         avgFoodQuality.text(`${res.averageRatings.avgFoodQualityRating}`)
-                        currentQuality.text(`${res.newQualityRating}`)
-                        currentWait.text(`${res.newWaitRating}`)
+                        avgWait.text(`${res.averageRatings.avgWaitTimeRating}`)
                     }
                 })
-                updateRating.hide();
-                updateButton.show();
-                updateQuality.val("")
-                updateWait.val("")
             })
         }
     }
@@ -162,7 +205,9 @@
                                     <p><strong>Wait Time Rating:</strong> <span class="foodStallWaitTimeRating">${res.waitTimeRating}</span></p> 
                                     <p class = "fsnumlikes"><strong>Number of Likes:</strong> 0 </p>
                                     <p class = "fsnumdislikes"><strong>Number of Dislikes:</strong> 0 </p>
-                                    <button class="updateFoodStallRating">Update</button>
+                                    <button id="updateFoodStallRating">Update Rating</button>
+                                    <button id="deleteFoodStallRating">Delete Rating</button>
+                                    <br>
                                     <button class = "foodstallratinglikes" data-id =${res._id}>Like</button> 
                                     <button class = "foodstallratingdislikes" data-id =${res._id}>Dislike</button>
                                     <div class="updateRating" hidden>
@@ -185,6 +230,7 @@
                     avgFoodQuality.text(`${res.averageRatings.avgFoodQualityRating}`)
                     avgWait.text(`${res.averageRatings.avgWaitTimeRating}`)
                     bindUpdate(list)
+                    bindDelete(list)
                 }
             })
 
@@ -196,5 +242,6 @@
     })
     $("#ratingsList li").each((idx, li) => {
         bindUpdate($(li))
+        bindDelete($(li))
     })
 })(window.jQuery)
