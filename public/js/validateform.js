@@ -631,47 +631,124 @@ if (tpratingdislikesbuttons){
 }
 
 
-if (rlbutton) {
-    rlbutton.addEventListener('click', async () => {
-        //code of what happens when a dislike button is pressed for ride rating
+const rideratinglikebuttons = document.querySelectorAll('.rideratinglikes')
+if (rideratinglikebuttons){
+    for (const rlbutton of rideratinglikebuttons)
+    {
+        rlbutton.addEventListener('click', async () => {
+            const rideratingid = rlbutton.dataset.id;
 
-        // we have to get the specific themepark id
-        // and the ride id and send it
-        const rideid = window.location.href.split('/')[6]
-        const res = await fetch("/themepark/addridelike", 
-            {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ rideid: rideid })
-        });
-        
-        const result = await res.json();
-        ridenumlikes.innerHTML = `<strong>Number of Likes:</strong> ${result.likes}`;
-        ridenumdislikes.innerHTML = `<strong>Number of Dislikes:</strong> ${result.dislikes}`;
+            const rideid = window.location.href.split('/')[4];
+            const res = await fetch("/themepark/addridelike", 
+                {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ rideid: rideid, rideratingid: rideratingid })
+            });
+            const result = await res.json();
+            
+            const parentele = rlbutton.parentElement;
 
-    })
+            const numrlikes = parentele.querySelector('.ridenumlikes');
+            const numrdislikes = parentele.querySelector('.ridenumdislikes')
+    
+            numrlikes.innerHTML = `<strong>Number of Likes:</strong> ${result.likes}`
+            numrdislikes.innerHTML = `<strong>Number of Dislikes:</strong> ${result.dislikes}`
+    
+        })
+    }
 }
 
-if (rdbutton) {
-    rdbutton.addEventListener('click', async() => {
-        //code of what happens when a dislike button is pressed for ride rating
-        const rideid = window.location.href.split('/')[6]
-        const res = await fetch("/themepark/addridedislike", 
-            {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ rideid: rideid })
-        });
-        const result = await res.json();
-        console.log(result.likes + " " + result.dislikes);
-        ridenumlikes.innerHTML = `<strong>Number of Likes:</strong> ${result.likes}`;
-        ridenumdislikes.innerHTML = `<strong>Number of Dislikes:</strong> ${result.dislikes}`;
-    })
+const rideratingdislikesbuttons = document.querySelectorAll('.rideratingdislikes')
+if (rideratingdislikesbuttons){
+    for (const rdbutton of rideratingdislikesbuttons)
+    {
+        rdbutton.addEventListener('click', async () => {
+            const rideratingid = rdbutton.dataset.id;
+
+            const rideid = window.location.href.split('/')[4];
+            const res = await fetch("/themepark/addridedislike", 
+                {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ rideid: rideid, rideratingid: rideratingid })
+            });
+            const result = await res.json();
+            
+            const parentele = rdbutton.parentElement;
+
+            const numrlikes = parentele.querySelector('.ridenumlikes');
+            const numrdislikes = parentele.querySelector('.ridenumdislikes')
+    
+            numrlikes.innerHTML = `<strong>Number of Likes:</strong> ${result.likes}`
+            numrdislikes.innerHTML = `<strong>Number of Dislikes:</strong> ${result.dislikes}`
+        })
+    }
 }
+
+const foodstalllratinglikesbutton = document.querySelectorAll('.foodstallratinglikes')
+if (foodstalllratinglikesbutton){
+    for (const fslbutton of foodstalllratinglikesbutton)
+    {
+        fslbutton.addEventListener('click', async () => {
+            const foodstallratingid = fslbutton.dataset.id;
+
+            const foodstallid = window.location.href.split('/')[4];
+            const res = await fetch("/themepark/addfslike", 
+                {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ foodstallid: foodstallid, foodstallratingid: foodstallratingid })
+            });
+            const result = await res.json();
+            
+            const parentele = fslbutton.parentElement;
+
+            const numfslikes = parentele.querySelector('.fsnumlikes');
+            const numfsdislikes = parentele.querySelector('.fsnumdislikes')
+    
+            numfslikes.innerHTML = `<strong>Number of Likes:</strong> ${result.likes}`
+            numfsdislikes.innerHTML = `<strong>Number of Dislikes:</strong> ${result.dislikes}`
+    
+        })
+    }
+}
+
+const foodstallratingdislikesbuttons = document.querySelectorAll('.foodstallratingdislikes')
+if (foodstallratingdislikesbuttons){
+    for (const fsdbutton of foodstallratingdislikesbuttons)
+    {
+        fsdbutton.addEventListener('click', async () => {
+            const foodstallratingid = fsdbutton.dataset.id;
+
+            const foodstallid = window.location.href.split('/')[4];
+            const res = await fetch("/themepark/addfsdislike", 
+                {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ foodstallid: foodstallid, foodstallratingid: foodstallratingid })
+            });
+            const result = await res.json();
+            
+            const parentele = fsdbutton.parentElement;
+
+            const numfslikes = parentele.querySelector('.fsnumlikes');
+            const numfsdislikes = parentele.querySelector('.fsnumdislikes')
+    
+            numfslikes.innerHTML = `<strong>Number of Likes:</strong> ${result.likes}`
+            numfsdislikes.innerHTML = `<strong>Number of Dislikes:</strong> ${result.dislikes}`
+        })
+    }
+}
+
 
 if (fslbutton){
     fslbutton.addEventListener('click', async() => {

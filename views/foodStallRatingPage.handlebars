@@ -29,10 +29,10 @@
             <p>{{userName}}</p>
             <p><strong>Food Quality Rating:</strong> {{foodQualityRating}}</p>
             <p><strong>Wait Time Rating:</strong> {{waitTimeRating}}</p>
-            <p id = 'fsnumlikes'><strong>Number of Likes:</strong> {{numUsersLiked}}</p>
-            <p id = 'fsnumdislikes'><strong>Number of Dislikes:</strong> {{numUsersDisliked}}</p>
-            <button id = 'foodstallratinglikes'>Like</button> 
-            <button id = 'foodstallratingdislikes'>Dislike</button> 
+            <p class = "fsnumlikes"><strong>Number of Likes:</strong> {{numUsersLiked}}</p>
+            <p class = "fsnumdislikes"><strong>Number of Dislikes:</strong> {{numUsersDisliked}}</p>
+            <button class = "foodstallratinglikes" data-id ={{_id}}>Like</button> 
+            <button class = "foodstallratingdislikes" data-id ={{_id}}>Dislike</button> 
         </li>
         {{/each}}
     </ol>
