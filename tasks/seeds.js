@@ -51,17 +51,17 @@ try {
 
     console.log("Seeding food stall ratings");
 
-    await foodstallratingfunc.createFoodStallRating(user1._id,foodStall1._id, 5, 4, "Fantastic food and quick service!");
-    await foodstallratingfunc.createFoodStallRating(user2._id,foodStall2._id,4,5, "Excellent food and ambiance.");
-    await foodstallratingfunc.createFoodStallRating(user3._id,foodStall3._id,3, 4, "Good food but slightly overpriced.");
+    await foodstallratingfunc.createFoodStallRating(user1.userName,foodStall1._id, 5, 4, "Fantastic food and quick service!");
+    await foodstallratingfunc.createFoodStallRating(user2.userName,foodStall2._id,4,5, "Excellent food and ambiance.");
+    await foodstallratingfunc.createFoodStallRating(user3.userName,foodStall3._id,3, 4, "Good food but slightly overpriced.");
 
     console.log("Food stall ratings done.");
 
     console.log("Seeding ride ratings");
     
-    await rideratingfunc.createRideRating(user1._id,ride1._id,4, 5, 5, "An absolutely thrilling experience!");
-    await rideratingfunc.createRideRating(user2._id,ride2._id,5,4,4, "Very immersive and fun!");
-    await rideratingfunc.createRideRating(user3._id,ride4._id,3, 4, 5, "Loved the adrenaline rush!");
+    await rideratingfunc.createRideRating(user1.userName,ride1._id,4, 5, 5, "An absolutely thrilling experience!");
+    await rideratingfunc.createRideRating(user2.userName,ride2._id,5,4,4, "Very immersive and fun!");
+    await rideratingfunc.createRideRating(user3.userName,ride4._id,3, 4, 5, "Loved the adrenaline rush!");
 
     console.log("Ride ratings done.");
 

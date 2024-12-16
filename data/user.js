@@ -1,7 +1,7 @@
 import {ObjectId} from "mongodb";
 import helper from "../helper.js"
 import { namefunc, usernamefunc, passwordfunc } from "../userhelper.js";
-import { themeparks, rides, users } from "../config/mongoCollections.js";
+import { themeparks, rides, users, comments } from "../config/mongoCollections.js";
 import bcrypt from 'bcrypt';
 
 export const signUpUser = async (name, username, password) => {
@@ -122,7 +122,8 @@ const createUser = async (
         _id: new ObjectId(),
         name: name,
         userName: userName,
-        password: hashedPassword
+        password: hashedPassword,
+        comments: [] 
     }
     const userInfo = await userCollections.insertOne(newUser);
     if (!userInfo.acknowledged || !userInfo.insertedId) {
