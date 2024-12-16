@@ -26,7 +26,7 @@ const createFoodStallRating = async (
     const foodStallRatingCollections = await foodstallratings();
 
     const alreadyRated = await foodStallRatingCollections.findOne({foodStallId: foodStallId, userName: userName});
-    if(alreadyRated !== null) throw `Error: ${userName} has already rated ${foodStall.foodStallName}`
+    if(alreadyRated !== null) throw `Error: You have already rated ${foodStall.foodStallName}`
 
     helper.checkRating(foodQualityRating)
     helper.checkRating(waitTimeRating)

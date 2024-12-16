@@ -90,7 +90,7 @@
                             //         </div>
                             //         <br>
                             //     </div>`)
-                            const newComment = $(`<p>Reply</p><p>User: ${res.userName} Comment: ${res.commentBody}</p>`)
+                            const newComment = $(`<p>&emsp;&emsp;User: ${res.userName} Comment: ${res.commentBody}</p>`)
                             $(div).append(newComment)
                             //bindButton(newComment)
                         }

@@ -1,4 +1,4 @@
-<a href="/themepark/{{themeId}}/foodstalls/{{foodstallId}}">Go back to food stall page</a>
+{{!-- <a href="/themepark/{{themeId}}/foodstalls/{{foodstallId}}">Go back to food stall page</a>
 <br>
 <p id="error"></p>
 <button id="addFoodStallReport">Report Food Stall</button>
@@ -30,4 +30,12 @@
   {{else}}
     <p>No reports have been submitted for this food stall yet.</p>
   {{/if}}
-</div>
+</div> --}}
+<h1>Reports for {{foodstallName}}</h1>
+<a href="/themepark/{{themeId}}/foodstalls/{{foodstallId}}">Go back to food stall page</a>
+<br>
+<p id="error"></p>
+
+<form action="/themepark/{{themeId}}/foodstalls/{{foodstallId}}/addReport" method="GET">
+    <button type="submit" id="addFoodStallReport">Report Food Stall</button>
+</form>

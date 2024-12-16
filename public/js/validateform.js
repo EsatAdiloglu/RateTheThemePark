@@ -65,71 +65,71 @@ if (addthemeparkform) {
   });
 }
 
-let addthemeparkratingform = document.getElementById('tprating') //a
-let staffInput = document.getElementById('theme_park_staff');
-let cleanlinessInput = document.getElementById('theme_park_cleanliness');
-let crowdsInput = document.getElementById('theme_park_crowds');
-let diversityInput = document.getElementById('theme_park_diversity');
+// let addthemeparkratingform = document.getElementById('tprating') //a
+// let staffInput = document.getElementById('theme_park_staff');
+// let cleanlinessInput = document.getElementById('theme_park_cleanliness');
+// let crowdsInput = document.getElementById('theme_park_crowds');
+// let diversityInput = document.getElementById('theme_park_diversity');
 
-function validRating(rating) {
-    if (typeof(rating) === 'undefined') {
-        throw   `You must enter rating`;
-    } else if (typeof(rating) !== 'integer') {
-        throw `Rating must be a numerical value`;
-    } else if (rating < 1 || rating > 10) {
-        throw `Rating must be between 1-10`; 
-    }
-}
+// function validRating(rating) {
+//     if (typeof(rating) === 'undefined') {
+//         throw   `You must enter rating`;
+//     } else if (typeof(rating) !== 'integer') {
+//         throw `Rating must be a numerical value`;
+//     } else if (rating < 1 || rating > 10) {
+//         throw `Rating must be between 1-10`; 
+//     }
+// }
 
-if (addthemeparkratingform) {
-    addthemeparkratingform.addEventListener('submit', (event) => {
-    const errors = [];
-    try {
-        validRating(staffInput.value, 2);
-    } catch (e) {
-        if (!errors.includes(e)) {
-            errors.push(e);
-        }
-    }
-    try {
-        validRating(cleanlinessInput.value, 5);
-    } catch (e) {
-        if (!errors.includes(e)) {
-            errors.push(e);
-        }
-    }
-    try {
-        validRating(crowdsInput.value, 2);
-    } catch (e) {
-        if (!errors.includes(e)) {
-            errors.push(e);
-        }
-    }
-    try {
-        validRating(diversityInput.value, 2);
-    } catch (e) {
-        if (!errors.includes(e)) {
-            errors.push(e);
-        }
-    }
-    if (errors.length > 0) {
-        const existingul = document.getElementById('myul');
-        if (existingul) {
-            existingul.remove();
-        }
-        let myUL = document.getElementById('myul');
-        myUL.id = 'myul';
-        event.preventDefault();
-              for (let i = 0; i < errors.length; i++) {
-                let myLi = document.createElement('li');
-                myLi.classList.add('error');
-                myLi.innerHTML = errors[i];
-                myUL.appendChild(myLi);
-              }
-              addthemeparkratingform.appendChild(myUL);
-    }
-  });
-}
+// if (addthemeparkratingform) {
+//     addthemeparkratingform.addEventListener('submit', (event) => {
+//     const errors = [];
+//     try {
+//         validRating(staffInput.value, 2);
+//     } catch (e) {
+//         if (!errors.includes(e)) {
+//             errors.push(e);
+//         }
+//     }
+//     try {
+//         validRating(cleanlinessInput.value, 5);
+//     } catch (e) {
+//         if (!errors.includes(e)) {
+//             errors.push(e);
+//         }
+//     }
+//     try {
+//         validRating(crowdsInput.value, 2);
+//     } catch (e) {
+//         if (!errors.includes(e)) {
+//             errors.push(e);
+//         }
+//     }
+//     try {
+//         validRating(diversityInput.value, 2);
+//     } catch (e) {
+//         if (!errors.includes(e)) {
+//             errors.push(e);
+//         }
+//     }
+//     if (errors.length > 0) {
+//         const existingul = document.getElementById('myul');
+//         if (existingul) {
+//             existingul.remove();
+//         }
+//         let myUL = document.getElementById('myul');
+//         myUL.id = 'myul';
+//         event.preventDefault();
+//               for (let i = 0; i < errors.length; i++) {
+//                 let myLi = document.createElement('li');
+//                 myLi.classList.add('error');
+//                 myLi.innerHTML = errors[i];
+//                 myUL.appendChild(myLi);
+//               }
+//               addthemeparkratingform.appendChild(myUL);
+//     }
+//   });
+// }
 
 function commenthelper(cmt){
     if (!cmt) throw "Comment not there";

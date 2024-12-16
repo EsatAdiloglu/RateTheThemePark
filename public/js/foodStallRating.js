@@ -10,10 +10,12 @@
         submitButton = $(`button[type="submit"]`),
         avgFoodQuality = $("#avgFoodQuality"),
         avgWait = $("#avgWait"),
-        numRating = $("#numRating")
+        numRating = $("#numRating"),
+        cancelButton = $("#cancelFoodStallRating")
 
     const checkNumber = (num, numName) => {
         if(typeof num === "string" && num.trim().length < 1) throw `Error: ${numName} wasn't given`
+        if(typeof num === "string" && num.includes("e")) throw `Error: ${numName} has exponents`
         num = Number(num)
         if(isNaN(num)) throw `Error: ${numName} is NaN`
         if(num % 1 !== 0) throw `Error: ${numName} isn't an integer`
@@ -24,7 +26,12 @@
         addFoodStallRating.hide();
         rating.show();
     })
-
+    cancelButton.on("click", () => { 
+        rating.hide();
+        addFoodStallRating.show();
+        quality.val("");
+        waitTime.val("");
+    })
     ratingForm.submit((event) => {
         event.preventDefault();
         error.hide();

@@ -1,8 +1,6 @@
  {{!-- Login Page for users to enter username and password --}}
 <a href = "/signupuser">Click here to signup!</a>
 <br>
- <h1> Sign In </h1>
- <main>
     <p>Please enter your username and password</p>
     <form method="POST" action="/signinuser" id="signin-form">
         <label for="check_username">Username</label>
@@ -12,7 +10,6 @@
         <input type="password" name="check_password" id="check_password">
         <button name="submit_button" id="submit_button">Submit</button>
     </form>
- </main>
 
 {{#if missing}}
   <div class="missing">

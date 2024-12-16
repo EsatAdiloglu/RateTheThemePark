@@ -8,7 +8,8 @@ import foodStallRatingData from "../data/foodStallRating.js"
 import commentsData from '../data/comment.js'
 import xss from "xss";
 
-router.route("/addThemeParkRating").post(async (req, res) => {
+router.route("/addThemeParkRating")
+.post(async (req, res) => {
     const themeParkRatingInfo = req.body
     try{
         themeParkRatingInfo.themeParkId = helper.checkId(themeParkRatingInfo.themeParkId, "Theme Park Id")
@@ -24,25 +25,62 @@ router.route("/addThemeParkRating").post(async (req, res) => {
         themeParkRatingInfo.themeParkDiversity = xss(themeParkRatingInfo.themeParkDiversity)
     }
     catch(e){
-        return res.status(400).json({Error: `${e}`})
+        return res.json({Error: `${e}`})
     }
 
     try{
         const user = await userData.getUserByUsername(req.session.user.userName)
         const {themeParkStaff, themeParkCleanliness, themeParkCrowds, themeParkDiversity} = themeParkRatingInfo
-        await themeParkRatingData.createThemeParkRating(user.userName, themeParkRatingInfo.themeParkId, themeParkStaff, themeParkCleanliness, themeParkCrowds, themeParkDiversity, "")
+        const rating = await themeParkRatingData.createThemeParkRating(user.userName, themeParkRatingInfo.themeParkId, themeParkStaff, themeParkCleanliness, themeParkCrowds, themeParkDiversity, "")
         const averages = await themeParkRatingData.getAverageThemeParkRatings(themeParkRatingInfo.themeParkId)
         return res.json({
+            _id: rating._id.toString(),
             userName: user.userName, 
             staffRating: themeParkStaff,
             cleanlinessRating: themeParkCleanliness,
             crowdsRating: themeParkCrowds,
             diversityRating: themeParkDiversity,
+            averageRatings: averages,
+            
+        })
+    }
+    catch(e){
+        return res.json({Error: `${e}`})
+    }
+})
+.patch(async (req, res) => {
+    const updateRatingInfo = req.body
+    try{
+        updateRatingInfo.ratingId = helper.checkId(updateRatingInfo.ratingId, "Rating Id")
+        helper.checkRating(updateRatingInfo.updateStaff)
+        helper.checkRating(updateRatingInfo.updateCleanliness)
+        helper.checkRating(updateRatingInfo.updateCrowd)
+        helper.checkRating(updateRatingInfo.updateDiversity)
+
+        updateRatingInfo.ratingId = xss(updateRatingInfo.ratingId)
+        updateRatingInfo.updateStaff = xss(updateRatingInfo.updateStaff)
+        updateRatingInfo.updateCleanliness = xss(updateRatingInfo.updateCleanliness)
+        updateRatingInfo.updateCrowd = xss(updateRatingInfo.updateCrowd)
+        updateRatingInfo.updateDiversity = xss(updateRatingInfo.updateDiversity)
+    }
+    catch(e){
+        return res.json({Error: `${e}`})
+    }
+    try{
+        const {ratingId, updateStaff, updateCleanliness, updateCrowd, updateDiversity} = updateRatingInfo
+        const updatedRating = await themeParkRatingData.updateRating(ratingId, updateStaff, updateCleanliness, updateCrowd, updateDiversity)
+        const averages = await themeParkRatingData.getAverageThemeParkRatings(updatedRating.themeParkId)
+        return res.json({
+            newStaffRating: updatedRating.staffRating,
+            newCleanlinessRating: updatedRating.cleanlinessRating,
+            newCrowdRating: updatedRating.crowdsRating,
+            newDiversityRating: updatedRating.diversityRating,
             averageRatings: averages
         })
     }
     catch(e){
-        return res.status(404).json({Error: `${e}`})
+        console.log(e)
+        return res.json({Error: `${e}`})
     }
 })
 
@@ -60,7 +98,7 @@ router.route("/addRideRating").post(async (req, res) => {
         rideRatingInfo.enjoyment = xss(rideRatingInfo.enjoyment)
     }
     catch(e){
-        return res.status(400).json({Error: `${e}`})
+        return res.json({Error: `${e}`})
     }
 
     try{
@@ -77,7 +115,7 @@ router.route("/addRideRating").post(async (req, res) => {
         })
     }
     catch(e){
-        return res.status(404).json({Error: `${e}`})
+        return res.json({Error: `${e}`})
     }
 })
 
@@ -93,7 +131,7 @@ router.route("/addFoodStallRating").post(async (req, res) => {
         foodStallRatingInfo.waitTime = xss(foodStallRatingInfo.waitTime)
     }
     catch(e){
-        return res.status(400).json({Error: `${e}`})
+        return res.json({Error: `${e}`})
     }
 
     try{
@@ -109,7 +147,7 @@ router.route("/addFoodStallRating").post(async (req, res) => {
         })
     }
     catch(e){
-        return res.status(404).json({Error: `${e}`})
+        return res.json({Error: `${e}`})
     }
 })
 
@@ -140,7 +178,7 @@ router.route("/addComment").post(async (req,res) => {
         commentInfo.commentBody = xss(commentInfo.commentBody)
     }
     catch(e){
-        return res.status(400).json({Error: `${e}`})
+        return res.json({Error: `${e}`})
     }
 
     try{
@@ -155,7 +193,7 @@ router.route("/addComment").post(async (req,res) => {
     }
     catch(e){
         console.log(e)
-        return res.status(404).json({Error: `${e}`})
+        return res.json({Error: `${e}`})
     }
 })
 
