@@ -58,7 +58,9 @@ Theme Park Rating Page (INDIVIDUAL THEME PARK)
       <p class="numtplikes"><strong>Number of Likes:</strong> {{numUsersLiked}}</p>
       <p class="numtpdislikes"><strong>Number of Dislikes:</strong> {{numUsersDisliked}}</p>
       {{#if edit}}
-      <button class="updateThemeParkRating">Update</button>
+      <button id="updateThemeParkRating">Update Rating</button>
+      <button id="deleteThemeParkRating">Delete Rating</button>
+      <br>
       {{/if}}
       <button class="themeparkratinglikes" data-id="{{_id}}">Like</button> 
       <button class="themeparkratingdislikes" data-id="{{_id}}">Dislike</button> 

@@ -80,6 +80,11 @@ const getThemeParkRatingById = async (id) => {
 
 const getThemeParkRatings = async (id, user) => {
     if (!ObjectId.isValid(id)) throw "Invalid Theme Park ID";
+    user = helper.checkString(user)
+
+    const themeParkCollections = await themeparks();
+    const exist = await themeParkCollections.findOne({_id: new ObjectId(id)})
+    if(!exist) throw `Error: a theme park doesn't exist with id ${id}`
 
     const themeParkRatingCollection = await themeparkratings();
     const ratings = await themeParkRatingCollection.find({themeParkId: id}).toArray();
@@ -115,7 +120,7 @@ const getThemeParkRatings = async (id, user) => {
 }
 
 const getAverageThemeParkRatings = async(id) => {
-    const ratings = (await getThemeParkRatings(id)).ratings
+    const ratings = (await getThemeParkRatings(id, "average rating")).ratings
     let avgStaff = 0
     let avgCleanliness = 0
     let avgCrowds = 0
@@ -166,9 +171,44 @@ const updateRating = async (
     }
 
     const themeParkRatingCollections = await themeparkratings();
+
+    const exist = await themeParkRatingCollections.findOne({_id: new ObjectId(id)})
+    if(!exist) throw `Error: a rating doesn't exist with id ${id}`
+
     const updatedResults = await themeParkRatingCollections.findOneAndUpdate({_id: new ObjectId(id)}, {$set: updatedRating}, {returnDocument: "after"})
     if(!updatedResults) throw "Error: Could not update rating"
     return updatedResults
 
 }
-export default {createThemeParkRating, getThemeParkRatingById, getThemeParkRatings, getAverageThemeParkRatings, updateRating}
+
+const deleteRating = async (id) => {
+    id = helper.checkId(id, "Rating Id")
+
+    const themeParkRatingCollections = await themeparkratings();
+    const themeParkCollections = await themeparks();
+    const userCollections = await users();
+
+    const exist = await themeParkRatingCollections.findOne({_id: new ObjectId(id)})
+    if(!exist) throw `Error: a rating doesn't exist with id ${id}`
+
+    const themePark = await themeParkCollections.findOne({ratings: id})
+    if(!themePark) throw `Error: no theme park has the rating with id ${id}`
+
+    const user = await userCollections.findOne({themeParkRatings: id})
+    if(!user) throw `Error: no user has the rating with id ${id}`
+
+    const deletedRating = await themeParkRatingCollections.findOneAndDelete({_id: new ObjectId(id)})
+    if(!deletedRating) throw "Error: could not delete rating"
+
+    const updatedUserRatings = {themeParkRatings: user.themeParkRatings.filter((rating) => rating !== id)}
+    const deletedUserRating = await userCollections.findOneAndUpdate({_id: user._id}, {$set: updatedUserRatings})
+    if(!deletedUserRating) throw "Error: could not delete rating from user"
+
+    const updatedThemeParkRatings = {ratings: themePark.ratings.filter((rating) => rating !== id)} 
+    const deletedThemeParkRating = await themeParkCollections.findOneAndUpdate({_id: themePark._id}, {$set: updatedThemeParkRatings}, {returnDocument: "after"})
+    if(!deletedThemeParkRating) throw "Error: could not delete rating from theme park"
+
+    return deletedThemeParkRating
+
+}
+export default {createThemeParkRating, getThemeParkRatingById, getThemeParkRatings, getAverageThemeParkRatings, updateRating, deleteRating}

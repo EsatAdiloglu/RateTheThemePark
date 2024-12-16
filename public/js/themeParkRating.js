@@ -29,7 +29,7 @@
 
     }
     function bindUpdate(li) {
-        const updateButton = li.find(".updateThemeParkRating")
+        const updateButton = li.find("#updateThemeParkRating")
         if(updateButton.length > 0){
             let updateRating = li.find(".updateRating"),
                 updateForm = li.find("#updateForm"),
@@ -129,6 +129,39 @@
             })
         }
     }
+    function bindDelete(li) {
+        const deleteButton = li.find("#deleteThemeParkRating")
+        if(deleteButton.length > 0) {
+            deleteButton.off("click").on("click", () => {
+                error.hide();
+                error.empty();
+
+                let requestConfig = {
+                    method: "DELETE",
+                    url: "/api/addThemeParkRating",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        ratingId: li.data("id")
+                    })
+                }
+
+                $.ajax(requestConfig).then((res) => {
+                    if(res.Error) {
+                        error.append(`<p>${res.Error}</p>`)
+                        error.show();
+                    }
+                    else{
+                        li.remove();
+                        numRating.text(`${res.averageRatings.numRatings}`)
+                        avgStaff.text(`${res.averageRatings.avgStaffRating}`)
+                        avgClean.text(`${res.averageRatings.avgCleanlinessRating}`)
+                        avgCrowd.text(`${res.averageRatings.avgCrowdRating}`)
+                        avgDiversity.text(`${res.averageRatings.avgDiversityRating}`)
+                    }
+                })
+            })
+        }
+    }
     addThemeParkRating.on("click", () => {
         addThemeParkRating.hide();
         rating.show();
@@ -211,7 +244,9 @@
                         <p><strong>Diversity Rating:</strong> <span id="themeParkDiversityRating">${res.diversityRating}</span></p>
                         <p class="numtplikes"><strong>Number of Likes:</strong> 0 </p>
                         <p class="numtpdislikes"><strong>Number of Dislikes:</strong> 0 </p>
-                        <button class="updateThemeParkRating">Update</button>
+                        <button id="updateThemeParkRating">Update Rating</button>
+                        <button id="deleteThemeParkRating">Delete Rating</button>
+                        <br>
                         <button class="themeparkratinglikes" data-id="${res._id}">Like</button> 
                         <button class="themeparkratingdislikes" data-id="${res._id}">Dislike</button> 
                         <div class="updateRating" hidden>
@@ -242,6 +277,7 @@
                     avgCrowd.text(`${res.averageRatings.avgCrowdRating}`)
                     avgDiversity.text(`${res.averageRatings.avgDiversityRating}`)
                     bindUpdate(list)
+                    bindDelete(list)
                     
                 }
             })
@@ -257,6 +293,7 @@
     )
     $("#ratingsList li").each((idx, li) => {
         bindUpdate($(li))
+        bindDelete($(li))
     })
 
 })(window.jQuery)

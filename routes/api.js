@@ -83,6 +83,28 @@ router.route("/addThemeParkRating")
         return res.json({Error: `${e}`})
     }
 })
+.delete(async (req,res) => {
+    const deleteRatingInfo = req.body
+    try{
+        deleteRatingInfo.ratingId = helper.checkId(deleteRatingInfo.ratingId, "Rating Id")
+
+        deleteRatingInfo.ratingId = xss(deleteRatingInfo.ratingId)
+    }
+    catch(e){
+        return res.json({Error: `${e}`})
+    }
+
+    try{
+        const {ratingId} = deleteRatingInfo
+        const themePark = await themeParkRatingData.deleteRating(ratingId)
+        const averages = await themeParkRatingData.getAverageThemeParkRatings(themePark._id.toString())
+
+        return res.json({deleted: true, averageRatings: averages})
+    }
+    catch(e){
+        return res.json({Error: `${e}`})
+    }
+})
 
 router.route("/addRideRating").post(async (req, res) => {
     const rideRatingInfo = req.body
