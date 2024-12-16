@@ -1,4 +1,4 @@
-import { ObjectId } from "mongodb";
+import { ObjectId, ReturnDocument } from "mongodb";
 import helper from "../helper.js";
 import { foodstallratings, foodstalls, users } from "../config/mongoCollections.js";
 
@@ -73,7 +73,7 @@ const getFoodStallRatingById = async (id) => {
     return foodStallRating
 }
 
-const getFoodStallRatings = async (id) => {
+const getFoodStallRatings = async (id, user) => {
     if (!ObjectId.isValid(id)) throw "Invalid Food Stall ID";
 
     const foodStallRatingCollection = await foodstallratings();
@@ -85,17 +85,23 @@ const getFoodStallRatings = async (id) => {
             ratings: []
         };
     }
-    const formattedFoodStallRatings = ratings.map(rating => ({
-        _id: rating._id.toString(),
-        userName: rating.userName.toString(),
-        foodQualityRating: rating.foodQualityRating,
-        waitTimeRating: rating.waitTimeRating,
-        review: rating.review,
-        numUsersLiked: rating.numUsersLiked,
-        numUsersDisliked: rating.numUsersDisliked,
-        comments: rating.comments, //rating.comments.map(commentId => commentId.toString()),
-        reports: rating.reports //rating.reports.map(reportId => reportId.toString())
-    }));
+    const formattedFoodStallRatings = ratings.map(rating => {
+        const formatRating = {
+            _id: rating._id.toString(),
+            userName: rating.userName.toString(),
+            foodQualityRating: rating.foodQualityRating,
+            waitTimeRating: rating.waitTimeRating,
+            review: rating.review,
+            numUsersLiked: rating.numUsersLiked,
+            numUsersDisliked: rating.numUsersDisliked,
+            comments: rating.comments, //rating.comments.map(commentId => commentId.toString()),
+            reports: rating.reports //rating.reports.map(reportId => reportId.toString())
+        }
+
+        if(rating.userName === user) formatRating.edit = true
+        else formatRating.edit = false
+        return formatRating
+    });
 
     return {
         foodStallId: id,
@@ -122,4 +128,24 @@ const getAverageFoodStallRatings = async(id) => {
         numRatings: ratings.length
     }
 }
-export default {createFoodStallRating, getFoodStallRatingById, getFoodStallRatings, getAverageFoodStallRatings}
+
+const updateRating = async (
+    id,
+    foodQualityRating,
+    waitTimeRating
+) => {
+    id = helper.checkId(id, "Rating Id")
+
+    helper.checkRating(foodQualityRating)
+    helper.checkRating(waitTimeRating)
+
+    const updatedRating = {
+        foodQualityRating: foodQualityRating,
+        waitTimeRating: waitTimeRating
+    }
+    const foodStallRatingCollections = await foodstallratings();
+    const updatedResults = await foodStallRatingCollections.findOneAndUpdate({_id: new ObjectId(id)}, {$set: updatedRating}, {returnDocument: "after"})
+    if(!updatedResults) throw "Error: Could not update rating"
+    return updatedResults
+}
+export default {createFoodStallRating, getFoodStallRatingById, getFoodStallRatings, getAverageFoodStallRatings, updateRating}

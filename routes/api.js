@@ -170,9 +170,10 @@ router.route("/addFoodStallRating").post(async (req, res) => {
     try{
         const user = await userData.getUserByUsername(req.session.user.userName)
         const {quality, waitTime} = foodStallRatingInfo
-        await foodStallRatingData.createFoodStallRating(user.userName, foodStallRatingInfo.foodStallId, quality, waitTime,"rating")
+        const rating = await foodStallRatingData.createFoodStallRating(user.userName, foodStallRatingInfo.foodStallId, quality, waitTime,"rating")
         const averages = await foodStallRatingData.getAverageFoodStallRatings(foodStallRatingInfo.foodStallId)
         return res.json({
+            _id: rating._id.toString(),
             userName: user.userName,
             foodQualityRating: quality,
             waitTimeRating: waitTime,
@@ -183,6 +184,36 @@ router.route("/addFoodStallRating").post(async (req, res) => {
         return res.json({Error: `${e}`})
     }
 })
+.patch(async (req,res) => {
+    const updateRatingInfo = req.body
+    try{
+        updateRatingInfo.ratingId = helper.checkId(updateRatingInfo.ratingId, "Rating Id")
+        helper.checkRating(updateRatingInfo.updateQuality)
+        helper.checkRating(updateRatingInfo.updateWait)
+
+        updateRatingInfo.ratingId = xss(updateRatingInfo.ratingId)
+        updateRatingInfo.updateQuality = xss(updateRatingInfo.updateQuality)
+        updateRatingInfo.updateWait = xss(updateRatingInfo.updateWait)
+    }
+    catch(e){
+        return res.json({Error: `${e}`})
+    }
+    try{
+        const {ratingId, updateQuality, updateWait} = updateRatingInfo
+        const updatedRating = await foodStallRatingData.updateRating(ratingId, updateQuality, updateWait) 
+        const averages = await foodStallRatingData.getAverageFoodStallRatings(updatedRating.foodStallId)
+        return res.json({
+            newQualityRating: updatedRating.foodQualityRating,
+            newWaitRating: updatedRating.waitTimeRating,
+            averageRatings: averages
+        })
+    }
+    catch(e){
+        console.log(e)
+        return res.json({Error: `${e}`})
+    }
+})
+
 
 router.route("/addComment").post(async (req,res) => {
     const commentInfo = req.body

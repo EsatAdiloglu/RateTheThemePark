@@ -26,14 +26,35 @@
  <div>
     <ol id="ratingsList">
         {{#each ratings}}
-        <li>
+        <li data-id="{{_id}}">
             <p>{{userName}}</p>
-            <p><strong>Food Quality Rating:</strong> {{foodQualityRating}}</p>
-            <p><strong>Wait Time Rating:</strong> {{waitTimeRating}}</p>
+            <p><strong>Food Quality Rating:</strong> <span class="foodStallQualityRating">{{foodQualityRating}}</span></p>
+            <p><strong>Wait Time Rating:</strong> <span class="foodStallWaitTimeRating">{{waitTimeRating}}</span></p>
             <p class = "fsnumlikes"><strong>Number of Likes:</strong> {{numUsersLiked}}</p>
             <p class = "fsnumdislikes"><strong>Number of Dislikes:</strong> {{numUsersDisliked}}</p>
+            {{#if edit}}
+            <button class="updateFoodStallRating">Update</button>
+            {{/if}}
             <button class = "foodstallratinglikes" data-id ={{_id}}>Like</button> 
             <button class = "foodstallratingdislikes" data-id ={{_id}}>Dislike</button> 
+            {{#if edit}}
+            <div class="updateRating" hidden>
+                <h3>Update Rating</h3>
+                <form id = "updateForm">
+                    <label for="updateQuality">Food Quality Rating</label>
+                    <input type="number" name="updateQuality" id="updateQuality">
+                    <br>
+                    <label for="updateWait">Wait Time Rating</label>
+                    <input type="number" name="updateWait" id="updateWait">
+                    <br>
+                    {{!-- <label for="food_stall_review">Enter Your Review</label>
+                    <input type="string" name="food_stall_review" id="food_stall_review">
+                    <br> --}}
+                    <button type="submit">Submit</button>
+                </form>
+                <button id="cancelUpdate">Cancel</button>
+            </div>
+            {{/if}}
         </li>
         {{/each}}
     </ol>

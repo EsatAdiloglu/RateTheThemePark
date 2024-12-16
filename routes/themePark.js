@@ -841,7 +841,7 @@ router.route('/:id/foodstalls/:foodstallid/ratings')
         const foodStall = await foodStallData.getFoodStallById(req.params.foodstallid);
         if(!themepark.foodStalls.some((f) => f === foodStall._id.toString())) throw `Error: the foodstall ${foodstall.foodStallName} doesn't exist in the themepark ${themepark.themeParkName}`
 
-        const foodStallRatings = (await foodStallRatingData.getFoodStallRatings(req.params.foodstallid)).ratings;
+        const foodStallRatings = (await foodStallRatingData.getFoodStallRatings(req.params.foodstallid, req.session.user.userName)).ratings;
         const averages = await foodStallRatingData.getAverageFoodStallRatings(req.params.foodstallid)
         
         return res.render('foodStallRatingPage',{

@@ -22,6 +22,82 @@
         if(num < 0 || num > 10) throw `Error: ${numName} isn't between 0 or 10`
 
     }
+    function bindUpdate(li) {
+        const updateButton = li.find(".updateFoodStallRating")
+        if(updateButton.length > 0){
+            let updateRating = li.find(".updateRating"),
+                updateForm = li.find("#updateForm"),
+                updateQuality = li.find("#updateQuality"),
+                updateWait = li.find("#updateWait"),
+                cancelUpdate = li.find("#cancelUpdate"),
+                currentQuality = li.find(".foodStallQualityRating"),
+                currentWait = li.find(".foodStallWaitTimeRating")
+            
+            updateButton.off("click").on("click", () => {
+                updateButton.hide();
+                updateRating.show();
+            })
+            cancelUpdate.off("click").on("click", () => {
+                updateRating.hide();
+                updateButton.show();
+                updateQuality.val("")
+                updateWait.val("")
+
+            })
+            
+            updateForm.off("submit").submit((event) => {
+                event.preventDefault()
+                error.hide();
+                error.empty();
+
+                let updateQualityRating = updateQuality.val()
+                    updateWaitRating = updateWait.val()
+
+                try{
+                    checkNumber(updateQualityRating, "Food Stall Food Quality Rating")
+                }
+                catch(e){
+                    updateQualityRating = Number(currentQuality.text())
+                }
+
+                try{
+                    checkNumber(updateWaitRating,"Food Stall Wait Time Rating")
+                }
+                catch(e){
+                    updateWaitRating = Number(currentWait.text())
+                }
+
+
+                let requestConfig = {
+                    method: "PATCH",
+                    url: "/api/addFoodStallRating",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        ratingId: li.data("id"),
+                        updateQuality: updateQualityRating,
+                        updateWait: updateWaitRating
+                    })
+                }
+                $.ajax(requestConfig).then((res) => {
+                    if(res.Error) {
+                        error.append(`<p>${res.Error}</p>`)
+                        error.show();
+                    }
+                    else{
+                        numRating.text(`${res.averageRatings.numRatings}`)
+                        avgWait.text(`${res.averageRatings.avgWaitTimeRating}`)
+                        avgFoodQuality.text(`${res.averageRatings.avgFoodQualityRating}`)
+                        currentQuality.text(`${res.newQualityRating}`)
+                        currentWait.text(`${res.newWaitRating}`)
+                    }
+                })
+                updateRating.hide();
+                updateButton.show();
+                updateQuality.val("")
+                updateWait.val("")
+            })
+        }
+    }
     addFoodStallRating.on("click", () => {
         addFoodStallRating.hide();
         rating.show();
@@ -80,20 +156,35 @@
                 }
                 else{
                     const list = $(`
-                                <li>
+                                <li data-id="${res._id}">
                                     <p>${res.userName}</p>
-                                    <p><strong>Food Quality Rating:</strong> ${res.foodQualityRating}</p>
-                                    <p><strong>Wait Time Rating:</strong> ${res.waitTimeRating}</p> 
+                                    <p><strong>Food Quality Rating:</strong> <span class="foodStallQualityRating">${res.foodQualityRating}</span></p>
+                                    <p><strong>Wait Time Rating:</strong> <span class="foodStallWaitTimeRating">${res.waitTimeRating}</span></p> 
                                     <p class = "fsnumlikes"><strong>Number of Likes:</strong> 0 </p>
                                     <p class = "fsnumdislikes"><strong>Number of Dislikes:</strong> 0 </p>
+                                    <button class="updateFoodStallRating">Update</button>
                                     <button class = "foodstallratinglikes" data-id =${res._id}>Like</button> 
-                                    <button class = "foodstallratingdislikes" data-id =${res._id}>Dislike</button> 
+                                    <button class = "foodstallratingdislikes" data-id =${res._id}>Dislike</button>
+                                    <div class="updateRating" hidden>
+                                        <h3>Update Rating</h3>
+                                        <form id = "updateForm">
+                                            <label for="updateQuality">Food Quality Rating</label>
+                                            <input type="number" name="updateQuality" id="updateQuality">
+                                            <br>
+                                            <label for="updateWait">Wait Time Rating</label>
+                                            <input type="number" name="updateWait" id="updateWait">
+                                            <br>
+                                            <button type="submit">Submit</button>
+                                        </form>
+                                        <button id="cancelUpdate">Cancel</button>
+                                    </div> 
                                 </li>
                         `)
                     ratingsList.append(list)
                     numRating.text(`${res.averageRatings.numRatings}`)
                     avgFoodQuality.text(`${res.averageRatings.avgFoodQualityRating}`)
                     avgWait.text(`${res.averageRatings.avgWaitTimeRating}`)
+                    bindUpdate(list)
                 }
             })
 
@@ -102,5 +193,8 @@
         quality.val("");
         waitTime.val("");
         addFoodStallRating.show();
+    })
+    $("#ratingsList li").each((idx, li) => {
+        bindUpdate($(li))
     })
 })(window.jQuery)

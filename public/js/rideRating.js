@@ -33,9 +33,9 @@
                 updateComfort = li.find("#updateComfort"),
                 updateEnjoyment = li.find("#updateEnjoyment"),
                 cancelUpdate = li.find("#cancelUpdate"),
-                currentWait = li.find("#rideWaitTimeRating"),
-                currentComfort = li.find("#rideComfortabilityRating"),
-                currentEnjoyment = li.find("#rideEnjoymentRating")
+                currentWait = li.find(".rideWaitTimeRating"),
+                currentComfort = li.find(".rideComfortabilityRating"),
+                currentEnjoyment = li.find(".rideEnjoymentRating")
             
             updateButton.off("click").on("click", () => {
                 updateButton.hide();
@@ -59,19 +59,19 @@
                     updateEnjoymentRating = updateEnjoyment.val()
 
                 try{
-                    checkNumber(updateWaitRating,"Theme Park Staff Rating")
+                    checkNumber(updateWaitRating,"Ride Wait Time Rating")
                 }
                 catch(e){
                     updateWaitRating = Number(currentWait.text())
                 }
                 try{
-                    checkNumber(updateComfortRating, "Theme Park Stuff Cleanliness")
+                    checkNumber(updateComfortRating, "Ride Cleanliness Rating")
                 }
                 catch(e){
                     updateComfortRating = Number(currentComfort.text())
                 }
                 try{
-                    checkNumber(updateEnjoymentRating,"Theme Park Crowds Rating")
+                    checkNumber(updateEnjoymentRating,"Ride Enjoyment Rating")
                 }
                 catch(e){
                     updateEnjoymentRating = Number(currentEnjoyment.text())

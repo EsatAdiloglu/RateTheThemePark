@@ -38,10 +38,10 @@
                 updateCrowd = li.find("#updateCrowd"),
                 updateDiversity = li.find("#updateDiversity"),
                 cancelUpdate = li.find("#cancelUpdate"),
-                currentStaff = li.find("#themeParkStaffRating"),
-                currentCleanliness = li.find("#themeParkCleanlinessRating"),
-                currentCrowd = li.find("#themeParkCrowdsRating"),
-                currentDiversity = li.find("#themeParkDiversityRating")
+                currentStaff = li.find(".themeParkStaffRating"),
+                currentCleanliness = li.find(".themeParkCleanlinessRating"),
+                currentCrowd = li.find(".themeParkCrowdsRating"),
+                currentDiversity = li.find(".themeParkDiversityRating")
             
             updateButton.off("click").on("click", () => {
                 updateButton.hide();
