@@ -53,7 +53,7 @@ const getFoodStallsByThemePark = async (id) => {
     if (!ObjectId.isValid(id)) throw "Invalid Theme Park ID";
 
     const foodStallsCollection = await foodstalls();
-    const foodstallarray = await foodStallsCollection.find({parkFoodStallIsLocatedIn: new ObjectId(id)}).toArray();
+    const foodstallarray = await foodStallsCollection.find({parkFoodStallIsLocatedIn: id}).toArray();
 
     if (foodstallarray.length === 0) {
         return {
