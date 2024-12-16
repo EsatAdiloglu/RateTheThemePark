@@ -1,14 +1,9 @@
- {{!--
-   /homepage/{idOfThemePark}/rides/addRide
-    Add a ride -> comes from add button in ridePage
-  --}}
- 
-
-    <a href = "/themepark/{{_id}}/rides">Go back</a>
+ <h1> Add A Report </h1>
+ <main>
     <p>Please enter the following information to add a ride</p>
-    <form id = "addride" method = 'POST' action = '/themepark/{{_id}}/rides/addRide'>
+    <form id = "ride_name">
         <label for="ride_name">Ride Name</label>
         <input type="string" name="ride_name" id="ride_name">
-        <br>
-        <button>Submit</button>
     </form>
+    <button>Submit</button>
+ </main>
