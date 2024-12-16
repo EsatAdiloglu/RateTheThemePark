@@ -120,30 +120,48 @@ const getThemeParkRatings = async (id, user) => {
 }
 
 const getAverageThemeParkRatings = async(id) => {
-    const ratings = (await getThemeParkRatings(id, "average rating")).ratings
+    const themeParkRatings = await getThemeParkRatings(id, "average rating")
     let avgStaff = 0
     let avgCleanliness = 0
     let avgCrowds = 0
     let avgDiversity = 0
     
-    ratings.forEach((rating) => {
+    themeParkRatings.ratings.forEach((rating) => {
         avgStaff += parseInt(rating.staffRating)
         avgCleanliness += parseInt(rating.cleanlinessRating)
         avgCrowds += parseInt(rating.crowdsRating)
         avgDiversity += parseInt(rating.diversityRating)
     })
-    const ratingLength = ratings.length > 0 ? ratings.length : 1
+    const ratingLength = themeParkRatings.ratings.length > 0 ? themeParkRatings.ratings.length : 1
 
     avgStaff /= ratingLength
     avgCleanliness /= ratingLength
     avgCrowds /= ratingLength
     avgDiversity /= ratingLength
+
+    avgStaff = avgStaff.toFixed(2)
+    avgCleanliness = avgCleanliness.toFixed(2)
+    avgCrowds = avgCrowds.toFixed(2)
+    avgDiversity = avgDiversity.toFixed(2)
+
+    const themeParkCollections = await themeparks();
+
+    const updatedRatings = {
+        staffRating: avgStaff,
+        cleanlinessRating: avgCleanliness,
+        crowdsRating: avgCrowds,
+        diversityRating: avgDiversity
+    }
+
+    const results = await themeParkCollections.findOneAndUpdate({_id: new ObjectId(themeParkRatings.themeParkID)}, {$set: updatedRatings})
+    if(!results) throw "Error: could not update theme park ratings"
+
     return {
-        avgStaffRating: avgStaff.toFixed(2),
-        avgCleanlinessRating: avgCleanliness.toFixed(2),
-        avgCrowdRating: avgCrowds.toFixed(2),
-        avgDiversityRating: avgDiversity.toFixed(2),
-        numRatings: ratings.length
+        avgStaffRating: avgStaff,
+        avgCleanlinessRating: avgCleanliness,
+        avgCrowdRating: avgCrowds,
+        avgDiversityRating: avgDiversity,
+        numRatings: themeParkRatings.ratings.length
     }
 
 

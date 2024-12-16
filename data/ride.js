@@ -9,9 +9,8 @@ const createRide = async (
     rideName = helper.checkString(rideName)
     themeParkId = helper.checkString(themeParkId)
     if(!ObjectId.isValid(themeParkId)) throw "Error: id isn't an object id"
-    themeParkId = new ObjectId(themeParkId)
     const themeParkCollections = await themeparks();
-    const themePark = await themeParkCollections.findOne({_id: themeParkId})
+    const themePark = await themeParkCollections.findOne({_id: new ObjectId(themeParkId)})
     if (themePark === null) throw `Error: there is no theme park with id ${id}`
 
     const rideCollections = await rides();
@@ -32,7 +31,7 @@ const createRide = async (
     if(!rideInfo.acknowledged || !rideInfo.insertedId) throw "Error: could not add a new ride"
     const rideId = rideInfo.insertedId.toString()
     const updateRides = {rides: [...themePark.rides, rideId]}
-    const updateResult = await themeParkCollections.findOneAndUpdate({_id: themeParkId},{$set: updateRides})
+    const updateResult = await themeParkCollections.findOneAndUpdate({_id: new ObjectId(themeParkId)},{$set: updateRides})
     if(!updateResult) throw "Error: could not add ride to themepark"
     return await getRideById(rideId);
 }

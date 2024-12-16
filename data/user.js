@@ -141,4 +141,4 @@ const getUserByUsername = async (userName) => {
     return user;
 };
 
-export default {getUserByUsername, createUser};
+export default {getUserByUsername, createUser, signUpUser};

@@ -10,9 +10,8 @@ const createFoodStall = async (
     foodStallName = helper.checkString(foodStallName);
     themeParkId = helper.checkString(themeParkId);
      if(!ObjectId.isValid(themeParkId)) throw "Error: id isn't an object id"
-    themeParkId = new ObjectId(themeParkId);
     const themeParkCollections = await themeparks();
-    const themePark = await themeParkCollections.findOne({_id: themeParkId});
+    const themePark = await themeParkCollections.findOne({_id: new ObjectId(themeParkId)});
     if (themePark === null) throw `Error: there is no theme park with id ${id}`
     
     const newFoodStall = {
@@ -31,7 +30,7 @@ const createFoodStall = async (
     if(!foodStallInfo.acknowledged || !foodStallInfo.insertedId) throw "Error: could not add a new food stall park"
     const foodStallId = foodStallInfo.insertedId.toString();
     const updateFoodStalls = {foodStalls: [...themePark.foodStalls, foodStallId]};
-    const updateResult = await themeParkCollections.findOneAndUpdate({_id: themeParkId},{$set: updateFoodStalls})
+    const updateResult = await themeParkCollections.findOneAndUpdate({_id: new ObjectId(themeParkId)},{$set: updateFoodStalls})
     if(!updateResult) throw "Error: could not add foodstall to themepark"
     return await getFoodStallById(foodStallId);
 }

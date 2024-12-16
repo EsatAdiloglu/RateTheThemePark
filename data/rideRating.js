@@ -118,27 +118,42 @@ const getRideRatingsByRide = async (id, user) => {
 }
 
 const getAverageRideRatings = async(id) => {
-    const ratings = (await getRideRatingsByRide(id, "average ratings")).ratings
+    const rideRatings = await getRideRatingsByRide(id, "average ratings")
     let avgWait = 0
     let avgComfort = 0
     let avgEnjoyment = 0
     
-    ratings.forEach((rating) => {
+    rideRatings.ratings.forEach((rating) => {
         avgWait += parseInt(rating.waitTimeRating)
         avgComfort += parseInt(rating.comfortabilityRating)
         avgEnjoyment += parseInt(rating.enjoymentRating)
     })
-    const ratingLength = ratings.length > 0 ? ratings.length : 1
+    const ratingLength = rideRatings.ratings.length > 0 ? rideRatings.ratings.length : 1
 
     avgWait /= ratingLength
     avgComfort /= ratingLength
     avgEnjoyment /= ratingLength
 
+    avgWait = avgWait.toFixed(2)
+    avgComfort = avgComfort.toFixed(2)
+    avgEnjoyment = avgEnjoyment.toFixed(2)
+
+    const rideCollections = await rides();
+
+    const updatedRatings = {
+        waitTimeRating: avgWait,
+        comfortabilityRating: avgComfort,
+        enjoymentAndExperienceRating: avgEnjoyment
+    }
+
+    const results = await rideCollections.findOneAndUpdate({_id: new ObjectId(rideRatings.rideId)}, {$set: updatedRatings})
+    if(!results) throw "Error: could not update theme park ratings"
+
     return {
-        avgWaitTimeRating: avgWait.toFixed(2),
-        avgComfortRating: avgComfort.toFixed(2),
-        avgEnjoymentRating: avgEnjoyment.toFixed(2),
-        numRatings: ratings.length
+        avgWaitTimeRating: avgWait,
+        avgComfortRating: avgComfort,
+        avgEnjoymentRating: avgEnjoyment,
+        numRatings: rideRatings.ratings.length
     }
 }
 
