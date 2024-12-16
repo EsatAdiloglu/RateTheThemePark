@@ -72,6 +72,21 @@ app.use('/signupuser', (req, res, next) => {
   next();
 });
 
+app.use('/themepark', (req, res, next) => {
+  if (!req.session.user) {
+    return res.redirect('/signinuser');
+  }
+  next();
+});
+
+// app.use((req, res, next) => {
+//   if (!req.session.user){
+//     return res.redirect('/signinuser')
+//   }
+//   next();
+// })
+
+
 configRoutes(app);
 
 app.listen(3000, () => {
