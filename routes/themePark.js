@@ -516,9 +516,8 @@ router.route('/:id/ratings')
         // Fetch theme park and render ratings page
         try {
             const themePark = await themeParkData.getThemeParkById(req.params.id);
-            const ratingsData = await themeParkRatingData.getThemeParkRatings(req.params.id);
+            const ratingsData = await themeParkRatingData.getThemeParkRatings(req.params.id, req.session.user.userName);
             const averages = await themeParkRatingData.getAverageThemeParkRatings(req.params.id);
-
             return res.status(200).render('themeParkRatingPage', {
                 tpid: req.params.id,
                 title: `Ratings for ${themePark.themeParkName}`,

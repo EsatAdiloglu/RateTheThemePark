@@ -9,6 +9,7 @@ const checkString = (str) => {
 }
 const checkRating = (num) => {
     if (isNaN(num)) throw "Error: num is NaN"
+    if(typeof num === "string" && num.includes("e")) throw "Error: num contains an exponent"
     num = Number(num)
     if (isNaN(num)) throw "Error: num is not a number"
     if (num < 0 || num > 10) throw "Error: num is out of bounds"
