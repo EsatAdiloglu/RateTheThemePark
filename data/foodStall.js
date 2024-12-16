@@ -13,7 +13,10 @@ const createFoodStall = async (
     const themeParkCollections = await themeparks();
     const themePark = await themeParkCollections.findOne({_id: new ObjectId(themeParkId)});
     if (themePark === null) throw `Error: there is no theme park with id ${id}`
-    
+
+    const foodStallCollections = await foodstalls();
+    const exist = await foodStallCollections.find({parkRideIsLocatedIn: themeParkId}).toArray()
+    if(exist.some((foodstall) => foodstall.foodStallName.toLowerCase() === foodstall.foodStallName.toLowerCase())) throw "Error: a food stall with that name already exists"
     const newFoodStall = {
         _id: new ObjectId(),
         foodStallName: foodStallName,
@@ -25,7 +28,6 @@ const createFoodStall = async (
         comments: [],
         reports: []
     }
-    const foodStallCollections = await foodstalls();
     const foodStallInfo = await foodStallCollections.insertOne(newFoodStall);
     if(!foodStallInfo.acknowledged || !foodStallInfo.insertedId) throw "Error: could not add a new food stall park"
     const foodStallId = foodStallInfo.insertedId.toString();

@@ -17,7 +17,7 @@ const createThemePark = async (
 
     const themeParkCollections = await themeparks();
     const exist = await themeParkCollections.find().toArray()
-    if(exist.some((themePark) => themePark.themeParkName.toLowerCase() === name.toLowerCase())) throw "Error: a theme park already exists with that name"
+    if(exist.some((themepark) => themepark.streetAddress.toLowerCase() === streetaddress.toLowerCase())) throw `Error: a theme park already has the same street address`
     const newThemePark = {
         themeParkName: name,
         streetAddress: streetaddress,
