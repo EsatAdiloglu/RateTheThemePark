@@ -78,7 +78,7 @@ const getThemeParkRatingById = async (id) => {
     return themeParkRating
 }
 
-const getThemeParkRatings = async (id) => {
+const getThemeParkRatings = async (id, user) => {
     if (!ObjectId.isValid(id)) throw "Invalid Theme Park ID";
 
     const themeParkRatingCollection = await themeparkratings();
@@ -90,19 +90,23 @@ const getThemeParkRatings = async (id) => {
             ratings: []
         };
     }
-
-    const formattedThemeRatings = ratings.map(rating => ({
-        _id: rating._id.toString(),
-        userName: rating.userName,
-        staffRating: rating.staffRating,
-        cleanlinessRating: rating.cleanlinessRating,
-        crowdsRating: rating.crowdsRating,
-        diversityRating: rating.diversityRating,
-        numUsersLiked: rating.numUsersLiked,
-        numUsersDisliked: rating.numUsersDisliked,
-        comments: rating.comments, //rating.comments.map(commentId => commentId.toString()),
-        reports: rating.reports //rating.reports.map(reportId => reportId.toString())
-    }));
+    const formattedThemeRatings = ratings.map(rating => {
+        const formatRating = {
+            _id: rating._id.toString(),
+            userName: rating.userName,
+            staffRating: rating.staffRating,
+            cleanlinessRating: rating.cleanlinessRating,
+            crowdsRating: rating.crowdsRating,
+            diversityRating: rating.diversityRating,
+            numUsersLiked: rating.numUsersLiked,
+            numUsersDisliked: rating.numUsersDisliked,
+            comments: rating.comments, //rating.comments.map(commentId => commentId.toString()),
+            reports: rating.reports //rating.reports.map(reportId => reportId.toString())
+        }
+        if(rating.userName === user) formatRating.edit = true
+        else formatRating.edit = false
+        return formatRating
+    });
 
     return {
         themeParkID: id,
@@ -139,4 +143,32 @@ const getAverageThemeParkRatings = async(id) => {
 
 
 }
-export default {createThemeParkRating, getThemeParkRatingById, getThemeParkRatings, getAverageThemeParkRatings}
+
+const updateRating = async (
+    id,
+    staffRating,
+    cleanlinessRating,
+    crowdsRating,
+    diversityRating
+) => {
+    id = helper.checkId(id)
+
+    helper.checkRating(staffRating)
+    helper.checkRating(cleanlinessRating)
+    helper.checkRating(crowdsRating)
+    helper.checkRating(diversityRating)
+
+    const updatedRating = {
+        staffRating: staffRating,
+        cleanlinessRating: cleanlinessRating,
+        crowdsRating: crowdsRating,
+        diversityRating: diversityRating
+    }
+
+    const themeParkRatingCollections = await themeparkratings();
+    const updatedResults = await themeParkRatingCollections.findOneAndUpdate({_id: new ObjectId(id)}, {$set: updatedRating}, {returnDocument: "after"})
+    if(!updatedResults) throw "Error: Could not update rating"
+    return updatedResults
+
+}
+export default {createThemeParkRating, getThemeParkRatingById, getThemeParkRatings, getAverageThemeParkRatings, updateRating}

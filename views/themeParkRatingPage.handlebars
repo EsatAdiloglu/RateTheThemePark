@@ -48,18 +48,45 @@ Theme Park Rating Page (INDIVIDUAL THEME PARK)
 
 <ul id="ratingsList">
   {{#each ratings}}
-    <li>
+    <li data-id="{{_id}}">
       <p>{{userName}}</p>
       {{!-- <p id="tpitem" data-id="{{_id}}" hidden></p> --}}
-      <p><strong>Staff Rating:</strong> {{staffRating}}</p>
-      <p><strong>Cleanliness Rating:</strong> {{cleanlinessRating}}</p>
-      <p><strong>Crowds Rating:</strong> {{crowdsRating}}</p>
-      <p><strong>Diversity Rating:</strong> {{diversityRating}}</p>
+      <p><strong>Staff Rating:</strong> <span id="themeParkStaffRating">{{staffRating}}</span></p>
+      <p><strong>Cleanliness Rating:</strong> <span id="themeParkCleanlinessRating">{{cleanlinessRating}}</span></p>
+      <p><strong>Crowds Rating:</strong> <span id="themeParkCrowdsRating">{{crowdsRating}}</span></p>
+      <p><strong>Diversity Rating:</strong> <span id="themeParkDiversityRating">{{diversityRating}}</span></p>
       <p class="numtplikes"><strong>Number of Likes:</strong> {{numUsersLiked}}</p>
       <p class="numtpdislikes"><strong>Number of Dislikes:</strong> {{numUsersDisliked}}</p>
+      {{#if edit}}
+      <button class="updateThemeParkRating">Update</button>
+      {{/if}}
       <button class="themeparkratinglikes" data-id="{{_id}}">Like</button> 
       <button class="themeparkratingdislikes" data-id="{{_id}}">Dislike</button> 
+      {{#if edit}}
+      <div class="updateRating" hidden>
+        <h3>Update Rating</h3>
+        <form id = "updateForm">
+          <label for="updateStaff">Staff Rating</label>
+          <input type="number" name="updateStaff" id="updateStaff">
+          <br>
+          <label for="updateCleanliness">Cleanliness Rating</label>
+          <input type="number" name="updateCleanliness" id="updateCleanliness">
+          <br>
+          <label for="updateCrowd">Crowds Rating</label>
+          <input type="number" name="updateCrowd" id="updateCrowd">
+          <br>
+          <label for="updateDiversity">Diversity Rating</label>
+          <input type="number" name="updateDiversity" id="updateDiversity">
+          <br>
+          {{!-- <label for="theme_park_review">Enter Your Review</label>
+          <input type="string" name="theme_park_review" id="theme_park_review"> --}}
+          <button type="submit">Submit</button>
+        </form>
+        <button id="cancelUpdate">Cancel</button>
+      </div>
+      {{/if}}
     </li>
+
   {{/each}}
 </ul>
 
