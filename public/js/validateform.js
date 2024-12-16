@@ -511,20 +511,20 @@ if (compareForm) {
 // let tplbutton = document.getElementById("themeparkratinglikes")
 // let tpdbutton = document.getElementById("themeparkratingdislikes")
 
-let rlbutton = document.getElementById("rideratinglikes")
-let rdbutton = document.getElementById("rideratingdislikes")
+// let rlbutton = document.getElementById("rideratinglikes")
+// let rdbutton = document.getElementById("rideratingdislikes")
 
-let fslbutton = document.getElementById("foodstallratinglikes")
-let fsdbutton = document.getElementById("foodstallratingdislikes")
+// let fslbutton = document.getElementById("foodstallratinglikes")
+// let fsdbutton = document.getElementById("foodstallratingdislikes")
 
 // let numtplikes = document.getElementById('numtplikes')
 // let numtpdislikes = document.getElementById('numtpdislikes')
 
-let ridenumlikes = document.getElementById('ridenumlikes')
-let ridenumdislikes = document.getElementById('ridenumdislikes')
+// let ridenumlikes = document.getElementById('ridenumlikes')
+// let ridenumdislikes = document.getElementById('ridenumdislikes')
 
-let fsnumlikes = document.getElementById('fsnumlikes')
-let fsnumdislikes = document.getElementById('fsnumdislikes')
+// let fsnumlikes = document.getElementById('fsnumlikes')
+// let fsnumdislikes = document.getElementById('fsnumdislikes')
 
 // if (tplbutton) {
 //     tplbutton.addEventListener('click', async () => {
@@ -750,41 +750,41 @@ if (foodstallratingdislikesbuttons){
 }
 
 
-if (fslbutton){
-    fslbutton.addEventListener('click', async() => {
-        const fsid = window.location.href.split('/')[6]
-        const res = await fetch("/themepark/addfslike", 
-            {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ fsid: fsid })
-        });
+// if (fslbutton){
+//     fslbutton.addEventListener('click', async() => {
+//         const fsid = window.location.href.split('/')[6]
+//         const res = await fetch("/themepark/addfslike", 
+//             {
+//             method: "POST",
+//             headers: {
+//                 "Content-Type": "application/json",
+//             },
+//             body: JSON.stringify({ fsid: fsid })
+//         });
         
-        const result = await res.json();
+//         const result = await res.json();
 
-        fsnumlikes.innerHTML = `<strong>Number of Likes:</strong> ${result.likes}`;
-        fsnumdislikes.innerHTML = `<strong>Number of Dislikes:</strong> ${result.dislikes}`;
-    })
-}
-if (fsdbutton){
-    fsdbutton.addEventListener('click', async() => {
-        const fsid = window.location.href.split('/')[6]
-        const res = await fetch("/themepark/addfsdislike", 
-            {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ fsid: fsid })
-        });
+//         fsnumlikes.innerHTML = `<strong>Number of Likes:</strong> ${result.likes}`;
+//         fsnumdislikes.innerHTML = `<strong>Number of Dislikes:</strong> ${result.dislikes}`;
+//     })
+// }
+// if (fsdbutton){
+//     fsdbutton.addEventListener('click', async() => {
+//         const fsid = window.location.href.split('/')[6]
+//         const res = await fetch("/themepark/addfsdislike", 
+//             {
+//             method: "POST",
+//             headers: {
+//                 "Content-Type": "application/json",
+//             },
+//             body: JSON.stringify({ fsid: fsid })
+//         });
         
-        const result = await res.json();
-        fsnumlikes.innerHTML = `<strong>Number of Likes:</strong> ${result.likes}`;
-        fsnumdislikes.innerHTML = `<strong>Number of Dislikes:</strong> ${result.dislikes}`;
-    })
-}
+//         const result = await res.json();
+//         fsnumlikes.innerHTML = `<strong>Number of Likes:</strong> ${result.likes}`;
+//         fsnumdislikes.innerHTML = `<strong>Number of Dislikes:</strong> ${result.dislikes}`;
+//     })
+// }
 // ---------------------------------- SIGNUP ----------------------------------------------------------
 let signupform = document.getElementById('signup-form')
 let signupname = document.getElementById('name');
