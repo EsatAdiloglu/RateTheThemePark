@@ -84,10 +84,10 @@
                                     <p>${res.userName}</p>
                                     <p><strong>Food Quality Rating:</strong> ${res.foodQualityRating}</p>
                                     <p><strong>Wait Time Rating:</strong> ${res.waitTimeRating}</p> 
-                                    <p><strong>Number of Likes:</strong> 0</p>
-                                    <p><strong>Number of Dislikes:</strong> 0</p>
-                                    <button id = 'foodstallratinglikes'>Like</button> 
-                                    <button id = 'foodstallratingdislikes'>Dislike</button> 
+                                    <p class = "fsnumlikes"><strong>Number of Likes:</strong> 0 </p>
+                                    <p class = "fsnumdislikes"><strong>Number of Dislikes:</strong> 0 </p>
+                                    <button class = "foodstallratinglikes" data-id =${res._id}>Like</button> 
+                                    <button class = "foodstallratingdislikes" data-id =${res._id}>Dislike</button> 
                                 </li>
                         `)
                     ratingsList.append(list)

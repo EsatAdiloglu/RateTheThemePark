@@ -180,14 +180,15 @@
                     const list = $(`
                                 <li data-id="${res._id}">
                                     <p>${res.userName}</p>
+                                    <p id="tpitem" data-id="${res._id}" hidden></p>
                                     <p><strong>Wait Time Rating:</strong> <span id="rideWaitTimeRating">{${res.waitTimeRating}</span></p> 
                                     <p><strong>Comfortability Rating:</strong> <span id="rideWaitTimeRating">{${res.comfortabilityRating}</span></p>
                                     <p><strong>Enjoyment and Experience Rating:</strong> <span id="rideWaitTimeRating">{${res.enjoymentRating}</span></p>
-                                    <p><strong>Number of Likes:</strong> 0 </p>
-                                    <p><strong>Number of Disikes:</strong> 0 </p>
+                                    <p class = "ridenumlikes"><strong>Number of Likes:</strong> 0</p>
+                                    <p class = "ridenumdislikes"><strong>Number of Dislikes:</strong> 0</p>
                                     <button class="updateRideRating">Update</button>
-                                    <button id = 'rideratinglikes'>Like</button> 
-                                    <button id = 'rideratingdislikes'>Dislike</button> 
+                                    <button class = "rideratinglikes" data-id =${res._id}>Like</button> 
+                                    <button class = "rideratingdislikes" data-id =${res._id}>Dislike</button> 
                                     <div class="updateRating" hidden>
                                         <h3>Update Rating</h3>
                                         <form id = "updateForm">
@@ -204,6 +205,7 @@
                                         </form>
                                         <button id="cancelUpdate">Cancel</button>
                                     </div>
+
                                 </li>
                         `)
                     ratingsList.append(list)

@@ -33,13 +33,13 @@
             <p><strong>Wait Time Rating:</strong> <span id="rideWaitTimeRating">{{waitTimeRating}}</span></p>
             <p><strong>Comfortability Rating:</strong> <span id="rideComfortabilityRating">{{comfortabilityRating}}</span></p>
             <p><strong>Enjoyment and Experience Rating:</strong> <span id="rideEnjoymentRating">{{ enjoymentRating}}</span></p>
-            <p id = 'ridenumlikes'><strong>Number of Likes:</strong> {{numUsersLiked}}</p>
-            <p id = 'ridenumdislikes'><strong>Number of Dislikes:</strong> {{numUsersDisliked}}</p>
+            <p class = "ridenumlikes"><strong>Number of Likes:</strong> {{numUsersLiked}}</p>
+            <p class = "ridenumdislikes"><strong>Number of Dislikes:</strong> {{numUsersDisliked}}</p>
             {{#if edit}}
             <button class="updateRideRating">Update</button>
             {{/if}}
-            <button id = 'rideratinglikes'>Like</button> 
-            <button id = 'rideratingdislikes'>Dislike</button> 
+            <button class = "rideratinglikes" data-id ={{_id}}>Like</button> 
+            <button class = "rideratingdislikes" data-id ={{_id}}>Dislike</button> 
             {{#if edit}}
             <div class="updateRating" hidden>
                 <h3>Update Rating</h3>
@@ -64,3 +64,4 @@
         </li>
         {{/each}}
     </ol>
+ 

@@ -52,9 +52,13 @@ router.route('/addlike')
     const tpratingcollections = await themeparkratings();
     const tpid = req.body.themeparkid;
     const tpratingid = req.body.tpratingid
+    let validTpId = helper.checkId(tpid, 'theme park id');
+    validTpId = xss(validTpId)
+    let validTpRatingId = helper.checkId(tpratingid, 'theme park rating id');
+    validTpRatingId = xss(validTpRatingId)
     
     //const themepark = await themeParkData.getThemeParkById(tpid);
-    const tprating = await themeParkRatingData.getThemeParkRatingById(tpratingid)
+    const tprating = await themeParkRatingData.getThemeParkRatingById(validTpRatingId)
     const uname = req.session.user.userName;
     // let tprating;
     // let tpratingid;
@@ -111,7 +115,7 @@ router.route('/addlike')
         res.status(404).json({error: error})
     }
 
-    const updated = await themeParkRatingData.getThemeParkRatingById(tpratingid);
+    const updated = await themeParkRatingData.getThemeParkRatingById(validTpRatingId);
     return res.json({likes: updated.numUsersLiked, dislikes: updated.numUsersDisliked})
     //return res.redirect(`/themepark/${tpid}/ratings`);
     //console.log('I am here')
@@ -123,9 +127,13 @@ router.route('/adddislike')
     const tpratingcollections = await themeparkratings();
     const tpid = req.body.themeparkid;
     const tpratingid = req.body.tpratingid
+    let validTpId = helper.checkId(tpid, 'theme park id');
+    validTpId = xss(validTpId)
+    let validTpRatingId = helper.checkId(tpratingid, 'theme park rating id');
+    validTpRatingId = xss(validTpRatingId)
     
     //const themepark = await themeParkData.getThemeParkById(tpid);
-    const tprating = await themeParkRatingData.getThemeParkRatingById(tpratingid)
+    const tprating = await themeParkRatingData.getThemeParkRatingById(validTpRatingId)
     const uname = req.session.user.userName;
 
     // for (let i = 0; i < themepark.ratings.length; i++){
@@ -135,94 +143,97 @@ router.route('/adddislike')
     //         break
     //     }
     // }
-    if (!tprating.usersDisliked.includes(uname)){
-        await tpratingcollections.updateOne(
-            { _id: new ObjectId(tprating._id) },  
-            { $inc: { numUsersDisliked: 1 },$push: { usersDisliked: uname } } 
-        )
-        // await tpratingcollections.updateOne(
-        //     { _id: new ObjectId(tprating._id) },     
-        //     { $push: { usersDisliked: uname } } 
-        //   );
-    }
-    else{
-        await tpratingcollections.updateOne(
-            { _id: new ObjectId(tprating._id) },  
-            { $inc: { numUsersDisliked: -1 }, $pull: { usersDisliked: uname } } 
-        )
-        // await tpratingcollections.updateOne(
-        //     { _id: new ObjectId(tprating._id) },     
-        //     { $pull: { usersDisliked: uname } } 
-        //   );
+    try {
+        if (!tprating.usersDisliked.includes(uname)){
+            await tpratingcollections.updateOne(
+                { _id: new ObjectId(tprating._id) },  
+                { $inc: { numUsersDisliked: 1 },$push: { usersDisliked: uname } } 
+            )
+            // await tpratingcollections.updateOne(
+            //     { _id: new ObjectId(tprating._id) },     
+            //     { $push: { usersDisliked: uname } } 
+            //   );
+        }
+        else{
+            await tpratingcollections.updateOne(
+                { _id: new ObjectId(tprating._id) },  
+                { $inc: { numUsersDisliked: -1 }, $pull: { usersDisliked: uname } } 
+            )
+            // await tpratingcollections.updateOne(
+            //     { _id: new ObjectId(tprating._id) },     
+            //     { $pull: { usersDisliked: uname } } 
+            //   );
+        }
+    
+        if (tprating.usersLiked.includes(uname)){
+            await tpratingcollections.updateOne(
+                { _id: new ObjectId(tprating._id) },  
+                { $inc: { numUsersLiked: -1 }, $pull: { usersLiked: uname }  } 
+            )
+            // await tpratingcollections.updateOne(
+            //     { _id: new ObjectId(tprating._id) },     
+            //     { $pull: { usersLiked: uname } } 
+            //   );
+        }
+    } catch (e) {
+        res.status(404).json({error: e})
     }
 
-    if (tprating.usersLiked.includes(uname)){
-        await tpratingcollections.updateOne(
-            { _id: new ObjectId(tprating._id) },  
-            { $inc: { numUsersLiked: -1 }, $pull: { usersLiked: uname }  } 
-        )
-        // await tpratingcollections.updateOne(
-        //     { _id: new ObjectId(tprating._id) },     
-        //     { $pull: { usersLiked: uname } } 
-        //   );
-    }
-
-    const updated = await themeParkRatingData.getThemeParkRatingById(tpratingid);
+    const updated = await themeParkRatingData.getThemeParkRatingById(validTpRatingId);
     return res.json({likes: updated.numUsersLiked, dislikes: updated.numUsersDisliked})
 })
 
 router.route('/addridelike')
 .post(async(req, res) => {
     const rideid = req.body.rideid;
-    
-
     const rideratingcollections = await rideratings();
-
-    const ride = await rideData.getRideById(rideid)
+    const rideratingid = req.body.rideratingid;
+    let validRId = helper.checkId(rideid, 'ride id');
+    validRId = xss(validRId)
+    let validRRatingId = helper.checkId(rideratingid, 'ride rating id');
+    validRRatingId = xss(validRRatingId)
+    const riderating = await rideRatingData.getRideRatingById(validRRatingId)
     const uname = req.session.user.userName;
-    
-    let riderating;
-    let rideratingid;
 
-    for (let i = 0; i < ride.ratings.length; i++){
-        riderating = await rideRatingData.getRideRatingById(ride.ratings[i])
-        if (riderating.userName === uname){
-            rideratingid = riderating._id;
+    try {
+        if (!riderating.usersLiked.includes(uname)){
+            console.log("hi 1")
+            await rideratingcollections.updateOne(
+                { _id: new ObjectId(riderating._id) },  
+                { $inc: { numUsersLiked: 1 }, $push: { usersLiked: uname } } 
+            )
+            // await rideratingcollections.updateOne(
+            //     { _id: new ObjectId(riderating._id) },     
+            //     { $push: { usersLiked: uname } } 
+            //   );
         }
-    }
-    
-    if (!riderating.usersLiked.includes(uname)){
-        await rideratingcollections.updateOne(
-            { _id: new ObjectId(riderating._id) },  
-            { $inc: { numUsersLiked: 1 }, $push: { usersLiked: uname } } 
-        )
-        // await rideratingcollections.updateOne(
-        //     { _id: new ObjectId(riderating._id) },     
-        //     { $push: { usersLiked: uname } } 
-        //   );
-    }
-    else{
-        await rideratingcollections.updateOne(
-            { _id: new ObjectId(riderating._id) },  
-            { $inc: { numUsersLiked: -1 }, $pull: { usersLiked: uname }  } 
-        )
-        // await rideratingcollections.updateOne(
-        //     { _id: new ObjectId(riderating._id) },     
-        //     { $pull: { usersLiked: uname } } 
-        //   );
-    }
-    if (riderating.usersDisliked.includes(uname)){
-        await rideratingcollections.updateOne(
-            { _id: new ObjectId(riderating._id) },  
-            { $inc: { numUsersDisliked: -1 }, $pull: { usersDisliked: uname }  } 
-        )
-        // await rideratingcollections.updateOne(
-        //     { _id: new ObjectId(riderating._id) },     
-        //     { $pull: { usersDisliked: uname } } 
-        //   );
+        else{
+            console.log("hi 2")
+            await rideratingcollections.updateOne(
+                { _id: new ObjectId(riderating._id) },  
+                { $inc: { numUsersLiked: -1 }, $pull: { usersLiked: uname }  } 
+            )
+            // await rideratingcollections.updateOne(
+            //     { _id: new ObjectId(riderating._id) },     
+            //     { $pull: { usersLiked: uname } } 
+            //   );
+        }
+        if (riderating.usersDisliked.includes(uname)){
+            console.log("hi 3")
+            await rideratingcollections.updateOne(
+                { _id: new ObjectId(riderating._id) },  
+                { $inc: { numUsersDisliked: -1 }, $pull: { usersDisliked: uname }  } 
+            )
+            // await rideratingcollections.updateOne(
+            //     { _id: new ObjectId(riderating._id) },     
+            //     { $pull: { usersDisliked: uname } } 
+            //   );
+        }
+    } catch (e) {
+        res.status(404).json({error: e})
     }
 
-    const updated = await rideRatingData.getRideRatingById(rideratingid)
+    const updated = await rideRatingData.getRideRatingById(validRRatingId)
     return res.json({likes: updated.numUsersLiked, dislikes: updated.numUsersDisliked})
 })
 
@@ -230,164 +241,157 @@ router.route('/addridedislike')
 .post(async(req, res) => {
     const rideid = req.body.rideid;
     
-
     const rideratingcollections = await rideratings();
-
-    const ride = await rideData.getRideById(rideid)
+    const rideratingid = req.body.rideratingid;
+    let validRId = helper.checkId(rideid, 'ride id');
+    validRId = xss(validRId)
+    let validRRatingId = helper.checkId(rideratingid, 'ride rating id');
+    validRRatingId = xss(validRRatingId)
+    const riderating = await rideRatingData.getRideRatingById(validRRatingId)
     const uname = req.session.user.userName;
-    
-    let riderating;
-    let rideratingid;
-
-    for (let i = 0; i < ride.ratings.length; i++){
-        riderating = await rideRatingData.getRideRatingById(ride.ratings[i])
-        if (riderating.userName === uname){
-            rideratingid = riderating._id;
+    try {
+        if (!riderating.usersDisliked.includes(uname)){
+            await rideratingcollections.updateOne(
+                { _id: new ObjectId(riderating._id) },  
+                { $inc: { numUsersDisliked: 1 }, $push: { usersDisliked: uname }  } 
+            )
+            // await rideratingcollections.updateOne(
+            //     { _id: new ObjectId(riderating._id) },     
+            //     { $push: { usersDisliked: uname } } 
+            //   );
         }
+        else{
+            await rideratingcollections.updateOne(
+                { _id: new ObjectId(riderating._id) },  
+                { $inc: { numUsersDisliked: -1 }, $pull: { usersDisliked: uname }  } 
+            )
+            // await rideratingcollections.updateOne(
+            //     { _id: new ObjectId(riderating._id) },     
+            //     { $pull: { usersDisliked: uname } } 
+            //   );
+        }
+        if (riderating.usersLiked.includes(uname)){
+            await rideratingcollections.updateOne(
+                { _id: new ObjectId(riderating._id) },  
+                { $inc: { numUsersLiked: -1 }, $pull: { usersLiked: uname } } 
+            )
+            // await rideratingcollections.updateOne(
+            //     { _id: new ObjectId(riderating._id) },     
+            //     { $pull: { usersLiked: uname } } 
+            //   );
+        }
+    } catch (e) {
+        res.status(404).json({error: e})
     }
     
-    if (!riderating.usersDisliked.includes(uname)){
-        await rideratingcollections.updateOne(
-            { _id: new ObjectId(riderating._id) },  
-            { $inc: { numUsersDisliked: 1 }, $push: { usersDisliked: uname }  } 
-        )
-        // await rideratingcollections.updateOne(
-        //     { _id: new ObjectId(riderating._id) },     
-        //     { $push: { usersDisliked: uname } } 
-        //   );
-    }
-    else{
-        await rideratingcollections.updateOne(
-            { _id: new ObjectId(riderating._id) },  
-            { $inc: { numUsersDisliked: -1 }, $pull: { usersDisliked: uname }  } 
-        )
-        // await rideratingcollections.updateOne(
-        //     { _id: new ObjectId(riderating._id) },     
-        //     { $pull: { usersDisliked: uname } } 
-        //   );
-    }
-    if (riderating.usersLiked.includes(uname)){
-        await rideratingcollections.updateOne(
-            { _id: new ObjectId(riderating._id) },  
-            { $inc: { numUsersLiked: -1 }, $pull: { usersLiked: uname } } 
-        )
-        // await rideratingcollections.updateOne(
-        //     { _id: new ObjectId(riderating._id) },     
-        //     { $pull: { usersLiked: uname } } 
-        //   );
-    }
+    
 
-    const updated = await rideRatingData.getRideRatingById(rideratingid)
+    const updated = await rideRatingData.getRideRatingById(validRRatingId)
     return res.json({likes: updated.numUsersLiked, dislikes: updated.numUsersDisliked})
 })
 
 router.route('/addfslike')
 .post(async(req, res) => {
-    const fsid = req.body.fsid;
-    
-
-    const fsratingcollections = await foodstallratings();
-
-    const foodstall = await foodStallData.getFoodStallById(fsid)
+    const fsid = req.body.foodstallid;
+    const foodstallratingcollections = await foodstallratings();
+    const foodstallratingid = req.body.foodstallratingid;
+    let validFsId = helper.checkId(fsid, 'food stall id');
+    validFsId = xss(validFsId)
+    let validFsRatingId = helper.checkId(foodstallratingid, 'food stall rating id');
+    validFsRatingId = xss(validFsRatingId)
+    const foodstallrating = await foodStallRatingData.getFoodStallRatingById(validFsRatingId)
     const uname = req.session.user.userName;
-    
-    let fsrating;
-    let fsratingid;
 
-    for (let i = 0; i < foodstall.ratings.length; i++){
-        fsrating = await foodStallRatingData.getFoodStallRatingById(foodstall.ratings[i])
-        if (fsrating.userName === uname){
-            fsratingid = fsrating._id;
+    try {
+        if (!foodstallrating.usersLiked.includes(uname)){
+            await foodstallratingcollections.updateOne(
+                { _id: new ObjectId(foodstallrating._id) },  
+                { $inc: { numUsersLiked: 1 }, $push: { usersLiked: uname } } 
+            )
+            // await rideratingcollections.updateOne(
+            //     { _id: new ObjectId(riderating._id) },     
+            //     { $push: { usersLiked: uname } } 
+            //   );
         }
-    }
-    
-    if (!fsrating.usersLiked.includes(uname)){
-        await fsratingcollections.updateOne(
-            { _id: new ObjectId(fsrating._id) },  
-            { $inc: { numUsersLiked: 1 }, $push: { usersLiked: uname } } 
-        )
-        // await fsratingcollections.updateOne(
-        //     { _id: new ObjectId(fsrating._id) },     
-        //     { $push: { usersLiked: uname } } 
-        //   );
-    }
-    else{
-        await fsratingcollections.updateOne(
-            { _id: new ObjectId(fsrating._id) },  
-            { $inc: { numUsersLiked: -1 }, $pull: { usersLiked: uname } } 
-        )
-        // await fsratingcollections.updateOne(
-        //     { _id: new ObjectId(fsrating._id) },     
-        //     { $pull: { usersLiked: uname } } 
-        //   );
-    }
-    if (fsrating.usersDisliked.includes(uname)){
-        await fsratingcollections.updateOne(
-            { _id: new ObjectId(fsrating._id) },  
-            { $inc: { numUsersDisliked: -1 }, $pull: { usersDisliked: uname } } 
-        )
-        // await fsratingcollections.updateOne(
-        //     { _id: new ObjectId(fsrating._id) },     
-        //     { $pull: { usersDisliked: uname } } 
-        //   );
+        else{
+            await foodstallratingcollections.updateOne(
+                { _id: new ObjectId(foodstallrating._id) },  
+                { $inc: { numUsersLiked: -1 }, $pull: { usersLiked: uname }  } 
+            )
+            // await rideratingcollections.updateOne(
+            //     { _id: new ObjectId(riderating._id) },     
+            //     { $pull: { usersLiked: uname } } 
+            //   );
+        }
+        if (foodstallrating.usersDisliked.includes(uname)){
+            await foodstallratingcollections.updateOne(
+                { _id: new ObjectId(foodstallrating._id) },  
+                { $inc: { numUsersDisliked: -1 }, $pull: { usersDisliked: uname }  } 
+            )
+            // await rideratingcollections.updateOne(
+            //     { _id: new ObjectId(riderating._id) },     
+            //     { $pull: { usersDisliked: uname } } 
+            //   );
+        }
+    } catch (e) {
+        res.status(404).json({error: e})
     }
 
-    const updated = await foodStallRatingData.getFoodStallRatingById(fsratingid)
+    const updated = await foodStallRatingData.getFoodStallRatingById(validFsRatingId)
     return res.json({likes: updated.numUsersLiked, dislikes: updated.numUsersDisliked})
+
 })
 
 router.route('/addfsdislike')
 .post(async(req, res) => {
-    const fsid = req.body.fsid;
-    
-
-    const fsratingcollections = await foodstallratings();
-
-    const foodstall = await foodStallData.getFoodStallById(fsid)
+    const fsid = req.body.foodstallid;
+    const foodstallratingcollections = await foodstallratings();
+    const foodstallratingid = req.body.foodstallratingid;
+    let validFsId = helper.checkId(fsid, 'food stall id');
+    validFsId = xss(validFsId)
+    let validFsRatingId = helper.checkId(foodstallratingid, 'food stall rating id');
+    validFsRatingId = xss(validFsRatingId)
+    const foodstallrating = await foodStallRatingData.getFoodStallRatingById(validFsRatingId)
     const uname = req.session.user.userName;
-    
-    let fsrating;
-    let fsratingid;
 
-    for (let i = 0; i < foodstall.ratings.length; i++){
-        fsrating = await foodStallRatingData.getFoodStallRatingById(foodstall.ratings[i])
-        if (fsrating.userName === uname){
-            fsratingid = fsrating._id;
+    try {
+        if (!foodstallrating.usersDisliked.includes(uname)){
+            await foodstallratingcollections.updateOne(
+                { _id: new ObjectId(foodstallrating._id) },  
+                { $inc: { numUsersDisliked: 1 }, $push: { usersDisliked: uname }  } 
+            )
+            // await rideratingcollections.updateOne(
+            //     { _id: new ObjectId(riderating._id) },     
+            //     { $push: { usersDisliked: uname } } 
+            //   );
         }
+        else{
+            await foodstallratingcollections.updateOne(
+                { _id: new ObjectId(foodstallrating._id) },  
+                { $inc: { numUsersDisliked: -1 }, $pull: { usersDisliked: uname }  } 
+            )
+            // await rideratingcollections.updateOne(
+            //     { _id: new ObjectId(riderating._id) },     
+            //     { $pull: { usersDisliked: uname } } 
+            //   );
+        }
+        if (foodstallrating.usersLiked.includes(uname)){
+            await foodstallratingcollections.updateOne(
+                { _id: new ObjectId(foodstallrating._id) },  
+                { $inc: { numUsersLiked: -1 }, $pull: { usersLiked: uname } } 
+            )
+            // await rideratingcollections.updateOne(
+            //     { _id: new ObjectId(riderating._id) },     
+            //     { $pull: { usersLiked: uname } } 
+            //   );
+        }
+    } catch (e) {
+        res.status(404).json({error: e})
     }
     
-    if (!fsrating.usersDisliked.includes(uname)){
-        await fsratingcollections.updateOne(
-            { _id: new ObjectId(fsrating._id) },  
-            { $inc: { numUsersDisliked: 1 }, $push: { usersDisliked: uname } } 
-        )
-        // await fsratingcollections.updateOne(
-        //     { _id: new ObjectId(fsrating._id) },     
-        //     { $push: { usersDisliked: uname } } 
-        //   );
-    }
-    else{
-        await fsratingcollections.updateOne(
-            { _id: new ObjectId(fsrating._id) },  
-            { $inc: { numUsersDisliked: -1 }, $pull: { usersDisliked: uname }  } 
-        )
-        // await fsratingcollections.updateOne(
-        //     { _id: new ObjectId(fsrating._id) },     
-        //     { $pull: { usersDisliked: uname } } 
-        //   );
-    }
-    if (fsrating.usersLiked.includes(uname)){
-        await fsratingcollections.updateOne(
-            { _id: new ObjectId(fsrating._id) },  
-            { $inc: { numUsersLiked: -1 }, $pull: { usersLiked: uname } } 
-        )
-        // await fsratingcollections.updateOne(
-        //     { _id: new ObjectId(fsrating._id) },     
-        //     { $pull: { usersLiked: uname } } 
-        //   );
-    }
+    
 
-    const updated = await foodStallRatingData.getFoodStallRatingById(fsratingid)
+    const updated = await foodStallRatingData.getFoodStallRatingById(validFsRatingId)
     return res.json({likes: updated.numUsersLiked, dislikes: updated.numUsersDisliked})
 })
 // ------------------------- WORKS
