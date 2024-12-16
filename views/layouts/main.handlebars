@@ -1,17 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <title>Rate My Theme Park</title>
-        {{{head}}}
-        <link rel="stylesheet" href="/public/css/styles.css">
-    </head>
-    <body>
-         <header>
-            Rate My Theme Park
-        </header>
-    </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rate My Theme Park</title>
+    {{{head}}}
+    <link rel="stylesheet" href="/public/css/styles.css">
+</head>
+<body>
+
+    <header>
+        <h1>{{title}}</h1>
+    </header>
+
     <main>
         {{{body}}}
     </main>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"
+        integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    {{#if script_partial}}
+        {{> (lookup . 'script_partial') }}
+    {{/if}}
+    <script src = '/public/js/validateform.js'></script>
+</body>
 </html>

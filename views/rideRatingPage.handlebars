@@ -1,0 +1,42 @@
+{{!-- List of ratings for evrey individial ride
+
+    /homepage/{idOfThemePark}/rides/{idOfRide}/ratings
+    - add button to add a ride rating
+ --}}
+ <p><strong>Number of Ratings:</strong> <span id="numRating">{{averages.numRatings}}</span></p>
+ <p><strong>Wait Time Rating:</strong> <span id="avgWait">{{averages.avgWaitTimeRating}}</span>/10, <strong>Comfortability Rating:</strong> <span id="avgComfort">{{averages.avgComfortRating}}</span>/10, <strong>Enjoyment and Experience Rating:</strong> <span id="avgEnjoyment">{{averages.avgEnjoymentRating}}</span>/10</p>
+ <div id="error"></div>
+ <button id="addRideRating">Add rating on ride</button>
+ <div id="rating" hidden>
+    <p>Please enter the following information to add a rating to the ride</p>
+    <form id = "ratingForm">
+        <label for="ride_waitime">Ride Wait Time Rating</label>
+        <input type="number" name="ride_waitime" id="ride_waitime">
+        <br>
+        <label for="ride_comfortability">Ride Comfortability Rating</label>
+        <input type="number" name="ride_comfortability" id="ride_comfortability">
+        <br>
+        <label for="ride_enjoyment">Ride Enjoyment and Experience Rating</label>
+        <input type="number" name="ride_enjoyment" id="ride_enjoyment">
+        <br>
+        {{!-- <label for="ride_review">Enter Your Review</label>
+        <input type="string" name="ride_review" id="ride_review">
+        <br> --}}
+        <button data-id={{rpid}} type="submit">Submit</button>
+    </form>
+ </div>
+    <ol id="ratingsList">
+        {{#each ratings}}
+        <li>
+            <p>{{userName}}</p>
+            <p><strong>Wait Time Rating:</strong> {{waitTimeRating}}</p>
+            <p><strong>Comfortability Rating:</strong>{{comfortabilityRating}}</p>
+            <p><strong>Enjoyment and Experience Rating:</strong> {{ enjoymentRating}}</p>
+            <p class = "ridenumlikes"><strong>Number of Likes:</strong> {{numUsersLiked}}</p>
+            <p class = "ridenumdislikes"><strong>Number of Dislikes:</strong> {{numUsersDisliked}}</p>
+            <button class = "rideratinglikes" data-id ={{_id}}>Like</button> 
+            <button class = "rideratingdislikes" data-id ={{_id}}>Dislike</button> 
+        </li>
+        {{/each}}
+    </ol>
+ 

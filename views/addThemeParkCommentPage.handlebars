@@ -1,0 +1,18 @@
+ {{!--
+ 
+ Add a comment to theme park
+ navigation back to theme park comment page
+    /homepage/{idOfThemPark}/comments/addComment
+
+   --}}
+
+ <h1> Add a Comment </h1>
+ <main>
+    <p>Please enter the following information to add a comment to a theme park</p>
+    <form id = "tpcomment" method = 'POST' action = "/themepark/{{_id}}/comments/addThemeParkComment">
+
+        <label for="theme_park_comment">Theme Park Comment</label>
+        <input type="text" name="theme_park_comment" id="theme_park_comment">
+        <button>Submit</button>
+    </form>
+ </main>

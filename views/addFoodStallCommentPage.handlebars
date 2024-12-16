@@ -1,0 +1,15 @@
+{{!-- 
+
+    /homepage/{idOfThemePark}/foodStalls/{idOfFoodStall}/comments/addFoodStallComment
+ --}}
+
+   <h1> Add A Food Stall comment </h1>
+ <main>
+    <p>Please enter the following information to add a comment to the food stall</p>
+    <form id = "foodstallcomment" method = 'POST' action = '/themepark/{{themeId}}/foodstalls/{{foodstallId}}/addComment'>
+        <label for="foodstall_comment">Food Stall Comment</label>
+        <input type="text" name="foodstall_comment" id="foodstall_comment">
+        <br>
+        <button>Submit</button>
+    </form>
+ </main>

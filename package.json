@@ -1,9 +1,23 @@
 {
+  "name": "cs_546_final_project",
+  "version": "1.0.0",
+  "description": "CS 546 Final Project",
+  "main": "app.js",
   "type": "module",
+  "scripts": {
+    "seed": "node ./tasks/seeds.js",
+    "start": "node app.js"
+  },
+  "author": "Esat Adiloglu 20010220, Ryan Eshan 20013632, Sai Mummadisingu 20014367, Advait Dantuluri 20014863",
+  "license": "ISC",
   "dependencies": {
     "axios": "^1.7.8",
-    "express": "^4.21.1",
+    "bcrypt": "^5.1.1",
+    "express": "^4.21.2",
     "express-handlebars": "^8.0.1",
-    "mongodb": "^6.11.0"
+    "express-session": "^1.18.1",
+    "mongodb": "^6.11.0",
+    "nodemon": "^3.1.7",
+    "xss": "^1.0.15"
   }
 }

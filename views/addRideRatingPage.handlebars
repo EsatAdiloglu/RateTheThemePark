@@ -1,21 +1,24 @@
+ {{!-- 
+    Adding a specific rating to a specific ride form
+    /homepage/{idOfThemePark}/rides/{idOfRide}/ratings/addRideRating
+ --}}
+ 
  <h1> Add A Ride Rating </h1>
  <main>
     <p>Please enter the following information to add a rating to the ride</p>
-    <form id = "ride_waitime">
+    <form id = "riderating" method = 'POST' action = '/themepark/{{tpid}}/rides/{{rpid}}/addRating'>
         <label for="ride_waitime">Ride Wait Time Rating</label>
         <input type="number" name="ride_waitime" id="ride_waitime">
-    </form>
-    <form id = "ride_comfortability">
+        <br>
         <label for="ride_comfortability">Ride Comfortability Rating</label>
         <input type="number" name="ride_comfortability" id="ride_comfortability">
-    </form>
-    <form id = "ride_enjoyment">
+        <br>
         <label for="ride_enjoyment">Ride Enjoyment and Experience Rating</label>
         <input type="number" name="ride_enjoyment" id="ride_enjoyment">
-    </form>
-    <form id = "ride_review">
-        <label for="ride_review">Enter Your Review</label>
+        <br>
+        {{!-- <label for="ride_review">Enter Your Review</label>
         <input type="string" name="ride_review" id="ride_review">
+        <br> --}}
+        <button>Submit</button>
     </form>
-    <button>Submit</button>
  </main>
