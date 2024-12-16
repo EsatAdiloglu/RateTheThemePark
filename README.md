@@ -1,5 +1,7 @@
 # RateTheThemePark
 
+NOTE: When you make a rating to a themepark, foodstall, or ride, likes and dislikes on your own rating WORKS when you reload the page. 
+
 To start, first download all packages doing:
 ```
 npm i
