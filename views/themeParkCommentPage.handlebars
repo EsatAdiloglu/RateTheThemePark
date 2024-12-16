@@ -29,9 +29,9 @@ Theme Park Comment Page (INDIVIDUAL THEME PARK)
       <div hidden>
         <p>Reply</p>
         <form class="childCommentForm">
-          <label for="childCommentForm"></label>
+          <label for="{{_id}}-child"></label>
           <br>
-          <textarea name="childCommentBody" class="childCommentBody"></textarea>
+          <textarea name="childCommentBody" id="{{_id}}-child" class="childCommentBody"></textarea>
           <br>
           <button  type="submit">Submit Reply</button>
         </form>

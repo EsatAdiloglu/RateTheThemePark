@@ -156,9 +156,9 @@
                             <div hidden>
                                 <p>Reply</p>
                                 <form class="childCommentForm">
-                                <label for="childCommentBody"></label>
+                                <label for="${res.commentId}-child"></label>
                                 <br>
-                                <textarea name="childCommentBody" class="childCommentBody"></textarea>
+                                <textarea name="childCommentBody" id="${res.commentId}-child" class="childCommentBody"></textarea>
                                 <br>
                                 <button type="submit">Submit Reply</button>
                                 </form>
