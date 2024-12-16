@@ -110,22 +110,35 @@ const getFoodStallRatings = async (id, user) => {
 }
 
 const getAverageFoodStallRatings = async(id) => {
-    const ratings = (await getFoodStallRatings(id)).ratings
+    const foodStallRatings = await getFoodStallRatings(id)
     let avgFood = 0
     let avgWait = 0
 
-    ratings.forEach((rating) => {
+    foodStallRatings.ratings.forEach((rating) => {
         avgFood += parseInt(rating.foodQualityRating)
         avgWait += parseInt(rating.waitTimeRating)
     })
-    const ratingLength = ratings.length > 0 ? ratings.length : 1
+    const ratingLength = foodStallRatings.ratings.length > 0 ? foodStallRatings.ratings.length : 1
 
     avgFood /= ratingLength
     avgWait /= ratingLength
+
+    avgFood = avgFood.toFixed(2)
+    avgWait = avgWait.toFixed(2)
+
+    const foodStallCollections = await foodstalls();
+
+    const updatedRatings = {
+        foodQualityRating: avgFood,
+        waitTimeRating: avgWait,
+    }
+    
+    const results = await foodStallCollections.findOneAndUpdate({_id: new ObjectId(foodStallRatings.foodStallId)}, {$set: updatedRatings})
+    if(!results) throw "Error: could not update theme park ratings"
     return{
-        avgFoodQualityRating: avgFood.toFixed(2),
-        avgWaitTimeRating: avgWait.toFixed(2),
-        numRatings: ratings.length
+        avgFoodQualityRating: avgFood,
+        avgWaitTimeRating: avgWait,
+        numRatings: foodStallRatings.ratings.length
     }
 }
 
