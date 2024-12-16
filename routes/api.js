@@ -118,6 +118,38 @@ router.route("/addRideRating").post(async (req, res) => {
         return res.json({Error: `${e}`})
     }
 })
+.patch(async (req,res) => {
+    const updateRatingInfo = req.body
+    try{
+        updateRatingInfo.ratingId = helper.checkId(updateRatingInfo.ratingId, "Rating Id")
+        helper.checkRating(updateRatingInfo.updateWait)
+        helper.checkRating(updateRatingInfo.updateComfort)
+        helper.checkRating(updateRatingInfo.updateEnjoyment)
+
+        updateRatingInfo.ratingId = xss(updateRatingInfo.ratingId)
+        updateRatingInfo.updateWait = xss(updateRatingInfo.updateWait)
+        updateRatingInfo.updateComfort = xss(updateRatingInfo.updateComfort)
+        updateRatingInfo.updateEnjoyment = xss(updateRatingInfo.updateEnjoyment)
+    }
+    catch(e){
+        return res.json({Error: `${e}`})
+    }
+    try{
+        const {ratingId, updateWait, updateComfort, updateEnjoyment} = updateRatingInfo
+        const updatedRating = await rideRatingData.updateRating(ratingId, updateWait, updateComfort, updateEnjoyment)
+        const averages = await rideRatingData.getAverageRideRatings(updatedRating.rideId)
+        return res.json({
+            newWaitRating: updatedRating.waitTimeRating,
+            newComfortRating: updatedRating.comfortabilityRating,
+            newEnjoymentRating: updatedRating.enjoymentRating,
+            averageRatings: averages
+        })
+    }
+    catch(e){
+        console.log(e)
+        return res.json({Error: `${e}`})
+    }
+})
 
 router.route("/addFoodStallRating").post(async (req, res) => {
     const foodStallRatingInfo = req.body

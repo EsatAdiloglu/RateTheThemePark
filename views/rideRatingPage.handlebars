@@ -28,15 +28,39 @@
  </div>
     <ol id="ratingsList">
         {{#each ratings}}
-        <li>
+        <li data-id="{{_id}}">
             <p>{{userName}}</p>
-            <p><strong>Wait Time Rating:</strong> {{waitTimeRating}}</p>
-            <p><strong>Comfortability Rating:</strong>{{comfortabilityRating}}</p>
-            <p><strong>Enjoyment and Experience Rating:</strong> {{ enjoymentRating}}</p>
+            <p><strong>Wait Time Rating:</strong> <span id="rideWaitTimeRating">{{waitTimeRating}}</span></p>
+            <p><strong>Comfortability Rating:</strong> <span id="rideComfortabilityRating">{{comfortabilityRating}}</span></p>
+            <p><strong>Enjoyment and Experience Rating:</strong> <span id="rideEnjoymentRating">{{ enjoymentRating}}</span></p>
             <p id = 'ridenumlikes'><strong>Number of Likes:</strong> {{numUsersLiked}}</p>
             <p id = 'ridenumdislikes'><strong>Number of Dislikes:</strong> {{numUsersDisliked}}</p>
+            {{#if edit}}
+            <button class="updateRideRating">Update</button>
+            {{/if}}
             <button id = 'rideratinglikes'>Like</button> 
             <button id = 'rideratingdislikes'>Dislike</button> 
+            {{#if edit}}
+            <div class="updateRating" hidden>
+                <h3>Update Rating</h3>
+                <form id = "updateForm">
+                    <label for="updateWait">Ride Wait Time Rating</label>
+                    <input type="number" name="updateWait" id="updateWait">
+                    <br>
+                    <label for="updateComfort">Ride Comfortability Rating</label>
+                    <input type="number" name="updateComfort" id="updateComfort">
+                    <br>
+                    <label for="updateEnjoyment">Ride Enjoyment and Experience Rating</label>
+                    <input type="number" name="updateEnjoyment" id="updateEnjoyment">
+                    <br>
+        {{!-- <label for="ride_review">Enter Your Review</label>
+        <input type="string" name="ride_review" id="ride_review">
+        <br> --}}
+                    <button type="submit">Submit</button>
+                </form>
+                <button id="cancelUpdate">Cancel</button>
+            </div>
+        {{/if}}
         </li>
         {{/each}}
     </ol>

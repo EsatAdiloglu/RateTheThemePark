@@ -151,7 +151,7 @@ const updateRating = async (
     crowdsRating,
     diversityRating
 ) => {
-    id = helper.checkId(id)
+    id = helper.checkId(id, "Rating Id")
 
     helper.checkRating(staffRating)
     helper.checkRating(cleanlinessRating)

@@ -74,7 +74,7 @@ const getRideRatingById = async (id) => {
     return rideRating
 }
 
-const getRideRatingsByRide = async (id) => {
+const getRideRatingsByRide = async (id, user) => {
     if (!ObjectId.isValid(id)) throw "Invalid Ride ID";
 
     const rideRatingCollection = await rideratings();
@@ -87,18 +87,23 @@ const getRideRatingsByRide = async (id) => {
         };
     }
 
-    const formattedRideRatings = ratings.map(rating => ({
-        _id: rating._id.toString(),
-        userName: rating.userName,
-        waitTimeRating: rating.waitTimeRating,
-        comfortabilityRating: rating.comfortabilityRating,
-        enjoymentRating: rating.enjoymentRating,
-        //review: rating.review,
-        numUsersLiked: rating.numUsersLiked,
-        numUsersDisliked: rating.numUsersDisliked,
-        comments: rating.comments, //rating.comments.map(commentId => commentId.toString()),
-        reports: rating.reports //rating.reports.map(reportId => reportId.toString())
-    }));
+    const formattedRideRatings = ratings.map(rating => {
+        const formatRating = {
+            _id: rating._id.toString(),
+            userName: rating.userName,
+            waitTimeRating: rating.waitTimeRating,
+            comfortabilityRating: rating.comfortabilityRating,
+            enjoymentRating: rating.enjoymentRating,
+            numUsersLiked: rating.numUsersLiked,
+            numUsersDisliked: rating.numUsersDisliked,
+            comments: rating.comments, //rating.comments.map(commentId => commentId.toString()),
+            reports: rating.reports //rating.reports.map(reportId => reportId.toString())
+        }
+
+        if(rating.userName === user) formatRating.edit = true
+        else formatRating.edit = false
+        return formatRating
+    });
 
     return {
         rideId: id,
@@ -129,7 +134,29 @@ const getAverageRideRatings = async(id) => {
         avgEnjoymentRating: avgEnjoyment.toFixed(2),
         numRatings: ratings.length
     }
-
-
 }
-export default {createRideRating, getRideRatingById, getRideRatingsByRide, getAverageRideRatings}
+
+const updateRating = async (
+    id,
+    waitTimeRating,
+    comfortabilityRating,
+    enjoymentRating
+) => {
+    id = helper.checkId(id, "Rating Id")
+
+    helper.checkRating(waitTimeRating)
+    helper.checkRating(comfortabilityRating)
+    helper.checkRating(enjoymentRating)
+
+    const updatedRating = {
+        waitTimeRating: waitTimeRating,
+        comfortabilityRating: comfortabilityRating,
+        enjoymentRating: enjoymentRating
+    }
+
+    const rideRatingCollections = await rideratings();
+    const updatedResults = await rideRatingCollections.findOneAndUpdate({_id: new ObjectId(id)}, {$set: updatedRating}, {returnDocument: "after"})
+    if(!updatedResults) throw "Error: Could not update rating"
+    return updatedResults
+}
+export default {createRideRating, getRideRatingById, getRideRatingsByRide, getAverageRideRatings, updateRating}

@@ -75,7 +75,7 @@ const getComments = async (id, user) => {
     const commentCollections = await comments();
     const commentArray = await commentCollections.find({thingId: id}).toArray();
 
-    const formattedComments = commentArray.map(async (comment) => {
+    const formattedComments = commentArray.map((comment) => {
         const formatComment = { 
             _id: comment._id.toString(),
             userName: comment.userName,
@@ -83,12 +83,11 @@ const getComments = async (id, user) => {
             commentBody: comment.commentBody,
             comments: comment.comments
         }
-        if(comment.userName.toLowerCase() === user) formatComment.edit = true
+        if(comment.userName === user) formatComment.edit = true
         else formatComment.edit = false
 
         return formatComment
     })
-
     for(let i = 0; i < formattedComments.length; i++){
         const comment = formattedComments[i]
         const childCommentArray = await commentCollections.find({thingId: comment._id}).toArray();
