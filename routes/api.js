@@ -104,9 +104,10 @@ router.route("/addRideRating").post(async (req, res) => {
     try{
         const user = await userData.getUserByUsername(req.session.user.userName)
         const {waitTime, comfortability, enjoyment} = rideRatingInfo
-        await rideRatingData.createRideRating(user.userName, rideRatingInfo.rideId, waitTime, comfortability, enjoyment,"")
+        const rating = await rideRatingData.createRideRating(user.userName, rideRatingInfo.rideId, waitTime, comfortability, enjoyment,"")
         const averages = await rideRatingData.getAverageRideRatings(rideRatingInfo.rideId)
         return res.json({
+            _id: rating._id.toString(),
             userName: user.userName,
             waitTimeRating: waitTime,
             comfortabilityRating: comfortability,

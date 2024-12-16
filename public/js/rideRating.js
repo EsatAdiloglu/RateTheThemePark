@@ -79,13 +79,13 @@
 
                 let requestConfig = {
                     method: "PATCH",
-                    url: "/api/addThemeParkRating",
+                    url: "/api/addRideRating",
                     contentType: "application/json",
                     data: JSON.stringify({
                         ratingId: li.data("id"),
-                        updateWait: updateStaffRating,
-                        updateComfort: updateCleanlinessRating,
-                        updateEnjoyment: updateCrowdRating,
+                        updateWait: updateWaitRating,
+                        updateComfort: updateComfortRating,
+                        updateEnjoyment: updateEnjoymentRating,
                     })
                 }
                 $.ajax(requestConfig).then((res) => {
@@ -181,9 +181,9 @@
                                 <li data-id="${res._id}">
                                     <p>${res.userName}</p>
                                     <p id="tpitem" data-id="${res._id}" hidden></p>
-                                    <p><strong>Wait Time Rating:</strong> <span id="rideWaitTimeRating">{${res.waitTimeRating}</span></p> 
-                                    <p><strong>Comfortability Rating:</strong> <span id="rideWaitTimeRating">{${res.comfortabilityRating}</span></p>
-                                    <p><strong>Enjoyment and Experience Rating:</strong> <span id="rideWaitTimeRating">{${res.enjoymentRating}</span></p>
+                                    <p><strong>Wait Time Rating:</strong> <span class="rideWaitTimeRating">${res.waitTimeRating}</span></p> 
+                                    <p><strong>Comfortability Rating:</strong> <span class="rideComfortabilityRating">${res.comfortabilityRating}</span></p>
+                                    <p><strong>Enjoyment and Experience Rating:</strong> <span class="rideEnjoymentRating">${res.enjoymentRating}</span></p>
                                     <p class = "ridenumlikes"><strong>Number of Likes:</strong> 0</p>
                                     <p class = "ridenumdislikes"><strong>Number of Dislikes:</strong> 0</p>
                                     <button class="updateRideRating">Update</button>

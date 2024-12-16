@@ -685,7 +685,7 @@ router.route('/:id/rides/:rideid/ratings')
             return res.status(404).json({error: `The ride ${ride.rideName} not found in the theme park ${themePark.themeParkName}`});
         }
 
-        const ridesratings = (await rideRatingData.getRideRatingsByRide(req.params.rideid)).ratings;
+        const ridesratings = (await rideRatingData.getRideRatingsByRide(req.params.rideid, req.session.user.userName)).ratings;
         const averages = await rideRatingData.getAverageRideRatings(req.params.rideid);
 
         //console.log(ridesratings)
