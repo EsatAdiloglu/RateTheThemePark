@@ -58,7 +58,8 @@
                     checkNumber(updateQualityRating, "Food Stall Food Quality Rating")
                 }
                 catch(e){
-                    if(typeof updateQualityRating === "String" && updateQualityRating.trim().length < 1) updateQualityRating = Number(currentQuality.text())
+
+                    if(typeof updateQualityRating === "string" && updateQualityRating.trim().length < 1) updateQualityRating = Number(currentQuality.text())
                     else errors.push(e)
                     
                 }
@@ -67,7 +68,7 @@
                     checkNumber(updateWaitRating,"Food Stall Wait Time Rating")
                 }
                 catch(e){
-                    if(typeof updateWaitRating === "String" && updateWaitRating.trim().length < 1) updateWaitRating = Number(currentWait.text())
+                    if(typeof updateWaitRating === "string" && updateWaitRating.trim().length < 1) updateWaitRating = Number(currentWait.text())
                     else errors.push(e)
                 }
 

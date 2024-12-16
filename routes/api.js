@@ -7,6 +7,8 @@ import rideRatingData from "../data/rideRating.js"
 import foodStallRatingData from "../data/foodStallRating.js"
 import commentsData from '../data/comment.js'
 import xss from "xss";
+import { foodstallratings, foodstalls, rideratings, rides, themeparkratings, themeparks, users } from "../config/mongoCollections.js";
+import { ObjectId } from "mongodb";
 
 router.route("/addThemeParkRating")
 .post(async (req, res) => {
@@ -29,6 +31,10 @@ router.route("/addThemeParkRating")
     }
 
     try{
+        const themeParkCollections = await themeparks();
+        const exist = await themeParkCollections.findOne({_id: new ObjectId(themeParkRatingInfo.themeParkId)})
+        if(!exist) throw `Error: there is no theme park with id ${themeParkRatingInfo.themeParkId}`
+
         const user = await userData.getUserByUsername(req.session.user.userName)
         const {themeParkStaff, themeParkCleanliness, themeParkCrowds, themeParkDiversity} = themeParkRatingInfo
         const rating = await themeParkRatingData.createThemeParkRating(user.userName, themeParkRatingInfo.themeParkId, themeParkStaff, themeParkCleanliness, themeParkCrowds, themeParkDiversity, "")
@@ -67,6 +73,19 @@ router.route("/addThemeParkRating")
         return res.json({Error: `${e}`})
     }
     try{
+        const themeParkRatingCollections = await themeparkratings();
+        const themeParkCollections = await themeparks();
+        const userCollections = await users();
+
+        const ratingExist = await themeParkRatingCollections.findOne({_id: new ObjectId(updateRatingInfo.ratingId)})
+        if(!ratingExist) throw `Error: there is no rating with id ${updateRatingInfo.ratingId}`
+
+        const themeParkExist = await themeParkCollections.findOne({_id: new ObjectId(ratingExist.themeParkId)})
+        if(!themeParkExist) throw `Error: there is no theme park with id ${ratingExist.themeParkId}`
+
+        const userExist = await userCollections.findOne({userName: ratingExist.userName})
+        if(!userExist) throw `Error: there is no user with user name ${ratingExist.userName}`
+
         const {ratingId, updateStaff, updateCleanliness, updateCrowd, updateDiversity} = updateRatingInfo
         const updatedRating = await themeParkRatingData.updateRating(ratingId, updateStaff, updateCleanliness, updateCrowd, updateDiversity)
         const averages = await themeParkRatingData.getAverageThemeParkRatings(updatedRating.themeParkId)
@@ -95,6 +114,20 @@ router.route("/addThemeParkRating")
     }
 
     try{
+        const themeParkRatingCollections = await themeparkratings();
+        const themeParkCollections = await themeparks();
+        const userCollections = await users();
+
+        const ratingExist = await themeParkRatingCollections.findOne({_id: new ObjectId(deleteRatingInfo.ratingId)})
+        if(!ratingExist) throw `Error: there is no rating with id ${deleteRatingInfo.ratingId}`
+
+        const themeParkExist = await themeParkCollections.findOne({_id: new ObjectId(ratingExist.themeParkId)})
+        if(!themeParkExist) throw `Error: there is no theme park with id ${ratingExist.themeParkId}`
+
+        const userExist = await userCollections.findOne({userName: ratingExist.userName})
+        if(!userExist) throw `Error: there is no user with user name ${ratingExist.userName}`
+
+
         const {ratingId} = deleteRatingInfo
         const themePark = await themeParkRatingData.deleteRating(ratingId)
         const averages = await themeParkRatingData.getAverageThemeParkRatings(themePark._id.toString())
@@ -124,6 +157,10 @@ router.route("/addRideRating").post(async (req, res) => {
     }
 
     try{
+        const rideCollections = await rides();
+        const exist = await rideCollections.findOne({_id: new ObjectId(rideRatingInfo.rideId)})
+        if(!exist) throw `Error: there is no ride with id ${rideRatingInfo.rideId}`
+
         const user = await userData.getUserByUsername(req.session.user.userName)
         const {waitTime, comfortability, enjoyment} = rideRatingInfo
         const rating = await rideRatingData.createRideRating(user.userName, rideRatingInfo.rideId, waitTime, comfortability, enjoyment,"")
@@ -158,6 +195,19 @@ router.route("/addRideRating").post(async (req, res) => {
         return res.json({Error: `${e}`})
     }
     try{
+        const rideRatingCollections = await rideratings();
+        const rideCollections = await rides();
+        const userCollections = await users();
+
+        const ratingExist = await rideRatingCollections.findOne({_id: new ObjectId(updateRatingInfo.ratingId)})
+        if(!ratingExist) throw `Error: there is no rating with id ${updateRatingInfo.ratingId}`
+
+        const rideExist = await rideCollections.findOne({_id: new ObjectId(ratingExist.rideId)})
+        if(!rideExist) throw `Error: there is no ride with id ${ratingExist.rideId}`
+
+        const userExist = await userCollections.findOne({userName: ratingExist.userName})
+        if(!userExist) throw `Error: there is no user with user name ${ratingExist.userName}`
+
         const {ratingId, updateWait, updateComfort, updateEnjoyment} = updateRatingInfo
         const updatedRating = await rideRatingData.updateRating(ratingId, updateWait, updateComfort, updateEnjoyment)
         const averages = await rideRatingData.getAverageRideRatings(updatedRating.rideId)
@@ -185,6 +235,19 @@ router.route("/addRideRating").post(async (req, res) => {
     }
 
     try{
+        const rideRatingCollections = await rideratings();
+        const rideCollections = await rides();
+        const userCollections = await users();
+
+        const ratingExist = await rideRatingCollections.findOne({_id: new ObjectId(deleteRatingInfo.ratingId)})
+        if(!ratingExist) throw `Error: there is no rating with id ${deleteRatingInfo.ratingId}`
+
+        const rideExist = await rideCollections.findOne({_id: new ObjectId(ratingExist.rideId)})
+        if(!rideExist) throw `Error: there is no ride with id ${ratingExist.rideId}`
+
+        const userExist = await userCollections.findOne({userName: ratingExist.userName})
+        if(!userExist) throw `Error: there is no user with user name ${ratingExist.userName}`
+        
         const {ratingId} = deleteRatingInfo
         const ride = await rideRatingData.deleteRating(ratingId)
         const averages = await rideRatingData.getAverageRideRatings(ride._id.toString())
@@ -212,6 +275,10 @@ router.route("/addFoodStallRating").post(async (req, res) => {
     }
 
     try{
+        const foodStallCollections = await foodstalls();
+        const exist = await foodStallCollections.findOne({_id: new ObjectId(foodStallRatingInfo.foodStallId)})
+        if(!exist) throw `Error: there is no food stall with id ${foodStallRatingInfo.foodStallId}`
+
         const user = await userData.getUserByUsername(req.session.user.userName)
         const {quality, waitTime} = foodStallRatingInfo
         const rating = await foodStallRatingData.createFoodStallRating(user.userName, foodStallRatingInfo.foodStallId, quality, waitTime,"rating")
@@ -243,6 +310,19 @@ router.route("/addFoodStallRating").post(async (req, res) => {
         return res.json({Error: `${e}`})
     }
     try{
+        const foodStallRatingCollections = await foodstallratings();
+        const foodStallCollections = await foodstalls();
+        const userCollections = await users();
+
+        const ratingExist = await foodStallRatingCollections.findOne({_id: new ObjectId(updateRatingInfo.ratingId)})
+        if(!ratingExist) throw `Error: there is no rating with id ${updateRatingInfo.ratingId}`
+
+        const foodStallExist = await foodStallCollections.findOne({_id: new ObjectId(ratingExist.foodStallId)})
+        if(!foodStallExist) throw `Error: there is no food stall with id ${ratingExist.foodStallId}`
+
+        const userExist = await userCollections.findOne({userName: ratingExist.userName})
+        if(!userExist) throw `Error: there is no user with user name ${ratingExist.userName}`
+
         const {ratingId, updateQuality, updateWait} = updateRatingInfo
         const updatedRating = await foodStallRatingData.updateRating(ratingId, updateQuality, updateWait) 
         const averages = await foodStallRatingData.getAverageFoodStallRatings(updatedRating.foodStallId)
@@ -269,6 +349,19 @@ router.route("/addFoodStallRating").post(async (req, res) => {
     }
 
     try{
+        const foodStallRatingCollections = await foodstallratings();
+        const foodStallCollections = await foodstalls();
+        const userCollections = await users();
+
+        const ratingExist = await foodStallRatingCollections.findOne({_id: new ObjectId(deleteRatingInfo.ratingId)})
+        if(!ratingExist) throw `Error: there is no rating with id ${deleteRatingInfo.ratingId}`
+
+        const foodStallExist = await foodStallCollections.findOne({_id: new ObjectId(ratingExist.foodStallId)})
+        if(!foodStallExist) throw `Error: there is no food stall with id ${ratingExist.foodStallId}`
+
+        const userExist = await userCollections.findOne({userName: ratingExist.userName})
+        if(!userExist) throw `Error: there is no user with user name ${ratingExist.userName}`
+        
         const {ratingId} = deleteRatingInfo
         const foodStall = await foodStallRatingData.deleteRating(ratingId)
         const averages = await foodStallRatingData.getAverageFoodStallRatings(foodStall._id.toString())

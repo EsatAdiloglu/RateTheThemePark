@@ -71,14 +71,14 @@
                     checkNumber(updateComfortRating, "Ride Cleanliness Rating")
                 }
                 catch(e){
-                    if(typeof updateComfortRating === "string" && updateWaitRating.trim().length < 1) updateComfortRating = Number(currentComfort.text())
+                    if(typeof updateComfortRating === "string" && updateComfortRating.trim().length < 1) updateComfortRating = Number(currentComfort.text())
                     else errors.push(e)
                 }
                 try{
                     checkNumber(updateEnjoymentRating,"Ride Enjoyment Rating")
                 }
                 catch(e){
-                    if(typeof updateEnjoymentRating === "string" && updateWaitRating.trim().length < 1) updateEnjoymentRating = Number(currentEnjoyment.text())
+                    if(typeof updateEnjoymentRating === "string" && updateEnjoymentRating.trim().length < 1) updateEnjoymentRating = Number(currentEnjoyment.text())
                     else errors.push(e)
                 }
                 if(errors.length > 0){

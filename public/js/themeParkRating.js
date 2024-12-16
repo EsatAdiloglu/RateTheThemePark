@@ -79,7 +79,7 @@
                     checkNumber(updateCleanlinessRating, "Theme Park Stuff Cleanliness")
                 }
                 catch(e){
-                    if(typeof updateCleanlinessRating === "string" && updateStaffRating.trim().length < 1) updateCleanlinessRating = Number(currentCleanliness.text())
+                    if(typeof updateCleanlinessRating === "string" && updateCleanlinessRating.trim().length < 1) updateCleanlinessRating = Number(currentCleanliness.text())
                     else errors.push(e)
                 }
             
@@ -87,7 +87,7 @@
                     checkNumber(updateCrowdRating,"Theme Park Crowds Rating")
                 }
                 catch(e){
-                    if(typeof updateCrowdRating === "string" && updateStaffRating.trim().length < 1) updateCrowdRating = Number(currentCrowd.text())
+                    if(typeof updateCrowdRating === "string" && updateCrowdRating.trim().length < 1) updateCrowdRating = Number(currentCrowd.text())
                     else errors.push(e)
                 }
         
@@ -95,7 +95,7 @@
                     checkNumber(updateDiversityRating, "Theme Park Diversity Rating")
                 }
                 catch(e){
-                    if(typeof updateDiversityRating === "string" && updateStaffRating.trim().length < 1) updateDiversityRating = Number(currentDiversity.text())
+                    if(typeof updateDiversityRating === "string" && updateDiversityRating.trim().length < 1) updateDiversityRating = Number(currentDiversity.text())
                     else errors.push(e)
                 }
 
@@ -254,10 +254,10 @@
                     const list = $(`<li data-id="${res._id}">
                         <p>${res.userName}</p>
                         <p id="tpitem" data-id="${res._id}" hidden></p>
-                        <p><strong>Staff Rating:</strong> <span id="themeParkStaffRating">${res.staffRating}</span></p>
-                        <p><strong>Cleanliness Rating:</strong> <span id="themeParkCleanlinessRating">${res.cleanlinessRating}</span></p>
-                        <p><strong>Crowds Rating:</strong> <span id="themeParkCrowdsRating">${res.crowdsRating}</span></p>
-                        <p><strong>Diversity Rating:</strong> <span id="themeParkDiversityRating">${res.diversityRating}</span></p>
+                        <p><strong>Staff Rating:</strong> <span class="themeParkStaffRating">${res.staffRating}</span></p>
+                        <p><strong>Cleanliness Rating:</strong> <span class="themeParkCleanlinessRating">${res.cleanlinessRating}</span></p>
+                        <p><strong>Crowds Rating:</strong> <span class="themeParkCrowdsRating">${res.crowdsRating}</span></p>
+                        <p><strong>Diversity Rating:</strong> <span class="themeParkDiversityRating">${res.diversityRating}</span></p>
                         <p class="numtplikes"><strong>Number of Likes:</strong> 0 </p>
                         <p class="numtpdislikes"><strong>Number of Dislikes:</strong> 0 </p>
                         <button id="updateThemeParkRating">Update Rating</button>
