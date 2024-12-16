@@ -16,6 +16,16 @@ try {
     const park1 = await themeparksfunc.createThemePark("Disneyland","1313 Disneyland Dr","Anaheim","United States", "CA");
     const park2 = await themeparksfunc.createThemePark("Universal Studios Hollywood","100 Universal City Plaza","Los Angeles","United States", "CA");
     const park3 = await themeparksfunc.createThemePark("Six Flags Magic Mountain","26101 Magic Mountain Pkwy","Valencia","United States", "CA");
+    const park4 = await themeparksfunc.createThemePark("Adventure Landing", "1944 Beach Blvd", "Jacksonville Beach", "United States", "FL");
+    const park5 = await themeparksfunc.createThemePark("Adventure Park USA", "11113 W Baldwin Rd", "New Market", "United States", "MD");
+    const park6 = await themeparksfunc.createThemePark("Adventuredome", "2880 S Las Vegas Blvd", "Las Vegas", "United States", "NV");
+    const park7 = await themeparksfunc.createThemePark("Adventureland", "305 34th Ave NW", "Altoona", "United States", "IA");
+    const park8 = await themeparksfunc.createThemePark("Adventureland", "2245 Broad Hollow Rd", "Farmingdale", "United States", "NY");
+    const park9 = await themeparksfunc.createThemePark("Barry Island Pleasure Park", "Barry Island", "United States", "WI");
+    const park10 = await themeparksfunc.createThemePark("Alabama Adventure", "4599 Splash Adventure Pkwy", "Bessemer", "United States", "AL");
+    const park11 = await themeparksfunc.createThemePark("Albion Boro Park", "106 E State St", "Albion", "United States", "PA");
+    const park12 = await themeparksfunc.createThemePark("Alpine Slide at Magic Mountain", "800 Wildrose Ln", "Big Bear Lake", "United States", "CA");
+    const park13 = await themeparksfunc.createThemePark("American Adventures", "250 Cobb Pkwy N", "Marietta", "United States", "GA");
 
     console.log("Theme parks done.");
 
