@@ -8,7 +8,12 @@ const constructorMethod = (app) => {
     app.use('/themepark', themeParkRoutes)
     app.use('/api',apiRoutes)
     app.use("*",(req,res) => {
-        return res.status(404).json({error: "Not Found"})
+        if (req.session.user){
+            return res.status(404).render('error', {signedin: true});
+        }
+        else{
+            return res.status(404).render('error', {signedin: false});
+        }
     });
 };
 

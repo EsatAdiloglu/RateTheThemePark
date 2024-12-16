@@ -853,7 +853,7 @@ let themeparklocation = document.getElementById('themeParkLocationForm');
 let tpinp = document.getElementById('themeParkLocationInput');
 let tplocationerror = document.getElementById("tplocationerror");
 if (themeparklocation){
-    tplocationerror.addEventListener('submit', (event) => {
+    themeparklocation.addEventListener('submit', (event) => {
         tplocationerror.hidden = false;
         if (!tpinp.value || tpinp.value.trim().length === 0 ){
             tplocationerror.hidden = true;
