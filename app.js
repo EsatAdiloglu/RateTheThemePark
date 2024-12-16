@@ -23,11 +23,6 @@ const handlebarsInstance = exphbs.create({
 
       return new Handlebars.SafeString(JSON.stringify(obj));
     },
-    // indent: function(obj){
-
-    //   const indentedcontent = `    ${obj.fn(this)}`
-    //   return new Handlebars.SafeString(indentedcontent)
-    // },
 
     partialsDir: ['views/partials/']
   }

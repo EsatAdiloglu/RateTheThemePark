@@ -29,17 +29,17 @@ try {
     console.log("Theme parks done.");
 
     console.log("Seeding rides");
-    const ride1 = await ridefunc.createRide(park1._id.toString(), "Space Mountain", "A thrilling indoor roller coaster.", 4.8);
-    const ride2 = await ridefunc.createRide(park1._id.toString(), "Pirates of the Caribbean", "A boat ride through pirate adventures.", 4.6);
-    const ride3 = await ridefunc.createRide(park2._id.toString(), "Jurassic World", "A dinosaur-themed water ride.", 4.9);
-    const ride4 = await ridefunc.createRide(park3._id.toString(), "Twisted Colossus", "A high-speed hybrid roller coaster.", 4.9);
+    const ride1 = await ridefunc.createRide(park1._id.toString(), "Space Mountain");
+    const ride2 = await ridefunc.createRide(park1._id.toString(), "Pirates of the Caribbean");
+    const ride3 = await ridefunc.createRide(park2._id.toString(), "Jurassic World");
+    const ride4 = await ridefunc.createRide(park3._id.toString(), "Twisted Colossus");
 
     console.log("Rides done.");
 
     console.log("Seeding food stalls");
-    const foodStall1 = await foodstallfunc.createFoodStall(park1._id.toString(), "Mickey's Diner", "American", 4.5);
-    const foodStall2 = await foodstallfunc.createFoodStall(park2._id.toString(), "The Three Broomsticks", "British", 4.8);
-    const foodStall3 = await foodstallfunc.createFoodStall(park3._id.toString(), "Johnny Rockets", "American", 4.2);
+    const foodStall1 = await foodstallfunc.createFoodStall(park1._id.toString(), "Mickey's Diner", "American");
+    const foodStall2 = await foodstallfunc.createFoodStall(park2._id.toString(), "The Three Broomsticks", "British");
+    const foodStall3 = await foodstallfunc.createFoodStall(park3._id.toString(), "Johnny Rockets", "American");
 
     console.log("Food stalls seeded successfully.");
 
