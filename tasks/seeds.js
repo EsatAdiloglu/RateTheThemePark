@@ -35,9 +35,9 @@ try {
     console.log("Food stalls seeded successfully.");
 
     console.log("Seeding users");
-    const user1 = await userfunc.createUser("John Doe", "johndoe@example.com", "Password123!");
-    const user2 = await userfunc.createUser("Jane Smith", "janesmith@example.com", "SecurePass456!");
-    const user3 = await userfunc.createUser("Alice Wonderland", "alice@example.com", "Wonderland789!");
+    const user1 = await userfunc.createUser("John Doe", "johndoe", "Password123!");
+    const user2 = await userfunc.createUser("Jane Smith", "janesmith", "SecurePass456!");
+    const user3 = await userfunc.createUser("Alice Wonderland", "alicewonder", "Wonderland789!");
 
     console.log("Users done.");
 

@@ -1,5 +1,6 @@
 import { ObjectId } from "mongodb";
 import helper from "../helper.js";
+import { Filter } from "bad-words";
 import { themeparks, rides, foodstalls, reports } from "../config/mongoCollections.js";
 
 const createReport = async (
@@ -8,9 +9,13 @@ const createReport = async (
     reportBody,
     option
 ) => {
+    const filter = new Filter();
     userName = helper.checkString(userName);
     thingId = helper.checkId(thingId);
     reportBody = helper.checkString(reportBody);
+
+    if (filter.isProfane(reportBody)) throw "Error: Report body contains inappropriate language. Please do not use this langauge.";
+    
 
     if (typeof option !== 'number') throw "Error: option isn't of type number";
     const reportCollections = await reports();
